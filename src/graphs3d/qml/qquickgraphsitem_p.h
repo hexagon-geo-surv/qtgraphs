@@ -172,6 +172,8 @@ class Q_GRAPHS_EXPORT QQuickGraphsItem : public QQuick3DViewport
     Q_PROPERTY(QGraphsTheme *theme READ theme WRITE setTheme NOTIFY themeChanged)
     Q_PROPERTY(QtGraphs3D::RenderingMode renderingMode READ renderingMode WRITE setRenderingMode
                    NOTIFY renderingModeChanged)
+    Q_PROPERTY(QtGraphs3D::TransparencyTechnique transparencyTechnique READ transparencyTechnique
+                   WRITE setTransparencyTechnique NOTIFY transparencyTechniqueChanged REVISION(6, 9))
     Q_PROPERTY(bool measureFps READ measureFps WRITE setMeasureFps NOTIFY measureFpsChanged)
     Q_PROPERTY(int currentFps READ currentFps NOTIFY currentFpsChanged)
     Q_PROPERTY(QQmlListProperty<QCustom3DItem> customItemList READ customItemList CONSTANT)
@@ -301,6 +303,9 @@ public:
 
     virtual void setRenderingMode(QtGraphs3D::RenderingMode mode);
     virtual QtGraphs3D::RenderingMode renderingMode() const;
+
+    virtual void setTransparencyTechnique(QtGraphs3D::TransparencyTechnique technique);
+    virtual QtGraphs3D::TransparencyTechnique transparencyTechnique() const;
 
     virtual void setSelectionMode(QtGraphs3D::SelectionFlags mode);
     virtual QtGraphs3D::SelectionFlags selectionMode() const;
@@ -583,6 +588,7 @@ Q_SIGNALS:
     void msaaSamplesChanged(int samples);
     void themeChanged(QGraphsTheme *theme);
     void renderingModeChanged(QtGraphs3D::RenderingMode mode);
+    void transparencyTechniqueChanged(QtGraphs3D::TransparencyTechnique technique);
     void measureFpsChanged(bool enabled);
     void currentFpsChanged(int fps);
     void selectedElementChanged(QtGraphs3D::ElementType type);
@@ -848,6 +854,8 @@ private:
     QQuick3DOrthographicCamera *m_oCamera = nullptr;
     QRectF m_cachedGeometry;
     QtGraphs3D::RenderingMode m_renderMode = QtGraphs3D::RenderingMode::DirectToBackground;
+    QtGraphs3D::TransparencyTechnique m_transparencyTechnique
+        = QtGraphs3D::TransparencyTechnique::Default;
     int m_samples = 0;
     int m_windowSamples = 0;
     QSize m_initialisedSize = QSize(0, 0);

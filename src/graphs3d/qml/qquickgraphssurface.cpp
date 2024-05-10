@@ -1689,6 +1689,7 @@ void QQuickGraphsSurface::updateMaterial(SurfaceModel *model)
     }
 
     bool textured = !(model->series->texture().isNull() && model->series->textureFile().isEmpty());
+    bool hasTransparency = false;
 
     if (isSeriesVisualsDirty() || !textured) {
         float minY = model->boundsMin.y();
@@ -1727,6 +1728,11 @@ void QQuickGraphsSurface::updateMaterial(SurfaceModel *model)
         material->setParentItem(model->model);
         material->setCullMode(QQuick3DMaterial::NoCulling);
         material->setProperty("flatShading", flatShading);
+
+        if (model->series->colorStyle() == QGraphsTheme::ColorStyle::Uniform)
+            hasTransparency = model->series->baseColor().alphaF() < 1.0;
+        else
+            hasTransparency = textureData->hasTransparency();
     }
 
     if (textured) {
@@ -1752,10 +1758,13 @@ void QQuickGraphsSurface::updateMaterial(SurfaceModel *model)
             texInput->texture()->setTextureData(textureData);
             texInput->texture()->setVerticalTiling(QQuick3DTexture::ClampToEdge);
             texInput->texture()->setHorizontalTiling(QQuick3DTexture::ClampToEdge);
+
+            hasTransparency = textureData->hasTransparency();
         } else {
             texInput->texture()->setSource(QUrl());
         }
     }
+    material->setProperty("hasTransparency", hasTransparency);
     material->update();
 }
 

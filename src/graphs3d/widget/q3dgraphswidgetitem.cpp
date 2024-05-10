@@ -128,6 +128,17 @@ QList<QGraphsTheme *> Q3DGraphsWidgetItem::themes() const
     return d->m_graphsItem->themes();
 }
 
+QtGraphs3D::TransparencyTechnique Q3DGraphsWidgetItem::transparencyTechnique() const
+{
+    Q_D(const Q3DGraphsWidgetItem);
+    return d->m_graphsItem->transparencyTechnique();
+}
+void Q3DGraphsWidgetItem::setTransparencyTechnique(QtGraphs3D::TransparencyTechnique technique)
+{
+    Q_D(const Q3DGraphsWidgetItem);
+    d->m_graphsItem->setTransparencyTechnique(technique);
+}
+
 /*!
  * \property Q3DGraphsWidgetItem::selectionMode
  *
@@ -1449,6 +1460,10 @@ void Q3DGraphsWidgetItemPrivate::createGraph()
                      &QQuickGraphsItem::activeThemeChanged,
                      q,
                      &Q3DGraphsWidgetItem::activeThemeChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::transparencyTechniqueChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::transparencyTechniqueChanged);
     QObject::connect(m_graphsItem.get(),
                      &QQuickGraphsItem::selectionModeChanged,
                      q,

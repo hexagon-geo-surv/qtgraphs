@@ -277,6 +277,34 @@ constexpr float polarRoundness = 64.0f;
  */
 
 /*!
+ * \qmlproperty Graphs3D.TransparencyTechnique GraphsItem3D::transparencyTechnique
+ * \since 6.9
+ *
+ * Specifies which transparency technique to use. The Default value is \c{Default}.
+ * When rendering transparent surface graphs, use \c{Approximate} or \c{Accurate}.
+ *
+ * \value Default
+ *        Indicates that order-independent transparency techniques are not used.
+ *        Offers the best performance. Use when graphs don't contain
+ *        transparency or when a bar or scatter graph is also using instancing,
+ *        that is \l optimizationHint is {QtGraphs3D::OptimizationHint::Default}.
+ *
+ * \value Approximate
+ *        Indicates that a graph attempts an approximation of order-independent
+ *        transparency. This method is faster than \c Accurate and works on older
+ *        hardware but may yield inaccurate results. Use when the order-independent
+ *        transparency is needed, but the performance cost has to be lower than
+ *        when using accurate order-independent transparency.
+ *
+ * \value Accurate
+ *        Indicates that accurate order-independent transparency is used.
+ *        Use when perfect transparency rendering is needed.
+ *        \note Accurate transparency is not yet implemented
+ *              and will be enabled when the required functionality
+ *              is added to QtQuick3D.
+ */
+
+/*!
  * \qmlproperty int GraphsItem3D::msaaSamples
  * The number of samples used in multisample antialiasing when renderingMode
  * is \c Indirect. When renderingMode is \c DirectToBackground, this property
@@ -775,6 +803,8 @@ QQuickGraphsItem::QQuickGraphsItem(QQuickItem *parent)
     // Set 4x MSAA by default
     setRenderingMode(QtGraphs3D::RenderingMode::Indirect);
     setMsaaSamples(4);
+
+    setTransparencyTechnique(QtGraphs3D::TransparencyTechnique::Default);
 
     // Accept touchevents
     setAcceptTouchEvents(true);
@@ -1675,6 +1705,33 @@ void QQuickGraphsItem::setRenderingMode(QtGraphs3D::RenderingMode mode)
 QtGraphs3D::RenderingMode QQuickGraphsItem::renderingMode() const
 {
     return m_renderMode;
+}
+
+void QQuickGraphsItem::setTransparencyTechnique(QtGraphs3D::TransparencyTechnique technique)
+{
+    if (technique == m_transparencyTechnique)
+        return;
+
+    switch (technique) {
+    case QtGraphs3D::TransparencyTechnique::Default:
+        environment()->setOitMethod(QQuick3DSceneEnvironment::OITNone);
+        break;
+    case QtGraphs3D::TransparencyTechnique::Approximate:
+        environment()->setOitMethod(QQuick3DSceneEnvironment::OITWeightedBlended);
+        break;
+    case QtGraphs3D::TransparencyTechnique::Accurate:
+        // environment()->setOitMethod(QQuick3DSceneEnvironment::OITSpinlock);
+        //TODO: Add this method when it is implemended in QtQuick3D
+        break;
+    }
+    m_transparencyTechnique = technique;
+
+    emit transparencyTechniqueChanged(technique);
+}
+
+QtGraphs3D::TransparencyTechnique QQuickGraphsItem::transparencyTechnique() const
+{
+    return m_transparencyTechnique;
 }
 
 void QQuickGraphsItem::keyPressEvent(QKeyEvent *ev)
