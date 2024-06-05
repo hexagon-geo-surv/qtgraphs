@@ -122,6 +122,10 @@ void tst_bars::initialProperties()
     QCOMPARE(m_graph->lightColor(), QColor(Qt::white));
     QCOMPARE(m_graph->lightStrength(), 5.0f);
     QCOMPARE(m_graph->shadowStrength(), 25.0f);
+    QCOMPARE(m_graph->minCameraXRotation(), -180);
+    QCOMPARE(m_graph->maxCameraXRotation(), 180);
+    QCOMPARE(m_graph->minCameraYRotation(), 0);
+    QCOMPARE(m_graph->maxCameraYRotation(), 90);
 }
 
 void tst_bars::initializeProperties()
@@ -270,6 +274,11 @@ void tst_bars::initializeProperties()
     QCOMPARE(maxCameraXRotSpy.size(), 0);
     QCOMPARE(minCameraYRotSpy.size(), 0);
     QCOMPARE(maxCameraYRotSpy.size(), 0);
+
+    QCOMPARE(m_graph->minCameraXRotation(), 10.0f);
+    QCOMPARE(m_graph->maxCameraXRotation(), 45.0f);
+    QCOMPARE(m_graph->minCameraYRotation(), 10.0f);
+    QCOMPARE(m_graph->maxCameraYRotation(), 45.0f);
 }
 
 void tst_bars::invalidProperties()

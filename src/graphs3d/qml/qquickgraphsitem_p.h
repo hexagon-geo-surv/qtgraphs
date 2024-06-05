@@ -195,6 +195,14 @@ class Q_GRAPHS_EXPORT QQuickGraphsItem : public QQuick3DViewport
                    cameraXRotationChanged)
     Q_PROPERTY(float cameraYRotation READ cameraYRotation WRITE setCameraYRotation NOTIFY
                    cameraYRotationChanged)
+    Q_PROPERTY(float minCameraXRotation READ minCameraXRotation WRITE setMinCameraXRotation NOTIFY
+                   minCameraXRotationChanged REVISION(6, 9))
+    Q_PROPERTY(float maxCameraXRotation READ maxCameraXRotation WRITE setMaxCameraXRotation NOTIFY
+                   maxCameraXRotationChanged REVISION(6, 9))
+    Q_PROPERTY(float minCameraYRotation READ minCameraYRotation WRITE setMinCameraYRotation NOTIFY
+                   minCameraYRotationChanged REVISION(6, 9))
+    Q_PROPERTY(float maxCameraYRotation READ maxCameraYRotation WRITE setMaxCameraYRotation NOTIFY
+                   maxCameraYRotationChanged REVISION(6, 9))
     Q_PROPERTY(float cameraZoomLevel READ cameraZoomLevel WRITE setCameraZoomLevel NOTIFY
                    cameraZoomLevelChanged)
     Q_PROPERTY(QtGraphs3D::CameraPreset cameraPreset READ cameraPreset WRITE setCameraPreset NOTIFY

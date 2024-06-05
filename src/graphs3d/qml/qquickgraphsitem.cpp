@@ -94,6 +94,34 @@ constexpr float polarRoundness = 64.0f;
  */
 
 /*!
+ * \qmlproperty float GraphsItem3D::minCameraXRotation
+ *
+ * \brief The minimum X-rotation angle of the camera around the target point in degrees.
+ * The default value is \c{-180.0}
+ */
+
+/*!
+ * \qmlproperty float GraphsItem3D::maxCameraXRotation
+ *
+ * \brief The maximum X-rotation angle of the camera around the target point in degrees.
+ * The default value is \c{180.0}
+ */
+
+/*!
+ * \qmlproperty float GraphsItem3D::minCameraYRotation
+ *
+ * \brief The minimum Y-rotation angle of the camera around the target point in degrees.
+ * The default value is \c{0.0}
+ */
+
+/*!
+ * \qmlproperty float GraphsItem3D::maxCameraYRotation
+ *
+ * \brief The maximum Y-rotation angle of the camera around the target point in degrees.
+ * The default value is \c{90.0}
+ */
+
+/*!
  * \qmlproperty bool GraphsItem3D::zoomAtTargetEnabled
  *
  * Whether zooming should change the camera target so that the zoomed point

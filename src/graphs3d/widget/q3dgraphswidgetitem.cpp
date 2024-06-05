@@ -438,6 +438,7 @@ void Q3DGraphsWidgetItem::setCameraYRotation(float rotation)
  * \property Q3DGraphsWidgetItem::minCameraXRotation
  *
  * \brief The minimum X-rotation angle of the camera around the target point in degrees.
+ * The default value is \c{-180.0}
  */
 float Q3DGraphsWidgetItem::minCameraXRotation() const
 {
@@ -455,6 +456,7 @@ void Q3DGraphsWidgetItem::setMinCameraXRotation(float rotation)
  * \property Q3DGraphsWidgetItem::maxCameraXRotation
  *
  * \brief The maximum X-rotation angle of the camera around the target point in degrees.
+ * The default value is \c{180.0}
  */
 float Q3DGraphsWidgetItem::maxCameraXRotation() const
 {
@@ -472,6 +474,7 @@ void Q3DGraphsWidgetItem::setMaxCameraXRotation(float rotation)
  * \property Q3DGraphsWidgetItem::minCameraYRotation
  *
  * \brief The minimum Y-rotation angle of the camera around the target point in degrees.
+ * The default value is \c{0.0}
  */
 float Q3DGraphsWidgetItem::minCameraYRotation() const
 {
@@ -489,6 +492,7 @@ void Q3DGraphsWidgetItem::setMinCameraYRotation(float rotation)
  * \property Q3DGraphsWidgetItem::maxCameraYRotation
  *
  * \brief The maximum Y-rotation angle of the camera around the target point in degrees.
+ * The default value is \c{90.0}
  */
 float Q3DGraphsWidgetItem::maxCameraYRotation() const
 {

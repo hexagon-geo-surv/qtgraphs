@@ -742,19 +742,6 @@ void QQuickGraphsBars::componentComplete()
 
 void QQuickGraphsBars::synchData()
 {
-    if (!m_noZeroInRange) {
-        setMinCameraYRotation(-90.0f);
-        setMaxCameraYRotation(90.0f);
-    } else {
-        if ((m_hasNegativeValues && !valueAxis()->reversed())
-            || (!m_hasNegativeValues && valueAxis()->reversed())) {
-            setMinCameraYRotation(-90.0f);
-            setMaxCameraYRotation(0.0f);
-        } else {
-            setMinCameraYRotation(0.0f);
-            setMaxCameraYRotation(90.0f);
-        }
-    }
     if (m_changeTracker.barSpecsChanged || !m_cachedBarThickness.isValid()) {
         updateBarSpecs(m_barThicknessRatio, m_barSpacing, m_isBarSpecRelative);
         m_changeTracker.barSpecsChanged = false;

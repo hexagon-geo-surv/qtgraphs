@@ -1863,7 +1863,6 @@ void QQuickGraphsScatter::synchData()
 
     updatePointScaleSize();
     QQuickGraphsItem::synchData();
-    setMinCameraYRotation(-90.0f);
 
     m_pointScale = calculatePointScaleSize();
 

@@ -75,6 +75,10 @@ lightColor: \"black\"
 ambientLightStrength: 0.5
 lightStrength: 10.0
 shadowStrength: 50.0
+minCameraXRotation: 0.0
+maxCameraXRotation: 90.0
+minCameraYRotation: -90.0
+maxCameraYRotation: 0.0
 }", top)
         common_init.anchors.fill = top
     }
@@ -190,6 +194,10 @@ shadowStrength: 50.0
             compare(common.ambientLightStrength, 0.25, "ambientLightStrength")
             compare(common.lightStrength, 5.0, "lightStrength")
             compare(common.shadowStrength, 25.0, "shadowStrength")
+            compare(common.minCameraXRotation, -180.0, "minCameraXRotation")
+            compare(common.maxCameraXRotation, 180.0, "maxCameraXRotation")
+            compare(common.minCameraYRotation, 0.0, "minCameraYRotation")
+            compare(common.maxCameraYRotation, 90.0, "maxCameraYRotation")
         }
 
         function test_2_change_common() {
@@ -217,6 +225,11 @@ shadowStrength: 50.0
             common.ambientLightStrength = 0.5
             common.lightStrength = 10.0
             common.shadowStrength = 50.0
+            common.minCameraXRotation = 0
+            common.maxCameraXRotation = 90
+            common.minCameraYRotation = -90
+            common.maxCameraYRotation = 0
+
             compare(common.selectionMode,
                     Graphs3D.SelectionFlag.Item | Graphs3D.SelectionFlag.Row
                     | Graphs3D.SelectionFlag.Slice, "selectionMode")
@@ -242,6 +255,10 @@ shadowStrength: 50.0
             compare(common.ambientLightStrength, 0.5, "ambientLightStrength")
             compare(common.lightStrength, 10.0, "lightStrength")
             compare(common.shadowStrength, 50.0, "shadowStrength")
+            compare(common.minCameraXRotation, 0.0, "minCameraXRotation")
+            compare(common.maxCameraXRotation, 90.0, "maxCameraXRotation")
+            compare(common.minCameraYRotation, -90.0, "minCameraYRotation")
+            compare(common.maxCameraYRotation, 0.0, "maxCameraYRotation")
         }
 
         function test_3_change_invalid_common() {
@@ -317,6 +334,10 @@ shadowStrength: 50.0
                     "ambientLightStrength")
             compare(common_init.lightStrength, 10.0, "lightStrength")
             compare(common_init.shadowStrength, 50.0, "shadowStrength")
+            compare(common_init.minCameraXRotation, 0.0, "minCameraXRotation")
+            compare(common_init.maxCameraXRotation, 90.0, "maxCameraXRotation")
+            compare(common_init.minCameraYRotation, -90.0, "minCameraYRotation")
+            compare(common_init.maxCameraYRotation, 0.0, "maxCameraYRotation")
 
             common_init.destroy()
         }
