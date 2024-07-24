@@ -69,6 +69,7 @@ else()
         SOURCES
             data/qitemmodelscatterdataproxy.cpp data/qitemmodelscatterdataproxy.h data/qitemmodelscatterdataproxy_p.h
             data/qscatter3dseries.cpp data/qscatter3dseries.h data/qscatter3dseries_p.h
+            data/qspline3dseries.cpp data/qspline3dseries.h data/qspline3dseries_p.h
             data/qscatterdataitem.cpp data/qscatterdataitem.h
             data/qscatterdataproxy.cpp data/qscatterdataproxy.h data/qscatterdataproxy_p.h
             data/scatteritemmodelhandler.cpp data/scatteritemmodelhandler_p.h
@@ -78,6 +79,7 @@ else()
             qml/foreigntypesscatter_p.h
             qml/qquickgraphsscatter.cpp qml/qquickgraphsscatter_p.h
             qml/qquickgraphsscatterseries.cpp qml/qquickgraphsscatterseries_p.h
+            qml/qquickgraphssplineseries.cpp qml/qquickgraphssplineseries_p.h
         INCLUDE_DIRECTORIES
             data
             engine

@@ -42,7 +42,7 @@ static const int insertRemoveRecordReserveSize = 31;
  *
  * See \l{Simple Scatter Graph} for more thorough usage example.
  *
- * \sa Scatter3DSeries, ScatterDataProxy, Bars3D, Surface3D,
+ * \sa Scatter3DSeries, Spline3DSeries, ScatterDataProxy, Bars3D, Surface3D,
  * {Qt Graphs C++ Classes for 3D}
  */
 
@@ -704,11 +704,13 @@ void QQuickGraphsScatter::removeDataItems(ScatterModel *graphModel,
         deleteDataItem(graphModel->selectionIndicator);
         deleteDataItem(graphModel->baseRef);
         deleteDataItem(graphModel->selectionRef);
+        deleteDataItem(graphModel->splineModel);
 
         graphModel->instancingRootItem = nullptr;
         graphModel->selectionIndicator = nullptr;
         graphModel->baseRef = nullptr;
         graphModel->selectionRef = nullptr;
+        graphModel->splineModel = nullptr;
     } else {
         QList<QQuick3DModel *> &items = graphModel->dataItems;
         removeDataItems(items, items.count());
@@ -1529,6 +1531,177 @@ void QQuickGraphsScatter::calculatePolarXZ(const float posX,
     z = -static_cast<float>(radius * qCos(angle)) * m_polarRadius;
 }
 
+void QQuickGraphsScatter::updateSpline(ScatterModel *model)
+{
+    if (auto series = qobject_cast<QSpline3DSeries *>(model->series)) {
+        if (!series->isSplineVisible()) {
+            if (model->splineModel)
+                model->splineModel->setVisible(false);
+            return;
+        } else {
+            if (!model->splineModel)
+                createSplineModel(model);
+
+            QQmlListReference materialRef(model->splineModel, "materials");
+            QQuick3DCustomMaterial *material = qobject_cast<QQuick3DCustomMaterial *>(
+                materialRef.at(0));
+
+            QVariant splineInputAsVariant = material->property("controlPoints");
+            QQuick3DShaderUtilsTextureInput *splineInput
+                = splineInputAsVariant.value<QQuick3DShaderUtilsTextureInput *>();
+            QQuick3DTexture *splineTexture = splineInput->texture();
+            QQuick3DTextureData *splineData = splineTexture->textureData();
+
+            bool loop = series->isSplineLooping();
+            material->setProperty("tension", series->splineTension());
+            material->setProperty("knotting", series->splineKnotting());
+            material->setProperty("loop", loop);
+            material->setProperty("color", series->splineColor());
+
+            const QScatterDataArray &array = series->dataArray();
+            qsizetype pointCount = array.size();
+            if (isDataDirty() && array.size() != 0) {
+                QVector<QVector4D> splinePoints;
+                QVector<SplineVertex> vertices;
+                splinePoints.reserve(pointCount + 2);
+                splineData->setSize(QSize(pointCount + 2, 1));
+
+                auto normalizedPos = [this](QVector3D pos) {
+                    float posX = static_cast<QValue3DAxis *>(axisX())->positionAt(pos.x())
+                                     * scale().x()
+                                 + translate().x();
+                    float posY = static_cast<QValue3DAxis *>(axisY())->positionAt(pos.y())
+                                     * scale().y()
+                                 + translate().y();
+                    float posZ = static_cast<QValue3DAxis *>(axisZ())->positionAt(pos.z())
+                                     * scale().z()
+                                 + translate().z();
+                    return QVector3D(posX, posY, posZ);
+                };
+
+                QVector3D first = normalizedPos(array.at(0).position());
+                QVector3D second = normalizedPos(array.at(1).position());
+                QVector3D pStart = first + (first - second) * 0.1f;
+                QVector3D last = normalizedPos(array.at(pointCount - 1).position());
+                QVector3D secondLast = normalizedPos(array.at(pointCount - 2).position());
+                QVector3D pEnd = last + (last - secondLast) * 0.1f;
+
+                if (loop)
+                    splinePoints.append(QVector4D(last, 1));
+                else
+                    splinePoints.append(QVector4D(pStart, 1));
+
+                const qsizetype resolution = series->splineResolution();
+                vertices.reserve(resolution * pointCount);
+                for (int i = 0; i < pointCount; i++) {
+                    splinePoints.push_back(QVector4D(normalizedPos(array.at(i).position()), 1));
+                    for (int j = 0; j < resolution; j++) {
+                        SplineVertex vertex;
+                        vertex.position = QVector3D(float(j) / float(resolution), float(i), 0);
+                        vertex.uv = QVector2D(float(j) / float(resolution - 1),
+                                              float(i) / float(pointCount + 2));
+                        vertices.push_back(vertex);
+                    }
+                }
+                if (loop)
+                    splinePoints.append(QVector4D(first, 1));
+                else
+                    splinePoints.append(QVector4D(pEnd, 1));
+
+                QByteArray pointData = QByteArray(reinterpret_cast<char *>(splinePoints.data()),
+                                                  splinePoints.size() * sizeof(QVector4D));
+
+                splineData->setTextureData(pointData);
+                material->setProperty("points", splinePoints.size());
+                QQuick3DGeometry *splineGeometry = model->splineModel->geometry();
+                QByteArray vertexBuffer(reinterpret_cast<char *>(vertices.data()),
+                                        vertices.size() * sizeof(SplineVertex));
+                splineGeometry->setVertexData(vertexBuffer);
+                splineGeometry->update();
+                splineTexture->setTextureData(splineData);
+                splineInput->setTexture(splineTexture);
+            }
+            model->splineModel->setVisible(true);
+        }
+    }
+}
+
+void QQuickGraphsScatter::createSplineModel(ScatterModel *model)
+{
+    QQuick3DModel *splineModel = new QQuick3DModel();
+    splineModel->setParent(model->series);
+    splineModel->setParentItem(graphNode());
+    splineModel->setObjectName(QStringLiteral("SplineModel"));
+    splineModel->setVisible(true);
+    splineModel->setPickable(false);
+    auto geometry = new QQuick3DGeometry();
+    geometry->setParent(splineModel);
+    geometry->setStride(sizeof(SplineVertex)); //pos + uv
+    geometry->setPrimitiveType(QQuick3DGeometry::PrimitiveType::LineStrip);
+    geometry->addAttribute(QQuick3DGeometry::Attribute::PositionSemantic,
+                           0,
+                           QQuick3DGeometry::Attribute::F32Type);
+    geometry->addAttribute(QQuick3DGeometry::Attribute::TexCoord0Semantic,
+                           sizeof(QVector3D),
+                           QQuick3DGeometry::Attribute::F32Type);
+    splineModel->setGeometry(geometry);
+
+    QQuick3DTexture *splineTex = new QQuick3DTexture();
+    splineTex->setHorizontalTiling(QQuick3DTexture::ClampToEdge);
+    splineTex->setVerticalTiling(QQuick3DTexture::ClampToEdge);
+    splineTex->setMinFilter(QQuick3DTexture::Nearest);
+    splineTex->setMagFilter(QQuick3DTexture::Nearest);
+    QQuick3DTextureData *splineData = new QQuick3DTextureData;
+    splineData->setSize(QSize(0, 1));
+    splineData->setFormat(QQuick3DTextureData::RGBA32F);
+    splineData->setParent(splineTex);
+    splineData->setParentItem(splineTex);
+    splineTex->setTextureData(splineData);
+
+    QQmlListReference materialRef(splineModel, "materials");
+    QQuick3DCustomMaterial *material = createQmlCustomMaterial(
+        QStringLiteral(":/materials/SplineMaterial"));
+    material->setParent(splineModel);
+    material->setParentItem(splineModel);
+    material->setObjectName("splineMaterial");
+    QVariant textureInputAsVariant = material->property("controlPoints");
+    QQuick3DShaderUtilsTextureInput *textureInput = textureInputAsVariant
+                                                        .value<QQuick3DShaderUtilsTextureInput *>();
+    textureInput->setTexture(splineTex);
+    splineTex->setParent(material);
+    materialRef.append(material);
+
+    model->splineModel = splineModel;
+
+    if (auto series = qobject_cast<QSpline3DSeries *>(model->series)) {
+        connect(series,
+                &QSpline3DSeries::splineTensionChanged,
+                this,
+                &QQuickGraphsScatter::handleSplineChanged);
+        connect(series,
+                &QSpline3DSeries::splineKnottingChanged,
+                this,
+                &QQuickGraphsScatter::handleSplineChanged);
+        connect(series,
+                &QSpline3DSeries::splineLoopingChanged,
+                this,
+                &QQuickGraphsScatter::handleSplineChanged);
+        connect(series,
+                &QSpline3DSeries::splineColorChanged,
+                this,
+                &QQuickGraphsScatter::handleSplineChanged);
+        connect(series,
+                &QSpline3DSeries::splineResolutionChanged,
+                this,
+                &QQuickGraphsScatter::handleSplineChanged);
+    }
+}
+
+void QQuickGraphsScatter::handleSplineChanged()
+{
+    m_isDataDirty = true;
+}
+
 QQuick3DModel *QQuickGraphsScatter::selected() const
 {
     return m_selected;
@@ -1640,8 +1813,10 @@ void QQuickGraphsScatter::updateGraph()
             }
         }
 
-        if (isDataDirty() || isSeriesVisualsDirty())
+        if (isDataDirty() || isSeriesVisualsDirty()) {
             updateScatterGraphItemPositions(graphModel);
+            updateSpline(graphModel);
+        }
 
         if (isSeriesVisualsDirty() || (graphModel->instancing && graphModel->instancing->isDirty()))
             updateScatterGraphItemVisuals(graphModel);
