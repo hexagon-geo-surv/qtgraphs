@@ -77,6 +77,12 @@ struct Abstract3DChangeBitField
     bool axisXLabelAutoRotationChanged : 1;
     bool axisYLabelAutoRotationChanged : 1;
     bool axisZLabelAutoRotationChanged : 1;
+    bool axisXScaleLabelsByCountChanged : 1;
+    bool axisYScaleLabelsByCountChanged : 1;
+    bool axisZScaleLabelsByCountChanged : 1;
+    bool axisXLabelSizeChanged : 1;
+    bool axisYLabelSizeChanged : 1;
+    bool axisZLabelSizeChanged : 1;
     bool aspectRatioChanged : 1;
     bool horizontalAspectRatioChanged : 1;
     bool axisXTitleVisibilityChanged : 1;
@@ -247,6 +253,8 @@ public:
     virtual void handleAxisReversedChangedBySender(QObject *sender);
     virtual void handleAxisFormatterDirtyBySender(QObject *sender);
     virtual void handleAxisLabelAutoRotationChangedBySender(QObject *sender);
+    virtual void handleAxisScaleLabelsByCountChangedBySender(QObject *sender);
+    virtual void handleAxisLabelSizeChangedBySender(QObject *sender);
     virtual void handleAxisTitleVisibilityChangedBySender(QObject *sender);
     virtual void handleAxisLabelVisibilityChangedBySender(QObject *sender);
     virtual void handleAxisTitleFixedChangedBySender(QObject *sender);
@@ -531,6 +539,8 @@ public Q_SLOTS:
     void handleAxisSegmentCountChanged(qsizetype count);
     void handleAxisSubSegmentCountChanged(qsizetype count);
     void handleAxisAutoAdjustRangeChanged(bool autoAdjust);
+    void handleAxisScaleLabelsByCountChanged(bool adjust);
+    void handleAxisLabelSizeChanged(float size);
     void handleAxisLabelFormatChanged(const QString &format);
     void handleAxisReversedChanged(bool enable);
     void handleAxisFormatterDirty();

@@ -882,6 +882,18 @@ void QQuickGraphsItem::handleAxisLabelAutoRotationChanged(float angle)
     handleAxisLabelAutoRotationChangedBySender(sender());
 }
 
+void QQuickGraphsItem::handleAxisScaleLabelsByCountChanged(bool adjust)
+{
+    Q_UNUSED(adjust);
+    handleAxisScaleLabelsByCountChangedBySender(sender());
+}
+
+void QQuickGraphsItem::handleAxisLabelSizeChanged(float size)
+{
+    Q_UNUSED(size);
+    handleAxisLabelSizeChangedBySender(sender());
+}
+
 void QQuickGraphsItem::handleAxisTitleVisibilityChanged(bool visible)
 {
     Q_UNUSED(visible);
@@ -1007,6 +1019,34 @@ void QQuickGraphsItem::handleAxisLabelAutoRotationChangedBySender(QObject *sende
         m_changeTracker.axisYLabelAutoRotationChanged = true;
     else if (sender == m_axisZ)
         m_changeTracker.axisZLabelAutoRotationChanged = true;
+    else
+        qWarning("%ls invoked for invalid axis", qUtf16Printable(QString::fromUtf8(__func__)));
+
+    emitNeedRender();
+}
+
+void QQuickGraphsItem::handleAxisScaleLabelsByCountChangedBySender(QObject *sender)
+{
+    if (sender == m_axisX)
+        m_changeTracker.axisXScaleLabelsByCountChanged = true;
+    else if (sender == m_axisY)
+        m_changeTracker.axisYScaleLabelsByCountChanged = true;
+    else if (sender == m_axisZ)
+        m_changeTracker.axisZScaleLabelsByCountChanged = true;
+    else
+        qWarning("%ls invoked for invalid axis", qUtf16Printable(QString::fromUtf8(__func__)));
+
+    emitNeedRender();
+}
+
+void QQuickGraphsItem::handleAxisLabelSizeChangedBySender(QObject *sender)
+{
+    if (sender == m_axisX)
+        m_changeTracker.axisXLabelSizeChanged = true;
+    else if (sender == m_axisY)
+        m_changeTracker.axisYLabelSizeChanged = true;
+    else if (sender == m_axisZ)
+        m_changeTracker.axisZLabelSizeChanged = true;
     else
         qWarning("%ls invoked for invalid axis", qUtf16Printable(QString::fromUtf8(__func__)));
 
@@ -1179,6 +1219,18 @@ void QQuickGraphsItem::setAxisHelper(QAbstract3DAxis::AxisOrientation orientatio
                      &QAbstract3DAxis::labelAutoAngleChanged,
                      this,
                      &QQuickGraphsItem::handleAxisLabelAutoRotationChanged);
+    QObject::connect(axis,
+                     &QAbstract3DAxis::labelAutoAngleChanged,
+                     this,
+                     &QQuickGraphsItem::handleAxisLabelAutoRotationChanged);
+    QObject::connect(axis,
+                     &QAbstract3DAxis::scaleLabelsByCountChanged,
+                     this,
+                     &QQuickGraphsItem::handleAxisScaleLabelsByCountChanged);
+    QObject::connect(axis,
+                     &QAbstract3DAxis::labelSizeChanged,
+                     this,
+                     &QQuickGraphsItem::handleAxisLabelSizeChanged);
     QObject::connect(axis,
                      &QAbstract3DAxis::titleVisibleChanged,
                      this,
@@ -2381,6 +2433,35 @@ void QQuickGraphsItem::synchData()
         axisDirty = true;
         m_changeTracker.axisZLabelAutoRotationChanged = false;
     }
+    if (m_changeTracker.axisXScaleLabelsByCountChanged) {
+        axisDirty = true;
+        m_changeTracker.axisXScaleLabelsByCountChanged = false;
+    }
+
+    if (m_changeTracker.axisYScaleLabelsByCountChanged) {
+        axisDirty = true;
+        m_changeTracker.axisYScaleLabelsByCountChanged = false;
+    }
+
+    if (m_changeTracker.axisZScaleLabelsByCountChanged) {
+        axisDirty = true;
+        m_changeTracker.axisZScaleLabelsByCountChanged = false;
+    }
+
+    if (m_changeTracker.axisXLabelSizeChanged) {
+        axisDirty = true;
+        m_changeTracker.axisXLabelSizeChanged = false;
+    }
+
+    if (m_changeTracker.axisYLabelSizeChanged) {
+        axisDirty = true;
+        m_changeTracker.axisYLabelSizeChanged = false;
+    }
+
+    if (m_changeTracker.axisZLabelSizeChanged) {
+        axisDirty = true;
+        m_changeTracker.axisZLabelSizeChanged = false;
+    }
 
     if (m_changeTracker.axisXTitleFixedChanged) {
         axisDirty = true;
@@ -3497,18 +3578,36 @@ void QQuickGraphsItem::updateLabels()
 
     float scale = backgroundScale.x() - m_backgroundScaleMargin.x();
 
+    float relativeScale = scale / m_axisX->labels().count();
+
     float pointSize = theme()->labelFont().pointSizeF();
 
     float textPadding = pointSize * .5f;
 
     float labelsMaxWidth = float(findLabelsMaxWidth(axisX()->labels())) + textPadding;
+
     QFontMetrics fm(theme()->labelFont());
     float labelHeight = fm.height() + textPadding;
 
-    float scaleFactor = fontScaleFactor(pointSize) * pointSize;
+    // set base size to some reasonable value
     float fontRatio = labelsMaxWidth / labelHeight;
-    m_fontScaled = QVector3D(scaleFactor * fontRatio, scaleFactor, 0.00001f);
-    float adjustment = labelAdjustment(labelsMaxWidth);
+
+    float adjustment;
+    const float baseSize = 25.0f;
+    const float relativePointSize = theme()->labelFont().pointSizeF() / baseSize;
+    const float scaleFactor = fontScaleFactor(pointSize) * pointSize;
+
+    if (axisX()->isScaleLabelsByCount()) {
+        m_fontScaled = QVector3D(0.01f * fontRatio * relativePointSize * relativeScale,
+                                 0.01f * relativePointSize * relativeScale,
+                                 0.01f) * axisX()->labelSize();
+        adjustment = m_fontScaled.y() * 110.0f;
+    } else {
+        m_fontScaled = QVector3D(scaleFactor * fontRatio, scaleFactor, 0.00001f)
+                * axisX()->labelSize();
+        adjustment = labelAdjustment(labelsMaxWidth * axisX()->labelSize());
+    }
+
     zPos = backgroundScale.z() + adjustment + m_labelMargin;
 
     adjustment *= qAbs(qSin(qDegreesToRadians(labelRotation.z())));
@@ -3629,14 +3728,23 @@ void QQuickGraphsItem::updateLabels()
     scale = backgroundScale.y() - m_backgroundScaleMargin.y();
     labelsMaxWidth = float(findLabelsMaxWidth(axisY()->labels())) + textPadding;
     fontRatio = labelsMaxWidth / labelHeight;
-    m_fontScaled = QVector3D(scaleFactor * fontRatio, scaleFactor, 0.00001f);
+    relativeScale = scale / m_axisY->labels().count();
+    if (axisY()->isScaleLabelsByCount()) {
+        m_fontScaled = QVector3D(0.01f * fontRatio * relativePointSize * relativeScale,
+                                 0.01f * relativePointSize * relativeScale,
+                                 0.01f) * axisY()->labelSize();
+        adjustment = m_fontScaled.y() * 190.0f;
+    } else {
+        m_fontScaled = QVector3D(scaleFactor * fontRatio, scaleFactor, 0.00001f)
+                * axisY()->labelSize();
+        adjustment = labelAdjustment(labelsMaxWidth * axisY()->labelSize());
+    }
 
     xPos = backgroundScale.x() - labelDepthMargin;
     if (!xFlipped)
         xPos *= -1.0f;
     labelTrans.setX(xPos);
 
-    adjustment = labelAdjustment(labelsMaxWidth);
     zPos = backgroundScale.z() + adjustment + m_labelMargin;
     if (zFlipped)
         zPos *= -1.0f;
@@ -3745,8 +3853,19 @@ void QQuickGraphsItem::updateLabels()
     scale = backgroundScale.z() - m_backgroundScaleMargin.z();
     labelsMaxWidth = float(findLabelsMaxWidth(axisZ()->labels())) + textPadding;
     fontRatio = labelsMaxWidth / labelHeight;
-    m_fontScaled = QVector3D(scaleFactor * fontRatio, scaleFactor, 0.00001f);
-    adjustment = labelAdjustment(labelsMaxWidth);
+    relativeScale = scale / m_axisZ->labels().count();
+
+    if (axisZ()->isScaleLabelsByCount()) {
+        m_fontScaled = QVector3D(0.01f * fontRatio * relativePointSize * relativeScale,
+                                 0.01f * relativePointSize * relativeScale,
+                                 0.01f) * axisZ()->labelSize();
+        adjustment = m_fontScaled.y() * 110.0f;
+    } else {
+        m_fontScaled = QVector3D(scaleFactor * fontRatio, scaleFactor, 0.00001f)
+                * axisZ()->labelSize();
+        adjustment = labelAdjustment(labelsMaxWidth * axisZ()->labelSize());
+    }
+
     xPos = backgroundScale.x() + adjustment + m_labelMargin;
     if (xFlipped)
         xPos *= -1.0f;
@@ -3813,8 +3932,17 @@ void QQuickGraphsItem::updateLabels()
     scale = backgroundScale.y() - m_backgroundScaleMargin.y();
     labelsMaxWidth = float(findLabelsMaxWidth(axisY()->labels())) + textPadding;
     fontRatio = labelsMaxWidth / labelHeight;
-    m_fontScaled = QVector3D(scaleFactor * fontRatio, scaleFactor, 0.00001f);
-    adjustment = labelAdjustment(labelsMaxWidth);
+    relativeScale = scale / m_axisY->labels().count();
+    if (axisY()->isScaleLabelsByCount()) {
+        m_fontScaled = QVector3D(0.01f * fontRatio * relativePointSize * relativeScale,
+                                 0.01f * relativePointSize * relativeScale,
+                                 0.01f) * axisY()->labelSize();
+        adjustment = m_fontScaled.y() * 190.0f;
+    } else {
+        m_fontScaled = QVector3D(scaleFactor * fontRatio, scaleFactor, 0.00001f)
+                * axisY()->labelSize();
+        adjustment = labelAdjustment(labelsMaxWidth * axisY()->labelSize());
+    }
 
     xPos = backgroundScale.x() + adjustment + m_labelMargin;
     if (xFlipped)
