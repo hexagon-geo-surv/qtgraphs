@@ -452,7 +452,7 @@ void PointRenderer::afterUpdate(QList<QAbstractSeries *> &cleanupSeries)
 
 bool PointRenderer::handleMouseMove(QMouseEvent *event)
 {
-    if (!m_pressedGroup->series->isVisible())
+    if (!m_pressedGroup || !m_pressedGroup->series->isVisible())
         return false;
 
     if (m_pointPressed && m_pressedGroup->series->isDraggable()) {
