@@ -93,8 +93,6 @@ else()
             data/qsurfacedataproxy.cpp data/qsurfacedataproxy.h data/qsurfacedataproxy_p.h
             data/surfaceitemmodelhandler.cpp data/surfaceitemmodelhandler_p.h
 
-            engine/surfaceselectioninstancing.cpp engine/surfaceselectioninstancing_p.h
-
             qml/foreigntypessurface_p.h
             qml/qquickgraphssurface.cpp qml/qquickgraphssurface_p.h
             qml/qquickgraphssurfaceseries.cpp qml/qquickgraphssurfaceseries_p.h

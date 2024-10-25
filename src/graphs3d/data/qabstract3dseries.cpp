@@ -790,9 +790,9 @@ void QAbstract3DSeriesPrivate::setDataProxy(QAbstractDataProxy *proxy)
 void QAbstract3DSeriesPrivate::setGraph(QQuickGraphsItem *graph)
 {
     Q_Q(QAbstract3DSeries);
-    connectGraphAndProxy(graph);
     m_graph = graph;
     q->setParent(graph);
+    connectGraphAndProxy(graph);
     markItemLabelDirty();
 }
 
