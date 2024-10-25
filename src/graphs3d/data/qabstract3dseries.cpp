@@ -152,8 +152,8 @@ QT_BEGIN_NAMESPACE
  * Sets the filename for a user defined custom mesh for objects that is used
  * when \l mesh is
  * \l{QAbstract3DSeries::Mesh::UserDefined}{Abstract3DSeries.Mesh.UserDefined}.
- * \note The file needs to be in the Wavefront OBJ format and include
- * vertices, normals, and UVs. It also needs to be in triangles.
+ * \note The file needs to be in the QtQuick3D mesh format. Use the \c balsam
+ * conversion tool to create a mesh from other 3D model formats.
  */
 
 /*!
@@ -501,8 +501,8 @@ void QAbstract3DSeries::setMeshAxisAndAngle(QVector3D axis, float angle)
  * \brief The filename for a user defined custom mesh for objects.
  *
  * The custom mesh is used when \l mesh is MeshUserDefined.
- * \note The file needs to be in the Wavefront OBJ format and include
- * vertices, normals, and UVs. It also needs to be in triangles.
+ * \note The file needs to be in the QtQuick3D mesh format. Use the \c balsam
+ * conversion tool to create a mesh from other 3D model formats.
  */
 void QAbstract3DSeries::setUserDefinedMesh(const QString &fileName)
 {
