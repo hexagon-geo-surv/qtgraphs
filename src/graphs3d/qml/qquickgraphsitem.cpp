@@ -4820,9 +4820,15 @@ void QQuickGraphsItem::updateCustomData()
                     iScales[i] *= ratio;
                 }
             }
-            model->setScale(QVector3D(iScales.at(0), iScales.at(1), iScales.at(2)));
+            // We incorrectly assumed models to be scaled to 0...1 by default, when they in
+            // reality are scaled to -1...1. Because of this we need to multiply the scale by 2
+            // (QTBUG-126611)
+            model->setScale(QVector3D(iScales.at(0), iScales.at(1), iScales.at(2)) * 2.f);
         } else {
-            model->setScale(item->scaling());
+            // We incorrectly assumed models to be scaled to 0...1 by default, when they in
+            // reality are scaled to -1...1. Because of this we need to multiply the scale by 2
+            // (QTBUG-126611)
+            model->setScale(item->scaling() * 2.f);
         }
 
         if (auto volume = qobject_cast<QCustom3DVolume *>(item)) {
