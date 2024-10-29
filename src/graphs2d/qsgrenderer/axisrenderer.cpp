@@ -164,13 +164,14 @@ void AxisRenderer::updateAxis()
     float axisWidth = m_graph->m_axisWidth;
     float axisHeight = m_graph->m_axisHeight;
 
+    const bool gridVisible = theme()->isGridVisible();
     if (m_axisVertical) {
-        m_gridVerticalLinesVisible = m_axisVertical->isGridVisible();
-        m_gridVerticalSubLinesVisible = m_axisVertical->isSubGridVisible();
+        m_gridVerticalLinesVisible = gridVisible && m_axisVertical->isGridVisible();
+        m_gridVerticalSubLinesVisible = gridVisible && m_axisVertical->isSubGridVisible();
     }
     if (m_axisHorizontal) {
-        m_gridHorizontalLinesVisible = m_axisHorizontal->isGridVisible();
-        m_gridHorizontalSubLinesVisible = m_axisHorizontal->isSubGridVisible();
+        m_gridHorizontalLinesVisible = gridVisible && m_axisHorizontal->isGridVisible();
+        m_gridHorizontalSubLinesVisible = gridVisible && m_axisHorizontal->isSubGridVisible();
     }
 
     if (auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical)) {
