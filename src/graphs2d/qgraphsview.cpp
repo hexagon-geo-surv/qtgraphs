@@ -799,7 +799,7 @@ void QGraphsView::clearSeriesFunc(QQmlListProperty<QObject> *list)
 }
 
 /*!
-    \qmlproperty GraphTheme GraphsView::theme
+    \qmlproperty GraphsTheme GraphsView::theme
     The theme used by the graph. Determines coloring,
     axis lines, fonts etc. If theme has not been set,
     the default theme is used.
