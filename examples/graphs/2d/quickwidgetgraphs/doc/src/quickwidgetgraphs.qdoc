@@ -4,6 +4,7 @@
 /*!
     \example 2d/quickwidgetgraphs
     \meta tags {Graphs, PieSeries, Widget, QuickWidget}
+    \examplecategory {Data Visualization}
 
     \title Graphs 2D in Qt Widgets
     \ingroup qtgraphs_examples
