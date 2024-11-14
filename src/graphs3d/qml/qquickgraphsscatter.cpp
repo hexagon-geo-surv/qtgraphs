@@ -437,6 +437,7 @@ void QQuickGraphsScatter::updateScatterGraphItemVisuals(ScatterModel *graphModel
                                  graphModel->series->singleHighlightColor());
 
     } else if (optimizationHint() == QtGraphs3D::OptimizationHint::Default) {
+        graphModel->instancingRootItem->setVisible(true);
         graphModel->instancing->setRangeGradient(rangeGradient);
         if (!rangeGradient) {
             bool transparentTexture = false;
@@ -1786,8 +1787,9 @@ void QQuickGraphsScatter::updateGraph()
     }
 
     for (auto graphModel : std::as_const(m_scatterGraphs)) {
+        bool seriesVisible = graphModel->series->isVisible();
         if (isDataDirty()) {
-            if (optimizationHint() == QtGraphs3D::OptimizationHint::Legacy) {
+            if (optimizationHint() == QtGraphs3D::OptimizationHint::Legacy && seriesVisible) {
                 if (graphModel->dataItems.count() != graphModel->series->dataProxy()->itemCount()) {
                     qsizetype sizeDiff = sizeDifference(graphModel->dataItems.count(),
                                                         graphModel->series->dataProxy()->itemCount());
@@ -1797,7 +1799,8 @@ void QQuickGraphsScatter::updateGraph()
                     else
                         removeDataItems(graphModel->dataItems, qAbs(sizeDiff));
                 }
-            } else {
+            } else if (optimizationHint() == QtGraphs3D::OptimizationHint::Default
+                       && seriesVisible) {
                 if (graphModel->instancing == nullptr) {
                     graphModel->instancing = new ScatterInstancing;
                     graphModel->instancing->setParent(graphModel->series);
@@ -1815,13 +1818,16 @@ void QQuickGraphsScatter::updateGraph()
             }
         }
 
-        if (isDataDirty() || isSeriesVisualsDirty()) {
+        if (seriesVisible && (isDataDirty() || isSeriesVisualsDirty())) {
             updateScatterGraphItemPositions(graphModel);
             updateSpline(graphModel);
         }
 
-        if (isSeriesVisualsDirty() || (graphModel->instancing && graphModel->instancing->isDirty()))
+        if (seriesVisible
+            && (isSeriesVisualsDirty()
+                || (graphModel->instancing && graphModel->instancing->isDirty()))) {
             updateScatterGraphItemVisuals(graphModel);
+        }
 
         const bool validSelection = (m_selectedItemSeries == graphModel->series
                                      && m_selectedItem != invalidSelectionIndex())
@@ -1836,6 +1842,7 @@ void QQuickGraphsScatter::updateGraph()
             } else {
                 selectionPosition = graphModel->instancing->dataArray().at(m_selectedItem).position;
             }
+
             updateItemLabel(selectionPosition);
             QString label = m_selectedItemSeries->itemLabel();
             itemLabel()->setProperty("labelText", label);
@@ -1844,9 +1851,9 @@ void QQuickGraphsScatter::updateGraph()
         }
     }
 
-    if (m_selectedItem == invalidSelectionIndex()) {
+    if (m_selectedItem == invalidSelectionIndex())
         itemLabel()->setVisible(false);
-    }
+
     setItemSelected(m_selectedItem != invalidSelectionIndex());
 }
 
@@ -1892,6 +1899,23 @@ void QQuickGraphsScatter::handleOptimizationHintChange(QtGraphs3D::OptimizationH
     m_optimizationChanged = true;
 }
 
+void QQuickGraphsScatter::handleSeriesVisibilityChangedBySender(QObject *sender)
+{
+    QQuickGraphsItem::handleSeriesVisibilityChangedBySender(sender);
+    auto series = static_cast<QScatter3DSeries *>(sender);
+    if (optimizationHint() == QtGraphs3D::OptimizationHint::Default) {
+        ScatterModel *graphModel = findGraphModel(series);
+        if (graphModel && graphModel->series == series) {
+            if (graphModel->instancingRootItem)
+                graphModel->instancingRootItem->setVisible(series->isVisible());
+            if (series == m_selectedItemSeries) {
+                itemLabel()->setVisible(series->isVisible());
+                graphModel->selectionIndicator->setVisible(series->isVisible());
+            }
+        }
+    }
+}
+
 bool QQuickGraphsScatter::selectedItemInRange(const ScatterModel *graphModel)
 {
     qsizetype itemCount;
@@ -1901,5 +1925,14 @@ bool QQuickGraphsScatter::selectedItemInRange(const ScatterModel *graphModel)
         itemCount = graphModel->dataItems.count();
 
     return m_selectedItem >= 0 && m_selectedItem < itemCount;
+}
+
+QQuickGraphsScatter::ScatterModel *QQuickGraphsScatter::findGraphModel(QScatter3DSeries *series)
+{
+    for (const auto &graphModel : std::as_const(m_scatterGraphs)) {
+        if (graphModel->series == series)
+            return graphModel;
+    }
+    return nullptr;
 }
 QT_END_NAMESPACE
