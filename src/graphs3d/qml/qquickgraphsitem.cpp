@@ -58,25 +58,21 @@ constexpr float polarRoundness = 64.0f;
 /*!
  * \qmlproperty Graphs3D.SelectionMode GraphsItem3D::selectionMode
  * The active selection mode in the graph.
- * One of the QtGraphs3D::SelectionFlag enum values.
- *
- * \sa QtGraphs3D::SelectionFlag
+ * One of the \l Graphs3D.SelectionFlag enum values.
  */
 
 /*!
  * \qmlproperty Graphs3D.ShadowQuality GraphsItem3D::shadowQuality
- * The quality of shadows. One of the QtGraphs3D::ShadowQuality enum
+ * The quality of shadows. One of the \l Graphs3D.ShadowQuality enum
  * values.
- *
- * \sa QtGraphs3D::ShadowQuality
  */
 
 /*!
  * \qmlproperty Graphs3D.CameraPreset GraphsItem3D::cameraPreset
  *
  * The currently active camera preset, which is one of
- * \l{GraphsItem3D::cameraPreset}{Graphs3D.CameraPreset}. If no
- * preset is active, the value is \c {Graphs3D.CameraPreset.None}.
+ * \l{Graphs3D.CameraPreset}. If no
+ * preset is active, the value is \c {Graphs3D.CameraPreset.NoPreset}.
  */
 
 /*!
@@ -220,33 +216,11 @@ constexpr float polarRoundness = 64.0f;
  *
  * How the graph will be rendered. Defaults to \c{Indirect}.
  *
- * \value DirectToBackground
- *        Indicates that the graph will be rendered directly on the window
- * background and QML items are rendered on top of it. Using non-transparent QML
- * item as a background will hide the graph. Clears the whole window before
- * rendering the graph, including the areas outside the graph. If the surface
- * format of the window supports antialiasing, it will be used (see
- * \c {qDefaultSurfaceFormat()}).
- * This rendering mode offers the best performance at the expense of
- * non-standard QML behavior. For example, the graphs do not obey the z ordering
- * of QML items and the opacity value has no effect on them.
- *
- * \value Indirect
- *        Indicates the graph will be first rendered to an offscreen surface
- * that is then drawn during normal QML item rendering. The rendered image is
- * antialiased using the multisampling method if it is supported in the current
- * environment and the msaaSamples property value is greater than zero.
- * This rendering mode offers good quality and normal QML item behavior at the
- * expense of performance.
- *
- * \note Antialiasing is not supported in OpenGL ES2 environments in any
- * rendering mode.
- *
  * \note Setting the \c antialiasing property of the graph does not do anything.
  * However, it is set by the graph itself if the current rendering mode uses
  * antialiasing.
  *
- * \sa msaaSamples
+ * \sa msaaSamples, Graphs3D.RenderingMode
  */
 
 /*!
@@ -440,7 +414,7 @@ constexpr float polarRoundness = 64.0f;
  *
  * \sa selectedLabelIndex(), selectedAxis(), selectedCustomItemIndex(),
  * selectedCustomItem(), Bars3D::selectedSeries, Scatter3D::selectedSeries,
- * Scene3D::selectionQueryPosition, QtGraphs3D::ElementType
+ * Scene3D::selectionQueryPosition, Graphs3D.ElementType
  */
 
 /*!
@@ -498,7 +472,7 @@ constexpr float polarRoundness = 64.0f;
  * This is mostly an issue on 32bit and OpenGL ES2 platforms. To work around
  * this issue, choose an item mesh with a low vertex count or use the point mesh.
  *
- * \sa Abstract3DSeries::mesh, QtGraphs3D::OptimizationHint
+ * \sa Abstract3DSeries::mesh, Graphs3D.OptimizationHint
  */
 
 /*!
@@ -555,10 +529,12 @@ constexpr float polarRoundness = 64.0f;
 /*!
  * \qmlproperty Graphs3D.GridLineType GraphsItem3D::gridLineType
  *
- * Defines whether the grid lines type is Graphs3D.GridLineType.Shader or
- * Graphs3D.GridLineType.Geometry.
+ * Defines whether the grid lines type is \c Graphs3D.GridLineType.Shader or
+ * \c Graphs3D.GridLineType.Geometry.
  *
  * This value affects all grid lines.
+ *
+ * \sa Graphs3D.GridLineType
  */
 
 /*!
