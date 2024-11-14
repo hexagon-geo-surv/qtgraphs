@@ -337,8 +337,10 @@ QT_BEGIN_NAMESPACE
  *
  * The highlight color for a selected object. Used if
  * \l{GraphsItem3D::selectionMode}{selectionMode}
- * has the \c GraphsItem3D.SelectionFlag.Item flag set.
+ * has the \c Graphs3D.SelectionFlag.Item flag set.
  * The default value depends on \l colorScheme.
+ *
+ * \sa Graphs3D.SelectionFlag
  */
 
 /*!
@@ -346,9 +348,11 @@ QT_BEGIN_NAMESPACE
  *
  * The highlight color for selected objects. Used if
  * \l{GraphsItem3D::selectionMode}{selectionMode}
- * has the \c GraphsItem3D.SelectionFlag.Row or \c GraphsItem3D.SelectionFlag.Column
+ * has the \c Graphs3D.SelectionFlag.Row or \c Graphs3D.SelectionFlag.Column
  * flag set.
  * The default value depends on \l colorScheme.
+ *
+ * \sa Graphs3D.SelectionFlag
  */
 
 /*!
@@ -370,8 +374,10 @@ QT_BEGIN_NAMESPACE
  *
  * The highlight gradient for a selected object. Used if
  * \l{GraphsItem3D::selectionMode}{selectionMode}
- * has the \c GraphsItem3D.SelectionFlag.Item flag set.
+ * has the \c Graphs3D.SelectionFlag.Item flag set.
  * The default value depends on \l colorScheme.
+ *
+ * \sa Graphs3D.SelectionFlag
  */
 
 /*!
@@ -379,9 +385,11 @@ QT_BEGIN_NAMESPACE
  *
  * The highlight gradient for selected objects. Used if
  * \l{GraphsItem3D::selectionMode}{selectionMode}
- * has the \c GraphsItem3D.SelectionFlag.Row or \c GraphsItem3D.SelectionFlag.Column
+ * has the \c Graphs3D.SelectionFlag.Row or \c Graphs3D.SelectionFlag.Column
  * flag set.
  * The default value depends on \l colorScheme.
+ *
+ * \sa Graphs3D.SelectionFlag
  */
 
 /*!
@@ -543,7 +551,9 @@ QT_BEGIN_NAMESPACE
  * The default value is \c 2.0.
  *
  * If it is set for grid lines, only has effect if
- * \l{Q3DGraphsWidgetItem::gridLineType} is \c Graphs3D.GridLineType.Shader
+ * \l{GraphsItem3D::gridLineType} is \c Graphs3D.GridLineType.Shader
+ *
+ * \sa Graphs3D.GridLineType
  */
 
 /*!
@@ -553,7 +563,9 @@ QT_BEGIN_NAMESPACE
  * The default value is \c 1.0.
  *
  * If it is set for grid lines, only has effect if
- * \l{Q3DGraphsWidgetItem::gridLineType} is \c Graphs3D.GridLineType.Shader
+ * \l{GraphsItem3D::gridLineType} is \c Graphs3D.GridLineType.Shader
+ *
+ * \sa Graphs3D.GridLineType
  */
 
 /*!
