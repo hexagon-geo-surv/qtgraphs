@@ -74,6 +74,33 @@ QT_BEGIN_NAMESPACE
  * This type manages the series specific visual elements, as well as the series
  * data (via a data proxy).
  *
+ * Bar3DSeries supports the following format tags for itemLabelFormat:
+ * \table
+ *   \row
+ *     \li @rowTitle      \li Title from row axis
+ *   \row
+ *     \li @colTitle      \li Title from column axis
+ *   \row
+ *     \li @valueTitle    \li Title from value axis
+ *   \row
+ *     \li @rowIdx        \li Visible row index. Localized using the graph locale.
+ *   \row
+ *     \li @colIdx        \li Visible column index. Localized using the graph locale.
+ *   \row
+ *     \li @rowLabel      \li Label from row axis
+ *   \row
+ *     \li @colLabel      \li Label from column axis
+ *   \row
+ *     \li @valueLabel    \li Item value formatted using the format of the value
+ *                            axis attached to the graph. For more information,
+ *                            see \l{QValue3DAxis::labelFormat}{labelFormat}.
+ *   \row
+ *     \li @seriesName    \li Name of the series
+ *   \row
+ *     \li %<format spec> \li Item value in the specified format. Formatted
+ *                            using the same rules as \l{QValue3DAxis::labelFormat}{labelFormat}.
+ * \endtable
+ *
  * For a more complete description, see QBar3DSeries.
  *
  * \sa {Qt Graphs Data Handling with 3D}
