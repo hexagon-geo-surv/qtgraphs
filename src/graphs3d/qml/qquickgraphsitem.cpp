@@ -301,7 +301,7 @@ constexpr float polarRoundness = 64.0f;
 /*!
  * \qmlproperty real GraphsItem3D::labelMargin
  *
- * brief This property specifies the margin for the placement of the axis labels.
+ * \brief This property specifies the margin for the placement of the axis labels.
  *
  * Negative values place the labels inside the plot-area while positive values
  * place them outside the plot-area. Label automatic rotation is disabled when
@@ -480,7 +480,7 @@ constexpr float polarRoundness = 64.0f;
 /*!
  * \qmlproperty Graphs3D.OptimizationHint GraphsItem3D::optimizationHint
  *
- * Whether the default, static, or legacy mode is used for rendering optimization.
+ * \brief Specifies whether the default or legacy mode is used for rendering optimization.
  *
  * The default mode uses instanced rendering, and provides the full feature set
  * at the best level of performance on most systems. The static mode optimizes
@@ -512,6 +512,7 @@ constexpr float polarRoundness = 64.0f;
 
 /*!
  * \qmlproperty vector3d GraphsItem3D::queriedGraphPosition
+ * \readonly
  *
  * This read-only property contains the latest graph position values along each
  * axis queried using Scene3D::graphPositionQuery. The values are normalized to

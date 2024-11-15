@@ -1042,7 +1042,7 @@ qreal Q3DGraphsWidgetItem::aspectRatio() const
 /*!
  * \property Q3DGraphsWidgetItem::optimizationHint
  *
- * \brief Whether the default, static, or legacy mode is used for rendering
+ * \brief Specifies whether the default or legacy mode is used for rendering
  * optimization.
  *
  * The default mode uses instanced rendering, and provides the full feature set
@@ -1201,6 +1201,7 @@ QLocale Q3DGraphsWidgetItem::locale() const
 
 /*!
  * \property Q3DGraphsWidgetItem::queriedGraphPosition
+ * \readonly
  *
  * \brief The latest queried graph position values along each axis.
  *
