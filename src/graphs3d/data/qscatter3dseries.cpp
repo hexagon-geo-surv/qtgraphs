@@ -428,7 +428,7 @@ void QScatter3DSeriesPrivate::createItemLabel()
     static const QString seriesNameTag(QStringLiteral("@seriesName"));
 
     if (m_selectedItem == QScatter3DSeries::invalidSelectionIndex()) {
-        m_itemLabel = QString();
+        m_itemLabel = hiddenLabelTag;
         return;
     }
 

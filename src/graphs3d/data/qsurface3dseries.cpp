@@ -642,7 +642,7 @@ void QSurface3DSeriesPrivate::createItemLabel()
     static const QString seriesNameTag(QStringLiteral("@seriesName"));
 
     if (m_selectedPoint == QSurface3DSeries::invalidSelectionPosition()) {
-        m_itemLabel = QString();
+        m_itemLabel = hiddenLabelTag;
         return;
     }
 
