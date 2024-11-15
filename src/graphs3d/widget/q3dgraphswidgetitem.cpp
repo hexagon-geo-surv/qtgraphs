@@ -1239,7 +1239,7 @@ QVector3D Q3DGraphsWidgetItem::queriedGraphPosition() const
  * If the margin value is negative, the margins are determined automatically and
  * can vary according to the size of the items in the series and the type of the
  * graph. The value is interpreted as a fraction of the y-axis range if the
- * graph aspect ratios have not beed changed from the default values. Defaults
+ * graph aspect ratios have not been changed from the default values. Defaults
  * to \c{-1.0}.
  *
  * \note Setting a smaller margin for a scatter graph than the automatically
