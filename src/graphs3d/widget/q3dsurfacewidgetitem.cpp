@@ -214,6 +214,7 @@ QValue3DAxis *Q3DSurfaceWidgetItem::axisZ() const
 
 /*!
  * \property Q3DSurfaceWidgetItem::selectedSeries
+ * \readonly
  *
  * \brief The selected series or null.
  *

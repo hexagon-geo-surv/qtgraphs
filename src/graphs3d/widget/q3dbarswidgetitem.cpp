@@ -359,6 +359,7 @@ QValue3DAxis *Q3DBarsWidgetItem::valueAxis() const
 
 /*!
  * \property Q3DBarsWidgetItem::selectedSeries
+ * \readonly
  *
  * \brief The selected series or a null value.
  *

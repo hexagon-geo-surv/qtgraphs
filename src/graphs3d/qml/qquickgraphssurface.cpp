@@ -75,6 +75,8 @@ QT_BEGIN_NAMESPACE
 
 /*!
  * \qmlproperty Surface3DSeries Surface3D::selectedSeries
+ * \readonly
+ *
  * The selected series or null. If \l {GraphsItem3D::selectionMode}{selectionMode}
  * has the \c MultiSeries flag set, this property holds the series
  * which owns the selected point.

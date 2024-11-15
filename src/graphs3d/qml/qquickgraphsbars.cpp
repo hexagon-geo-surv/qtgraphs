@@ -107,6 +107,8 @@
 
 /*!
  * \qmlproperty Bar3DSeries Bars3D::selectedSeries
+ * \readonly
+ *
  * The selected series or \c null. If \l {GraphsItem3D::selectionMode}{selectionMode} has
  * the \c SelectionMultiSeries flag set, this property holds the series that
  * owns the selected bar.

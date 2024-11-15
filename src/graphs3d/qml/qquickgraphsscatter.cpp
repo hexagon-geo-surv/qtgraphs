@@ -78,6 +78,8 @@ static const int insertRemoveRecordReserveSize = 31;
 
 /*!
  * \qmlproperty Scatter3DSeries Scatter3D::selectedSeries
+ * \readonly
+ *
  * The selected series or null.
  */
 

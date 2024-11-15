@@ -195,6 +195,7 @@ QValue3DAxis *Q3DScatterWidgetItem::axisZ() const
 
 /*!
  * \property Q3DScatterWidgetItem::selectedSeries
+ * \readonly
  *
  * \brief The selected series or null.
  */
