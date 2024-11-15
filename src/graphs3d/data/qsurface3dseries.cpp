@@ -93,7 +93,7 @@ QT_BEGIN_NAMESPACE
  * in the data array of the series as selected.
  * Only one point can be selected at a time.
  *
- * To clear selection from this series, invalidSelectionPosition is set as the
+ * To clear the selection from this series, assign invalidSelectionPosition as the
  * position. If this series is added to a graph, the graph can adjust the
  * selection according to user interaction or if it becomes invalid.
  *
@@ -106,8 +106,10 @@ QT_BEGIN_NAMESPACE
 
 /*!
  * \qmlproperty point Surface3DSeries::invalidSelectionPosition
+ * \readonly
+ *
  * A constant property providing an invalid selection position.
- * This position is set to the selectedPoint property to clear the selection
+ * This position is assigned to the selectedPoint property to clear the selection
  * from this series.
  *
  * \sa GraphsItem3D::clearSelection()
