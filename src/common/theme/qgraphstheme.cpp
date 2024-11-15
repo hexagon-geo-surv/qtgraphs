@@ -225,7 +225,7 @@ QT_BEGIN_NAMESPACE
  *     \li seriesColors
  *     \li Qt::black
  *   \row
- *     \li seriesGradients
+ *     \li baseGradients
  *     \li QLinearGradient. Essentially fully black.
  *   \row
  *     \li colorStyle
@@ -268,27 +268,37 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
- * \qmlproperty list<color> GraphsTheme::seriesColors
- *
- * The list of base colors to be used for all the objects in the graph, series
- * by series. If there are more series than colors, color list wraps and starts
- * again with the first color in the list. Has no immediate effect if colorStyle
- * is not \c GraphsTheme.ColorStyle.Uniform.
- *
- * This can be overridden by setting \l{Abstract3DSeries::baseColor}
- * {Abstract3DSeries.baseColor} explicitly in the series.
+    \qmlproperty list<color> GraphsTheme::seriesColors
+
+    The list of colors to be used for all the objects in the graph, series
+    by series. If there are more series than colors, color list wraps and starts
+    again with the first color in the list. Has no immediate effect if \l colorStyle
+    is not \c GraphsTheme.ColorStyle.Uniform.
+
+    Example usage:
+    \badcode
+    seriesColors: [ "red" ]
+    \endcode
+
+    This can be overridden by setting \l{Abstract3DSeries::baseColor}
+    {Abstract3DSeries.baseColor} explicitly in the series.
  */
 
 /*!
- * \qmlproperty list<Color> GraphsTheme::baseColors
- *
- * The list of base colors to be used for all the objects in the graph, series
- * by series. If there are more series than colors, color list wraps and starts
- * again with the first color in the list. Has no immediate effect if colorStyle
- * is not \c GraphsTheme.ColorStyle.Uniform.
- *
- * This can be overridden by setting \l{Abstract3DSeries::baseColor}
- * {Abstract3DSeries.baseColor} explicitly in the series.
+    \qmlproperty list<Color> GraphsTheme::baseColors
+
+    The list of base colors of type Color to be used for all the objects in the graph, series
+    by series. If there are more series than colors, color list wraps and starts
+    again with the first color in the list. Has no immediate effect if \l colorStyle
+    is not \c GraphsTheme.ColorStyle.Uniform.
+
+    Example usage:
+    \badcode
+    baseColors: [ Color { color: "red" } ]
+    \endcode
+
+    This can be overridden by setting \l{Abstract3DSeries::baseColor}
+    {Abstract3DSeries.baseColor} explicitly in the series.
  */
 
 /*!
@@ -356,17 +366,25 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
- * \qmlproperty list<Gradient> GraphsTheme::baseGradients
- *
- * The list of base gradients to be used for all the objects in the graph,
- * series by series. If there are more series than gradients, the gradient list
- * wraps and starts again with the first gradient in the list.
- *
- * Has no immediate effect if colorStyle is \l{QGraphsTheme::ColorStyle::Uniform}
- * {GraphsTheme.ColorStyle.Uniform}.
- *
- * This value can be overridden by setting \l{Abstract3DSeries::baseGradient}
- *{Abstract3DSeries.baseGradient} explicitly in the series.
+   \qmlproperty list<Gradient> GraphsTheme::baseGradients
+
+    The list of base gradients to be used for all the objects in the graph,
+    series by series. If there are more series than gradients, the gradient list
+    wraps and starts again with the first gradient in the list.
+
+    Has no immediate effect if colorStyle is \l{QGraphsTheme::ColorStyle::Uniform}
+    {GraphsTheme.ColorStyle.Uniform}.
+
+    Example usage:
+    \badcode
+    baseGradients: [ Gradient {
+        GradientStop { position: 1.0; color: "#DBEB00" }
+        GradientStop { position: 0.0; color: "#373F26" }
+    } ]
+    \endcode
+
+   This value can be overridden by setting \l{Abstract3DSeries::baseGradient}
+   {Abstract3DSeries.baseGradient} explicitly in the series.
  */
 
 /*!
@@ -559,7 +577,7 @@ QT_BEGIN_NAMESPACE
 /*!
  * \qmlproperty real GraphsTheme::GraphsLine.subWidth
  *
- * The color of the main lines.
+ * The width of the sub lines.
  * The default value is \c 1.0.
  *
  * If it is set for grid lines, only has effect if
