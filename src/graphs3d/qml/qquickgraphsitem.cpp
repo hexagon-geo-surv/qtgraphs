@@ -4895,10 +4895,15 @@ void QQuickGraphsItem::updateCustomData()
         QQuick3DNode *customLabel = labelIterator.value();
 
         QVector3D pos = label->position();
+        // We incorrectly assumed label position to be normalized by default, when it in
+        // reality is -1...1. Because of this we need to multiply the x and z by 2.
+        // (QTBUG-131138)
+        pos.setX(pos.x() * 2.f);
+        pos.setZ(pos.z() * 2.f);
         if (!label->isPositionAbsolute()) {
-            if (label->position().x() < minX || label->position().x() > maxX
-                || label->position().y() < minY || label->position().y() > maxY
-                || label->position().z() < minZ || label->position().z() > maxZ) {
+            if (pos.x() < minX || pos.x() > maxX
+                || pos.y() < minY || pos.y() > maxY
+                || pos.z() < minZ || pos.z() > maxZ) {
                 customLabel->setVisible(false);
                 ++labelIterator;
                 continue;
