@@ -97,7 +97,7 @@ QT_BEGIN_NAMESPACE
  *
  * Only one bar can be selected at a time.
  *
- * To clear the selection from this series, set invalidSelectionPosition as the
+ * To clear the selection from this series, assign invalidSelectionPosition as the
  * position.
  *
  * If this series is added to a graph, the graph can adjust the selection
@@ -113,8 +113,10 @@ QT_BEGIN_NAMESPACE
 
 /*!
  * \qmlproperty point Bar3DSeries::invalidSelectionPosition
+ * \readonly
+ *
  * A constant property providing an invalid position for selection. This
- * position is set to the selectedBar property to clear the selection from this
+ * position is assigned to the selectedBar property to clear the selection from this
  * series.
  *
  * \sa {GraphsItem3D::clearSelection()}{GraphsItem3D.clearSelection()}
