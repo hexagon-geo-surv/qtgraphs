@@ -226,6 +226,8 @@ constexpr float polarRoundness = 64.0f;
 
 /*!
  * \qmlproperty Scene3D GraphsItem3D::scene
+ * \readonly
+ *
  * The Scene3D pointer that can be used to manipulate the scene and access the
  * scene elements.
  *
@@ -430,6 +432,7 @@ constexpr float polarRoundness = 64.0f;
 
 /*!
  * \qmlproperty Graphs3D.ElementType GraphsItem3D::selectedElement
+ * \readonly
  *
  * The element selected in the graph.
  *
