@@ -181,6 +181,7 @@ void Q3DGraphsWidgetItem::setShadowQuality(const QtGraphs3D::ShadowQuality &shad
 
 /*!
  * \property Q3DGraphsWidgetItem::scene
+ * \readonly
  *
  * \brief The Q3DScene pointer that can be used to manipulate the scene and
  * access the scene elements.
@@ -347,6 +348,7 @@ QCustom3DItem *Q3DGraphsWidgetItem::selectedCustomItem() const
 
 /*!
  * \property Q3DGraphsWidgetItem::selectedElement
+ * \readonly
  *
  * \brief The element selected in the graph.
  *
