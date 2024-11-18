@@ -2571,9 +2571,19 @@ void QQuickGraphsItem::synchData()
     auto rotation = Utils::calculateRotation(rotVec);
     if (m_yFlipped) {
         m_backgroundRotation->setRotation(rotation);
+        if (m_axisX->labelAutoAngle() > 0.0f ||
+                m_axisY->labelAutoAngle() > 0.0f ||
+                m_axisZ->labelAutoAngle() > 0.0f) {
+            m_labelsNeedupdate = true;
+        }
     } else {
         modelMatrix.rotate(rotation);
         m_backgroundRotation->setRotation(rotation);
+        if (m_axisX->labelAutoAngle() > 0.0f ||
+                m_axisY->labelAutoAngle() > 0.0f ||
+                m_axisZ->labelAutoAngle() > 0.0f) {
+            m_labelsNeedupdate = true;
+        }
     }
 
     bool forceUpdateCustomVolumes = false;
@@ -2904,6 +2914,9 @@ void QQuickGraphsItem::synchData()
 
     if (m_measureFps)
         QQuickItem::update();
+
+    if (m_labelsNeedupdate)
+        updateLabels();
 }
 
 void QQuickGraphsItem::updateGrid()
@@ -3705,7 +3718,6 @@ void QQuickGraphsItem::updateLabels()
     labelAngleFraction = labelAutoAngle / 90.0f;
     fractionCamX = m_xRotation * labelAngleFraction;
     fractionCamY = m_yRotation * labelAngleFraction;
-
     QVector3D sideLabelRotation(0.0f, -90.0f, 0.0f);
     QVector3D backLabelRotation(0.0f, 0.0f, 0.0f);
 
@@ -3996,6 +4008,7 @@ void QQuickGraphsItem::updateLabels()
                  totalBackLabelRotation,
                  labelsMaxWidth,
                  m_fontScaled);
+    m_labelsNeedupdate = false;
 }
 
 void QQuickGraphsItem::updateRadialLabelOffset()
