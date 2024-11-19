@@ -1525,10 +1525,12 @@ void QQuickGraphsBars::updateBarPositions(QBar3DSeries *series)
             float heightValue = updateBarHeightParameters(item);
             float angle = item->rotation();
 
-            if (angle)
-                model->setRotation(QQuaternion::fromAxisAndAngle(upVector, angle));
-            else
-                model->setRotation(QQuaternion());
+            if (angle) {
+                model->setRotation(QQuaternion::fromAxisAndAngle(upVector, angle)
+                                   + series->meshRotation());
+            } else {
+                model->setRotation(QQuaternion() + series->meshRotation());
+            }
 
             if (heightValue < 0.f) {
                 const QVector3D rot = model->eulerRotation();
@@ -1581,9 +1583,20 @@ void QQuickGraphsBars::updateBarPositions(QBar3DSeries *series)
                         float heightValue = updateBarHeightParameters(&item);
                         BarItemHolder *bih = new BarItemHolder();
 
-                        if (heightValue < 0.f) {
-                            const QVector3D eulerRot = barList.at(i)->model->eulerRotation();
-                            bih->eulerRotation = QVector3D(-180.f, eulerRot.y(), eulerRot.z());
+                        if (barList.at(i)->model->eulerRotation() != QVector3D()
+                            || series->meshRotation() != QQuaternion()) {
+                            const QQuaternion rotation =
+                                QQuaternion(barList.at(i)->model->eulerRotation().toVector4D())
+                                + series->meshRotation();
+
+                            bih->rotation = rotation;
+                            if (heightValue < 0.f) {
+                                bih->rotation = QQuaternion(
+                                    QVector3D(-180.f, rotation.y(), rotation.z()).toVector4D());
+                            }
+                        } else {
+                            bih->rotation = QQuaternion::fromEulerAngles(
+                                QVector3D(.0f, item.rotation(), .0f));
                         }
 
                         float colPos = (col + seriesPos) * m_cachedBarSpacing.width();
@@ -2420,7 +2433,7 @@ void QQuickGraphsBars::createBarItemHolders(QBar3DSeries *series,
             selectedBih->selectedBar = false;
             selectedBih->color = series->singleHighlightColor();
             selectedBih->coord = bih->coord;
-            selectedBih->eulerRotation = bih->eulerRotation;
+            selectedBih->rotation = bih->rotation;
             selectedBih->heightValue = bih->heightValue;
             selectedBih->position = bih->position;
             selectedBih->scale = bih->scale;
@@ -2474,7 +2487,7 @@ void QQuickGraphsBars::createBarItemHolders(QBar3DSeries *series,
             selectedBih->selectedBar = false;
             selectedBih->color = series->multiHighlightColor();
             selectedBih->coord = bih->coord;
-            selectedBih->eulerRotation = bih->eulerRotation;
+            selectedBih->rotation = bih->rotation;
             selectedBih->heightValue = bih->heightValue;
             selectedBih->position = bih->position;
             selectedBih->scale = bih->scale;
@@ -2505,7 +2518,7 @@ void QQuickGraphsBars::createBarItemHolders(QBar3DSeries *series,
             selectedBih->selectedBar = false;
             selectedBih->color = series->baseColor();
             selectedBih->coord = bih->coord;
-            selectedBih->eulerRotation = bih->eulerRotation;
+            selectedBih->rotation = bih->rotation;
             selectedBih->heightValue = bih->heightValue;
             selectedBih->position = bih->position;
             selectedBih->scale = bih->scale;
