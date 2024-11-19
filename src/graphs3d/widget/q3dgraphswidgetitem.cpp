@@ -15,7 +15,7 @@ QT_BEGIN_NAMESPACE
 
 /*!
  * \class Q3DGraphsWidgetItem
- * \inmodule QtGraphs
+ * \inmodule QtGraphsWidgets
  * \ingroup graphs_3D_widgets
  * \brief The Q3DGraphsWidgetItem class provides a window and render loop for
  * graphs.
