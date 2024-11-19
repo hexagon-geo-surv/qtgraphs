@@ -9,7 +9,7 @@ QT_BEGIN_NAMESPACE
 
 /*!
  * \class Q3DScatterWidgetItem
- * \inmodule QtGraphs
+ * \inmodule QtGraphsWidgets
  * \ingroup graphs_3D_widgets
  * \brief The Q3DScatterWidgetItem class provides methods for rendering 3D scatter graphs.
  *
