@@ -331,6 +331,10 @@ QT_BEGIN_NAMESPACE
  * \qmlproperty color GraphsTheme::labelTextColor
  *
  * The color of the font used for labels.
+ *
+ * If an axis has specified \l{graphsline.labelTextColor}{labelTextColor} explicitly,
+ * this has no effect.
+ *
  * The default value depends on \l colorScheme.
  */
 
@@ -1045,24 +1049,28 @@ void QGraphsTheme::setLabelBackgroundColor(QColor newLabelBackgroundColor)
  * \property QGraphsTheme::labelTextColor
  *
  * \brief The color of the font used for labels.
+ *
+ * If an axis has specified \l{QGraphsLine::labelTextColor}{labelTextColor} explicitly,
+ * this has no effect.
+ *
  * The default value depends on \l colorScheme.
  */
 QColor QGraphsTheme::labelTextColor() const
 {
     Q_D(const QGraphsTheme);
-    if (d->m_customBits.labelTextColorCustom)
-        return d->m_labelTextColor;
     return d->m_labelTextThemeColor;
 }
 
 void QGraphsTheme::setLabelTextColor(QColor newLabelTextColor)
 {
     Q_D(QGraphsTheme);
-    d->m_customBits.labelTextColorCustom = true;
-    if (d->m_labelTextColor == newLabelTextColor)
+    if (d->m_labelTextThemeColor == newLabelTextColor)
         return;
+    d->m_customBits.labelTextColorCustom = true;
     d->m_dirtyBits.labelTextColorDirty = true;
-    d->m_labelTextColor = newLabelTextColor;
+    d->m_labelTextThemeColor = newLabelTextColor;
+    axisX().d->m_labelTextThemeColor = newLabelTextColor;
+    axisY().d->m_labelTextThemeColor = newLabelTextColor;
     Q_EMIT labelTextColorChanged();
     Q_EMIT update();
 }
@@ -1510,10 +1518,21 @@ void QGraphsTheme::setColorSchemePalette()
                                                            defaultColorLevel);
         d->m_multiHighlightThemeGradient = createGradient(QColor(QRgb(0x22D489)), defaultColorLevel);
 
-        d->m_labelTextThemeColor = QColor(QRgb(0xAEAEAE));
-        d->m_axisX.d->m_labelTextThemeColor = QColor(QRgb(0xAEAEAE));
-        d->m_axisY.d->m_labelTextThemeColor = QColor(QRgb(0xAEAEAE));
-        d->m_axisZ.d->m_labelTextThemeColor = QColor(QRgb(0xAEAEAE));
+        // If a label text color has been overridden already, do not change it back
+        if (!d->m_labelTextThemeColor.isValid() || !d->m_customBits.labelTextColorCustom)
+            d->m_labelTextThemeColor = QColor(QRgb(0xAEAEAE));
+        if (!d->m_axisX.d->m_labelTextThemeColor.isValid()
+            || !d->m_axisX.d->m_bits.labelTextColorCustom) {
+            d->m_axisX.d->m_labelTextThemeColor = QColor(QRgb(0xAEAEAE));
+        }
+        if (!d->m_axisY.d->m_labelTextThemeColor.isValid()
+            || !d->m_axisY.d->m_bits.labelTextColorCustom) {
+            d->m_axisY.d->m_labelTextThemeColor = QColor(QRgb(0xAEAEAE));
+        }
+        if (!d->m_axisZ.d->m_labelTextThemeColor.isValid()
+            || !d->m_axisZ.d->m_bits.labelTextColorCustom) {
+            d->m_axisZ.d->m_labelTextThemeColor = QColor(QRgb(0xAEAEAE));
+        }
     } else {
         d->m_backgroundThemeColor = QColor(QRgb(0xF2F2F2));
         d->m_plotAreaBackgroundThemeColor = QColor(QRgb(0xFCFCFC));
@@ -1534,10 +1553,21 @@ void QGraphsTheme::setColorSchemePalette()
                                                            defaultColorLevel);
         d->m_multiHighlightThemeGradient = createGradient(QColor(QRgb(0x22D47B)), defaultColorLevel);
 
-        d->m_labelTextThemeColor = QColor(QRgb(0x6A6A6A));
-        d->m_axisX.d->m_labelTextThemeColor = QColor(QRgb(0x6A6A6A));
-        d->m_axisY.d->m_labelTextThemeColor = QColor(QRgb(0x6A6A6A));
-        d->m_axisZ.d->m_labelTextThemeColor = QColor(QRgb(0x6A6A6A));
+        // If a label text color has been overridden already, do not change it back
+        if (!d->m_labelTextThemeColor.isValid() || !d->m_customBits.labelTextColorCustom)
+            d->m_labelTextThemeColor = QColor(QRgb(0x6A6A6A));
+        if (!d->m_axisX.d->m_labelTextThemeColor.isValid()
+            || !d->m_axisX.d->m_bits.labelTextColorCustom) {
+            d->m_axisX.d->m_labelTextThemeColor = QColor(QRgb(0x6A6A6A));
+        }
+        if (!d->m_axisY.d->m_labelTextThemeColor.isValid()
+            || !d->m_axisY.d->m_bits.labelTextColorCustom) {
+            d->m_axisY.d->m_labelTextThemeColor = QColor(QRgb(0x6A6A6A));
+        }
+        if (!d->m_axisZ.d->m_labelTextThemeColor.isValid()
+            || !d->m_axisZ.d->m_bits.labelTextColorCustom) {
+            d->m_axisZ.d->m_labelTextThemeColor = QColor(QRgb(0x6A6A6A));
+        }
     }
 
     d->m_dirtyBits.backgroundColorDirty = true;
