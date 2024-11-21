@@ -2419,11 +2419,30 @@ void QQuickGraphsItem::synchData()
         m_changeTracker.axisZRangeChanged = false;
     }
 
+    if (m_changeTracker.axisXReversedChanged) {
+        m_changeTracker.axisXReversedChanged = false;
+        if (m_axisX->type() == QAbstract3DAxis::AxisType::Value) {
+            QValue3DAxis *valueAxisX = static_cast<QValue3DAxis *>(m_axisX);
+            updateAxisReversed(valueAxisX->reversed());
+            m_labelsNeedupdate = true;
+        }
+    }
+
     if (m_changeTracker.axisYReversedChanged) {
         m_changeTracker.axisYReversedChanged = false;
         if (m_axisY->type() == QAbstract3DAxis::AxisType::Value) {
             QValue3DAxis *valueAxisY = static_cast<QValue3DAxis *>(m_axisY);
             updateAxisReversed(valueAxisY->reversed());
+            m_labelsNeedupdate = true;
+        }
+    }
+
+    if (m_changeTracker.axisZReversedChanged) {
+        m_changeTracker.axisZReversedChanged = false;
+        if (m_axisZ->type() == QAbstract3DAxis::AxisType::Value) {
+            QValue3DAxis *valueAxisZ = static_cast<QValue3DAxis *>(m_axisZ);
+            updateAxisReversed(valueAxisZ->reversed());
+            m_labelsNeedupdate = true;
         }
     }
 
@@ -3681,7 +3700,9 @@ void QQuickGraphsItem::updateLabels()
             obj->setScale(m_fontScaled);
             obj->setPosition(labelTrans);
             obj->setRotation(totalRotation);
-            obj->setProperty("labelText", labels[i]);
+            qsizetype labelIndex =
+                    valueAxisX->reversed() ? labelCount - 1 - i : i;
+            obj->setProperty("labelText", labels[labelIndex]);
             obj->setProperty("labelWidth", labelsMaxWidth);
             obj->setProperty("labelHeight", labelHeight);
             if (!labels[i].compare(hiddenLabelTag))
@@ -3771,18 +3792,19 @@ void QQuickGraphsItem::updateLabels()
     if (zFlipped)
         zPos *= -1.0f;
     labelTrans.setZ(zPos);
-
     for (int i = 0; i < repeaterY()->count() / 2; i++) {
         if (labelCount <= i)
             break;
         auto obj = static_cast<QQuick3DNode *>(repeaterY()->objectAt(i));
-        labelTrans.setY(static_cast<QValue3DAxis *>(axisY())->labelPositionAt(i) * scale * 2.0f
-                        - scale);
+        auto valueAxisY = static_cast<QValue3DAxis *>(axisY());
+        labelTrans.setY(valueAxisY->labelPositionAt(i) * scale * 2.0f - scale);
+
         obj->setObjectName(QStringLiteral("ElementAxisYLabel"));
         obj->setScale(m_fontScaled);
         obj->setPosition(labelTrans);
         obj->setRotation(totalRotation);
-        obj->setProperty("labelText", labels[i]);
+        qsizetype labelIndex = valueAxisY->reversed() ? labelCount - 1 - i : i;
+        obj->setProperty("labelText", labels[labelIndex]);
         obj->setProperty("labelWidth", labelsMaxWidth);
         obj->setProperty("labelHeight", labelHeight);
         if (!labels[i].compare(hiddenLabelTag))
@@ -3925,7 +3947,8 @@ void QQuickGraphsItem::updateLabels()
             obj->setScale(m_fontScaled);
             obj->setPosition(labelTrans);
             obj->setRotation(totalRotation);
-            obj->setProperty("labelText", labels[i]);
+            qsizetype labelIndex = valueAxisZ->reversed() ? labelCount - 1 - i : i;
+            obj->setProperty("labelText", labels[labelIndex]);
             obj->setProperty("labelWidth", labelsMaxWidth);
             obj->setProperty("labelHeight", labelHeight);
             if (!labels[i].compare(hiddenLabelTag))
@@ -3985,13 +4008,15 @@ void QQuickGraphsItem::updateLabels()
             break;
         auto obj = static_cast<QQuick3DNode *>(
             repeaterY()->objectAt(i + (repeaterY()->count() / 2)));
-        labelTrans.setY(static_cast<QValue3DAxis *>(axisY())->labelPositionAt(i) * scale * 2.0f
+        auto valueAxisY = static_cast<QValue3DAxis *>(axisY());
+        labelTrans.setY(valueAxisY->labelPositionAt(i) * scale * 2.0f
                         - scale);
         obj->setObjectName(QStringLiteral("ElementAxisYLabel"));
         obj->setScale(m_fontScaled);
         obj->setPosition(labelTrans);
         obj->setRotation(totalRotation);
-        obj->setProperty("labelText", labels[i]);
+        qsizetype labelIndex = valueAxisY->reversed() ? labelCount - 1 - i : i;
+        obj->setProperty("labelText", labels[labelIndex]);
         obj->setProperty("labelWidth", labelsMaxWidth);
         obj->setProperty("labelHeight", labelHeight);
         if (!labels[i].compare(hiddenLabelTag))

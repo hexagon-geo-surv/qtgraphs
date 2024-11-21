@@ -237,6 +237,13 @@ void QQuickGraphsScatter::updateScatterGraphItemPositions(ScatterModel *graphMod
     QScatterDataProxy *dataProxy = graphModel->series->dataProxy();
     QList<QQuick3DModel *> itemList = graphModel->dataItems;
 
+    auto valueAxisX = static_cast<QValue3DAxis *>(axisX());
+    auto valueAxisY = static_cast<QValue3DAxis *>(axisY());
+    auto valueAxisZ = static_cast<QValue3DAxis *>(axisZ());
+    bool xReversed = valueAxisX->reversed();
+    bool yReversed = valueAxisY->reversed();
+    bool zReversed = valueAxisZ->reversed();
+
     if (itemSize == 0.0f)
         itemSize = m_pointScale;
 
@@ -254,12 +261,16 @@ void QQuickGraphsScatter::updateScatterGraphItemPositions(ScatterModel *graphMod
             if (isDotPositionInAxisRange(dotPos)) {
                 dataPoint->setVisible(true);
                 QQuaternion dotRot = item.rotation();
-                float posX = static_cast<QValue3DAxis *>(axisX())->positionAt(dotPos.x())
-                                 * scale().x() + translate().x();
-                float posY = static_cast<QValue3DAxis *>(axisY())->positionAt(dotPos.y())
-                                 * scale().y() + translate().y();
-                float posZ = static_cast<QValue3DAxis *>(axisZ())->positionAt(dotPos.z())
-                                 * scale().z() + translate().z();
+                float dotPosX = xReversed ? 1.0f - valueAxisX->positionAt(dotPos.x())
+                                          : valueAxisX->positionAt(dotPos.x());
+                float dotPosY = yReversed ? 1.0f - valueAxisY->positionAt(dotPos.y())
+                                          : valueAxisY->positionAt(dotPos.y());
+                float dotPosZ = zReversed ? 1.0f - valueAxisZ->positionAt(dotPos.z())
+                                          : valueAxisZ->positionAt(dotPos.z());
+
+                float posX = dotPosX * scale().x() + translate().x();
+                float posY = dotPosY * scale().y() + translate().y();
+                float posZ = dotPosZ * scale().z() + translate().z();
                 dataPoint->setPosition(QVector3D(posX, posY, posZ));
                 QQuaternion totalRotation;
 
@@ -283,15 +294,16 @@ void QQuickGraphsScatter::updateScatterGraphItemPositions(ScatterModel *graphMod
             QVector3D dotPos = item.position();
 
             if (isDotPositionInAxisRange(dotPos)) {
-                auto posX = static_cast<QValue3DAxis *>(axisX())->positionAt(dotPos.x())
-                                * scale().x()
-                            + translate().x();
-                auto posY = static_cast<QValue3DAxis *>(axisY())->positionAt(dotPos.y())
-                                * scale().y()
-                            + translate().y();
-                auto posZ = static_cast<QValue3DAxis *>(axisZ())->positionAt(dotPos.z())
-                                * scale().z()
-                            + translate().z();
+                float dotPosX = xReversed ? 1.0f - valueAxisX->positionAt(dotPos.x())
+                                          : valueAxisX->positionAt(dotPos.x());
+                float dotPosY = yReversed ? 1.0f - valueAxisY->positionAt(dotPos.y())
+                                          : valueAxisY->positionAt(dotPos.y());
+                float dotPosZ = zReversed ? 1.0f - valueAxisZ->positionAt(dotPos.z())
+                                          : valueAxisZ->positionAt(dotPos.z());
+
+                float posX = dotPosX * scale().x() + translate().x();
+                float posY = dotPosY * scale().y() + translate().y();
+                float posZ = dotPosZ * scale().z() + translate().z();
 
                 QQuaternion totalRotation;
 
