@@ -223,6 +223,26 @@ constexpr float polarRoundness = 64.0f;
  */
 
 /*!
+ * \qmlproperty Node GraphsItem3D::rootNode
+ * \readonly
+ *
+ * Returns a pointer to the root node of the 3D graph. Use this property
+ * for injecting a 3D graph into a separate \l {View3D} using
+ * \l {View3D::}{importScene}:
+ *
+ * \code
+ * Bars3D {
+ *   id: bars
+ * }
+ * View3D {
+ *   importScene: bars.rootNode
+ * }
+ * \endcode
+ *
+ * \sa {View3D}
+ */
+
+/*!
  * \qmlproperty Scene3D GraphsItem3D::scene
  * \readonly
  *

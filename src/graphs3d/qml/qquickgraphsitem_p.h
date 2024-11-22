@@ -162,6 +162,7 @@ struct Abstract3DChangeBitField
 class Q_GRAPHS_EXPORT QQuickGraphsItem : public QQuick3DViewport
 {
     Q_OBJECT
+    Q_PROPERTY(QQuick3DNode *rootNode READ rootNode CONSTANT REVISION(6, 9))
     Q_PROPERTY(QtGraphs3D::SelectionFlags selectionMode READ selectionMode WRITE setSelectionMode
                    NOTIFY selectionModeChanged)
     Q_PROPERTY(QtGraphs3D::ShadowQuality shadowQuality READ shadowQuality WRITE setShadowQuality
