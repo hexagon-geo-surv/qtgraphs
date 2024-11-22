@@ -1224,6 +1224,7 @@ void QQuickGraphsBars::handleItemChanged(qsizetype rowIndex, qsizetype columnInd
     for (ChangeItem item : m_changedItems) {
         if (item.point == candidate && item.series == series) {
             newItem = false;
+            setDataDirty(true);
             break;
         }
     }
