@@ -5168,6 +5168,7 @@ void QQuickGraphsItem::setMeasureFps(bool enable)
         } else {
             QObject::disconnect(renderStats(), 0, this, 0);
         }
+        emit measureFpsChanged(enable);
     }
 }
 

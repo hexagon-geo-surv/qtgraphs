@@ -116,7 +116,6 @@ void Q3DGraphsWidgetItem::setActiveTheme(QGraphsTheme *activeTheme)
 {
     Q_D(Q3DGraphsWidgetItem);
     d->m_graphsItem->setTheme(activeTheme);
-    emit activeThemeChanged(activeTheme);
 }
 
 /*!
@@ -150,7 +149,6 @@ void Q3DGraphsWidgetItem::setSelectionMode(const QtGraphs3D::SelectionFlags &sel
 {
     Q_D(Q3DGraphsWidgetItem);
     d->m_graphsItem->setSelectionMode(selectionMode);
-    emit selectionModeChanged(selectionMode);
 }
 
 /*!
@@ -176,7 +174,6 @@ void Q3DGraphsWidgetItem::setShadowQuality(const QtGraphs3D::ShadowQuality &shad
 {
     Q_D(Q3DGraphsWidgetItem);
     d->m_graphsItem->setShadowQuality(shadowQuality);
-    emit shadowQualityChanged(shadowQuality);
 }
 
 /*!
@@ -837,6 +834,8 @@ QVector3D Q3DGraphsWidgetItem::cameraTargetPosition() const
 
 void Q3DGraphsWidgetItem::setCameraTargetPosition(QVector3D target)
 {
+    Q_D(Q3DGraphsWidgetItem);
+
     QVector3D newTarget = target;
 
     if (newTarget.x() < -1.0f)
@@ -854,7 +853,7 @@ void Q3DGraphsWidgetItem::setCameraTargetPosition(QVector3D target)
     else if (newTarget.z() > 1.0f)
         newTarget.setZ(1.0f);
 
-    if (Q_D(Q3DGraphsWidgetItem); d->m_graphsItem->cameraTargetPosition() != newTarget) {
+    if (d->m_graphsItem->cameraTargetPosition() != newTarget) {
         if (d->m_graphsItem->cameraPreset() != QtGraphs3D::CameraPreset::NoPreset)
             d->m_graphsItem->setCameraPreset(QtGraphs3D::CameraPreset::NoPreset);
         d->m_graphsItem->setCameraTargetPosition(newTarget);
@@ -880,7 +879,7 @@ bool Q3DGraphsWidgetItem::wrapCameraXRotation() const
 void Q3DGraphsWidgetItem::setWrapCameraXRotation(bool wrap)
 {
     Q_D(Q3DGraphsWidgetItem);
-    d->m_graphsItem->setCameraXRotation(wrap);
+    d->m_graphsItem->setWrapCameraXRotation(wrap);
 }
 
 /*!
@@ -957,6 +956,7 @@ void Q3DGraphsWidgetItem::doPicking(QPoint point)
 void Q3DGraphsWidgetItem::setMeasureFps(bool enable)
 {
     Q_D(Q3DGraphsWidgetItem);
+
     d->m_graphsItem->setMeasureFps(enable);
     if (enable) {
         QObject::connect(d->m_graphsItem.get(),
@@ -1426,6 +1426,108 @@ void Q3DGraphsWidgetItemPrivate::createGraph()
                      &QQuickGraphsItem::gridLineTypeChanged,
                      q,
                      &Q3DGraphsWidgetItem::gridLineTypeChanged);
+
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::activeThemeChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::activeThemeChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::selectionModeChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::selectionModeChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::shadowQualityChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::shadowQualityChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::cameraPresetChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::cameraPresetChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::cameraXRotationChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::cameraXRotationChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::cameraYRotationChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::cameraYRotationChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::minCameraXRotationChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::minCameraXRotationChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::maxCameraXRotationChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::maxCameraXRotationChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::minCameraYRotationChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::minCameraYRotationChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::maxCameraYRotationChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::maxCameraYRotationChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::cameraZoomLevelChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::cameraZoomLevelChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::minCameraZoomLevelChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::minCameraZoomLevelChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::maxCameraZoomLevelChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::maxCameraZoomLevelChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::wrapCameraXRotationChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::wrapCameraXRotationChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::wrapCameraYRotationChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::wrapCameraYRotationChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::measureFpsChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::measureFpsChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::orthoProjectionChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::orthoProjectionChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::aspectRatioChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::aspectRatioChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::optimizationHintChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::optimizationHintChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::polarChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::polarChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::labelMarginChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::labelMarginChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::radialLabelOffsetChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::radialLabelOffsetChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::horizontalAspectRatioChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::horizontalAspectRatioChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::localeChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::localeChanged);
+    QObject::connect(m_graphsItem.get(),
+                     &QQuickGraphsItem::marginChanged,
+                     q,
+                     &Q3DGraphsWidgetItem::marginChanged);
+
     m_widget->installEventFilter(q);
 }
 
