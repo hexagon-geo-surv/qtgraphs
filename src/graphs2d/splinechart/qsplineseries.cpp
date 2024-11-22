@@ -22,7 +22,7 @@ QT_BEGIN_NAMESPACE
     \nativetype QSplineSeries
     \inqmlmodule QtGraphs
     \ingroup graphs_qml_2D
-    \inherits QXYSeries
+    \inherits XYSeries
 
     \brief SplineSeries presents data in spline graphs.
 
