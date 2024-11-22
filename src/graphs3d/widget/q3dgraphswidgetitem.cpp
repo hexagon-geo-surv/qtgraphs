@@ -280,9 +280,8 @@ void Q3DGraphsWidgetItem::releaseCustomItem(QCustom3DItem *item)
  */
 QList<QCustom3DItem *> Q3DGraphsWidgetItem::customItems() const
 {
-    // TODO: API missing in QQuickGraphsItem (QTBUG-99844)
-    return {};
-//    return m_graphsItem->customItems();
+    Q_D(const Q3DGraphsWidgetItem);
+    return d->m_graphsItem->customItems();
 }
 
 /*!

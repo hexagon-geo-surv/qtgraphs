@@ -34,9 +34,8 @@ private slots:
     void addTheme();
     void removeTheme();
 
-    // TODO: QTBUG-99844
-    //void addCustomItem();
-    //void removeCustomItem();
+    void addCustomItem();
+    void removeCustomItem();
 
     void renderToImage();
 
@@ -439,16 +438,15 @@ void tst_bars::removeTheme()
     delete theme2;
     delete theme;
 }
-// TODO: QTBUG-99844
-/*
+
 void tst_bars::addCustomItem()
 {
     QCustom3DItem *item = new QCustom3DItem();
     QCustom3DItem *item2 = new QCustom3DItem();
 
-    m_graph->addCustomItem(item);
+    QCOMPARE(m_graph->addCustomItem(item), 0);
     QCOMPARE(m_graph->customItems().size(), 1);
-    m_graph->addCustomItem(item2);
+    QCOMPARE(m_graph->addCustomItem(item2), 1);
     QCOMPARE(m_graph->customItems().size(), 2);
 }
 
@@ -473,7 +471,7 @@ void tst_bars::removeCustomItem()
     m_graph->removeCustomItems();
     QCOMPARE(m_graph->customItems().size(), 0);
 }
-*/
+
 void tst_bars::renderToImage()
 {
     /* Crashes on some CI machines using Mesa, but can't repro locally, so commented out for now.
