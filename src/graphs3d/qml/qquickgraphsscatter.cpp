@@ -227,7 +227,7 @@ qsizetype QQuickGraphsScatter::getItemIndex(QQuick3DModel *item)
 
 void QQuickGraphsScatter::clearSelection()
 {
-    setSelectedItem(invalidSelectionIndex(), 0);
+    clearSelectionModel();
 }
 
 void QQuickGraphsScatter::updateScatterGraphItemPositions(ScatterModel *graphModel)
@@ -337,16 +337,20 @@ void QQuickGraphsScatter::updateScatterGraphItemPositions(ScatterModel *graphMod
         graphModel->instancing->setDataArray(positions);
 
         if (selectedItemInSeries(graphModel->series)) {
-            QQuaternion totalRotation;
+            if (isDotPositionInAxisRange(dataProxy->itemAt(m_selectedItem).position())) {
+                QQuaternion totalRotation;
 
-            if (graphModel->series->mesh() != QAbstract3DSeries::Mesh::Point) {
-                totalRotation = graphModel->instancing->dataArray().at(m_selectedItem).rotation
-                                * meshRotation;
+                if (graphModel->series->mesh() != QAbstract3DSeries::Mesh::Point) {
+                    totalRotation = graphModel->instancing->dataArray().at(m_selectedItem).rotation
+                                    * meshRotation;
+                } else {
+                    totalRotation = cameraTarget()->rotation();
+                }
+                graphModel->selectionIndicator->setRotation(totalRotation);
+                graphModel->instancing->hideDataItem(m_selectedItem);
             } else {
-                totalRotation = cameraTarget()->rotation();
+                clearSelectionModel();
             }
-            graphModel->selectionIndicator->setRotation(totalRotation);
-            graphModel->instancing->hideDataItem(m_selectedItem);
         }
     }
 }
@@ -1368,24 +1372,36 @@ bool QQuickGraphsScatter::doPicking(QPointF position)
         QList<QQuick3DPickResult> results = pickAll(position.x(), position.y());
         if (!results.empty()) {
             for (const auto &result : std::as_const(results)) {
-                if (const auto &hit = result.objectHit()) {
-                    if (hit == backgroundBB() || hit == background()) {
+                if (const auto &hitItem = result.objectHit()) {
+                    if (hitItem == backgroundBB() || hitItem == background()) {
+                        m_clickedType = QtGraphs3D::ElementType::None;
                         clearSelectionModel();
                         continue;
                     }
-                    if (optimizationHint() == QtGraphs3D::OptimizationHint::Legacy) {
-                        setSelected(hit);
-                        break;
-                    } else if (optimizationHint() == QtGraphs3D::OptimizationHint::Default) {
-                        setSelected(hit, result.instanceIndex());
-                        break;
+
+                    if (m_clickedType != QtGraphs3D::ElementType::AxisXLabel
+                        && m_clickedType != QtGraphs3D::ElementType::AxisYLabel
+                        && m_clickedType != QtGraphs3D::ElementType::AxisZLabel) {
+                        if (optimizationHint() == QtGraphs3D::OptimizationHint::Legacy) {
+                            setSelected(hitItem);
+                            handleSelectedElementChange(QtGraphs3D::ElementType::Series);
+                            break;
+                        } else if (optimizationHint() == QtGraphs3D::OptimizationHint::Default) {
+                            setSelected(hitItem, result.instanceIndex());
+                            handleSelectedElementChange(QtGraphs3D::ElementType::Series);
+                            break;
+                        }
+                    } else {
+                        clearSelectionModel();
                     }
                 }
             }
         } else {
             clearSelectionModel();
+            handleSelectedElementChange(QtGraphs3D::ElementType::None);
         }
     }
+
     return true;
 }
 
@@ -1766,7 +1782,9 @@ void QQuickGraphsScatter::clearSelectionModel()
 
     setSelectedItem(invalidSelectionIndex(), nullptr);
 
-    itemLabel()->setVisible(false);
+    if (itemLabel())
+        itemLabel()->setVisible(false);
+
     setSeriesVisualsDirty();
     m_selected = nullptr;
     m_previousSelected = nullptr;
@@ -1774,8 +1792,10 @@ void QQuickGraphsScatter::clearSelectionModel()
 
 void QQuickGraphsScatter::clearAllSelectionInstanced()
 {
-    for (const auto &graph : m_scatterGraphs)
-        graph->instancing->resetVisibilty();
+    for (const auto &graph : m_scatterGraphs) {
+        if (graph->instancing)
+            graph->instancing->resetVisibilty();
+    }
 }
 
 void QQuickGraphsScatter::optimizationChanged(QtGraphs3D::OptimizationHint toOptimization)
