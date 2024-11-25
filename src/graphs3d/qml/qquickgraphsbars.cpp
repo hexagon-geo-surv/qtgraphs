@@ -957,12 +957,12 @@ void QQuickGraphsBars::calculateSceneScalingFactors()
     m_xScaleFactor = m_rowWidth / m_scaleFactor;
     m_zScaleFactor = m_columnDepth / m_scaleFactor;
 
-    if (m_requestedMargin < 0.0f) {
+    if (margin() < 0.0f) {
         m_hBackgroundMargin = 0.0f;
         m_vBackgroundMargin = 0.0f;
     } else {
-        m_hBackgroundMargin = m_requestedMargin;
-        m_vBackgroundMargin = m_requestedMargin;
+        m_hBackgroundMargin = margin();
+        m_vBackgroundMargin = margin();
     }
 
     auto scale = QVector3D(m_xScaleFactor, 1.0f, m_zScaleFactor);
