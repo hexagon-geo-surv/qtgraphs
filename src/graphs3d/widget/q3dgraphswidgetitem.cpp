@@ -26,11 +26,10 @@ QT_BEGIN_NAMESPACE
  * You should not need to use this class directly, but one of its subclasses
  * instead.
  *
- * Anti-aliasing is turned on by default on C++, except in OpenGL ES2
- * environments, where anti-aliasing is not supported by Qt Graphs.
- * To specify non-default anti-aliasing for a graph, give a custom surface
- * format as a constructor parameter. You can use the convenience function \c
- * qDefaultSurfaceFormat() to create the surface format object.
+ * Multisampling is turned off by default in \c {QSurfaceFormat}.
+ * To enable multisampling, set a custom surface format as
+ * a default surface format. To get the custom surface format,
+ * use \l {QQuick3D::idealSurfaceFormat()}.
  *
  * \note Q3DGraphsWidgetItem sets window flag \c Qt::FramelessWindowHint on by
  * default. If you want to display graph windows as standalone windows with
