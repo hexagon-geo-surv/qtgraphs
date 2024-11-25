@@ -192,8 +192,6 @@ constexpr float polarRoundness = 64.0f;
  * indicate the edges of the corresponding axis range. Any values outside this
  * range are clamped to the edge.
  *
- * \note For bar graphs, the Y-coordinate is ignored and camera always targets
- * a point on the horizontal background.
  */
 
 /*!
@@ -5961,7 +5959,9 @@ void QQuickGraphsItem::setCameraTargetPosition(QVector3D target)
     if (m_requestedTarget == target)
         return;
 
-    m_requestedTarget = target;
+    m_requestedTarget.setX(std::clamp(target.x(), -1.0f, 1.0f));
+    m_requestedTarget.setY(std::clamp(target.y(), -1.0f, 1.0f));
+    m_requestedTarget.setZ(std::clamp(target.z(), -1.0f, 1.0f));
     emit cameraTargetPositionChanged(target);
 }
 

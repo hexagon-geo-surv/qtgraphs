@@ -820,9 +820,6 @@ void Q3DGraphsWidgetItem::setMaxCameraZoomLevel(float level)
  * Valid coordinate values are between \c{-1.0...1.0}, where the edge values
  * indicate the edges of the corresponding axis range. Any values outside this
  * range are clamped to the edge.
- *
- * \note For bar graphs, the Y-coordinate is ignored and camera always targets a
- * point on the horizontal background.
  */
 QVector3D Q3DGraphsWidgetItem::cameraTargetPosition() const
 {

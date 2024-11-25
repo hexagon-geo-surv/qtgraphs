@@ -189,6 +189,8 @@ Item {
             compare(top.common.ambientLightStrength, 0.25, "ambientLightStrength")
             compare(top.common.lightStrength, 5.0, "lightStrength")
             compare(top.common.shadowStrength, 25.0, "shadowStrength")
+            compare(top.common.cameraTargetPosition, Qt.vector3d(0, 0, 0),
+                    "cameraTargetPosition")
         }
 
         function test_2_change_common() {
@@ -217,6 +219,8 @@ Item {
             top.common.lightStrength = 10.0
             top.common.shadowStrength = 50.0
 
+            top.common.cameraTargetPosition = Qt.vector3d(1.0, 0.0, -1.0)
+
             compare(top.common.selectionMode,
                     Graphs3D.SelectionFlag.Item | Graphs3D.SelectionFlag.Row
                     | Graphs3D.SelectionFlag.Slice, "selectionMode")
@@ -242,6 +246,8 @@ Item {
             compare(top.common.ambientLightStrength, 0.5, "ambientLightStrength")
             compare(top.common.lightStrength, 10.0, "lightStrength")
             compare(top.common.shadowStrength, 50.0, "shadowStrength")
+            compare(top.common.cameraTargetPosition, Qt.vector3d(1.0, 0.0, -1.0),
+                    "cameraTargetPosition")
         }
 
         function test_3_change_invalid_common() {
@@ -280,6 +286,10 @@ Item {
             compare(top.common.shadowStrength, 25.0, "shadowStrength")
             top.common.shadowStrength = -1.0
             compare(top.common.shadowStrength, 25.0, "shadowStrength")
+
+            top.common.cameraTargetPosition = Qt.vector3d(2.0, 1.0, -2.0)
+            compare(top.common.cameraTargetPosition, Qt.vector3d(1.0, 1.0, -1.0),
+                    "cameraTargetPosition")
 
             top.common.destroy()
         }
