@@ -198,6 +198,8 @@ maxCameraYRotation: 0.0
             compare(common.maxCameraXRotation, 180.0, "maxCameraXRotation")
             compare(common.minCameraYRotation, 0.0, "minCameraYRotation")
             compare(common.maxCameraYRotation, 90.0, "maxCameraYRotation")
+            compare(common.cameraTargetPosition, Qt.vector3d(0, 0, 0),
+                    "cameraTargetPosition")
         }
 
         function test_2_change_common() {
@@ -229,6 +231,7 @@ maxCameraYRotation: 0.0
             common.maxCameraXRotation = 90
             common.minCameraYRotation = -90
             common.maxCameraYRotation = 0
+            common.cameraTargetPosition = Qt.vector3d(1.0, 0.0, -1.0)
 
             compare(common.selectionMode,
                     Graphs3D.SelectionFlag.Item | Graphs3D.SelectionFlag.Row
@@ -259,6 +262,8 @@ maxCameraYRotation: 0.0
             compare(common.maxCameraXRotation, 90.0, "maxCameraXRotation")
             compare(common.minCameraYRotation, -90.0, "minCameraYRotation")
             compare(common.maxCameraYRotation, 0.0, "maxCameraYRotation")
+            compare(common.cameraTargetPosition, Qt.vector3d(1.0, 0.0, -1.0),
+                    "cameraTargetPosition")
         }
 
         function test_3_change_invalid_common() {
@@ -301,6 +306,10 @@ maxCameraYRotation: 0.0
             compare(common.shadowStrength, 25.0, "shadowStrength")
             common.shadowStrength = -1.0
             compare(common.shadowStrength, 25.0, "shadowStrength")
+
+            common.cameraTargetPosition = Qt.vector3d(2.0, 1.0, -2.0)
+            compare(common.cameraTargetPosition, Qt.vector3d(1.0, 1.0, -1.0),
+                    "cameraTargetPosition")
 
             common.destroy()
         }

@@ -241,6 +241,10 @@ shadowStrength: 50.0
             common.shadowStrength = -1.0
             compare(common.shadowStrength, 25.0, "shadowStrength")
 
+            common.cameraTargetPosition = Qt.vector3d(2.0, 2.0, -2.0)
+            compare(common.cameraTargetPosition, Qt.vector3d(1.0, 1.0, -1.0),
+                    "cameraTargetPosition")
+
             common.destroy()
         }
 

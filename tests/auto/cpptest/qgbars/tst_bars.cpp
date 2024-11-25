@@ -125,6 +125,7 @@ void tst_bars::initialProperties()
     QCOMPARE(m_graph->maxCameraXRotation(), 180);
     QCOMPARE(m_graph->minCameraYRotation(), 0);
     QCOMPARE(m_graph->maxCameraYRotation(), 90);
+    QCOMPARE(m_graph->cameraTargetPosition(), QVector3D(.0f, .0f, .0f));
 }
 
 void tst_bars::initializeProperties()
@@ -165,6 +166,7 @@ void tst_bars::initializeProperties()
     QSignalSpy maxCameraXRotSpy(m_graph, &Q3DBarsWidgetItem::maxCameraXRotationChanged);
     QSignalSpy minCameraYRotSpy(m_graph, &Q3DBarsWidgetItem::minCameraYRotationChanged);
     QSignalSpy maxCameraYRotSpy(m_graph, &Q3DBarsWidgetItem::maxCameraYRotationChanged);
+    QSignalSpy cameraTargetPosSpy(m_graph, &Q3DBarsWidgetItem::cameraTargetPositionChanged);
 
     m_graph->setMultiSeriesUniform(true);
     m_graph->setBarThickness(0.2f);
@@ -221,6 +223,7 @@ void tst_bars::initializeProperties()
     m_graph->setMaxCameraZoomLevel(10.0f);
     m_graph->setWrapCameraXRotation(false);
     m_graph->setWrapCameraYRotation(true);
+    m_graph->setCameraTargetPosition(QVector3D(1.f, .0f, 1.f));
 
     QCOMPARE(m_graph->activeTheme()->theme(), QGraphsTheme::Theme::QtGreenNeon);
     QCOMPARE(m_graph->selectionMode(),
@@ -248,9 +251,12 @@ void tst_bars::initializeProperties()
     // one for setShadowQuality and one for setOrthoProjection, which calls setShadowQuality
     QCOMPARE(shadowQualitySpy.size(), 2);
 
+    QCOMPARE(m_graph->cameraTargetPosition(), QVector3D(1.f, .0f, 1.f));
+
     // these are connected to graphsitems signals
-    QCOMPARE(selectedElementSpy.size(), 0);
-    QCOMPARE(queriedGraphPositionSpy.size(), 0);
+    QCOMPARE(selectedElementSpy.size(), 0); // this is connected to graphsitems signal
+    QCOMPARE(queriedGraphPositionSpy.size(), 0); // this is connected to graphsitems signal
+
     QCOMPARE(currentFpsSpy.size(), 0);
 
     QCOMPARE(measureFpsSpy.size(), 1);
@@ -308,6 +314,9 @@ void tst_bars::invalidProperties()
     QCOMPARE(m_graph->shadowStrength(), 25.0f);
     m_graph->setShadowStrength(100.1f);
     QCOMPARE(m_graph->shadowStrength(), 25.0f);
+
+    m_graph->setCameraTargetPosition(QVector3D(2.f, 2.f, -2.f));
+    QCOMPARE(m_graph->cameraTargetPosition(), QVector3D(1.f, 1.f, -1.f));
 }
 
 void tst_bars::addSeries()
