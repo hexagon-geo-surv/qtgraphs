@@ -5056,6 +5056,8 @@ void QQuickGraphsItem::geometryChange(const QRectF &newGeometry, const QRectF &o
 {
     QQuickItem::geometryChange(newGeometry, oldGeometry);
     // Do not cache primary subviewport geometry, as that will mess up window size
+    if (!parentItem())
+        return;
     m_cachedGeometry = parentItem()->boundingRect();
     updateWindowParameters();
 }
