@@ -398,6 +398,36 @@ constexpr float polarRoundness = 64.0f;
  */
 
 /*!
+ * \qmlmethod void GraphsItem3D::releaseCustomItem(Custom3DItem item)
+ *
+ * Gets ownership of \a item back and removes the \a item from the graph.
+ *
+ * \note If the same item is added back to the graph, the texture file needs to
+ * be re-set.
+ *
+ * \sa Custom3DItem::textureFile
+ */
+
+/*!
+ * \qmlmethod void GraphsItem3D::doPicking(QPoint point)
+ *
+ * Performs picking using view coordinates from \a point
+ * on the elements of the graph, selecting the first item hit.
+ * Default input handling performs this upon receiving the onTapped event.
+ *
+ * \sa selectedElement
+ */
+
+/*!
+ * \qmlmethod void GraphsItem3D::doPicking(QVector3D origin, QVector3D direction)
+ *
+ * Performs picking starting from \a origin and in \a direction
+ * on the elements of the graph, selecting the first item hit.
+ *
+ * \sa selectedElement
+ */
+
+/*!
  * \qmlmethod int GraphsItem3D::selectedLabelIndex()
  *
  * Can be used to query the index of the selected label after receiving
@@ -5648,6 +5678,56 @@ bool QQuickGraphsItem::doPicking(QPointF point)
     checkSliceEnabled();
 
     QList<QQuick3DPickResult> results = pickAll(point.x(), point.y());
+    if (!m_customItemList.isEmpty()) {
+        // Try to pick custom item only
+        for (const auto &result : results) {
+            QCustom3DItem *customItem = m_customItemList.key(result.objectHit(), nullptr);
+
+            if (customItem) {
+                qsizetype selectedIndex = m_customItems.indexOf(customItem);
+                m_selectedCustomItemIndex = selectedIndex;
+                handleSelectedElementChange(QtGraphs3D::ElementType::CustomItem);
+                // Don't allow picking in subclasses if custom item is picked
+                return false;
+            }
+        }
+    }
+
+    for (const auto &result : results) {
+        if (!result.objectHit())
+            continue;
+        QString objName = result.objectHit()->objectName();
+        if (objName.contains(QStringLiteral("ElementAxisXLabel"))) {
+            for (int i = 0; i < repeaterX()->count(); i++) {
+                auto obj = static_cast<QQuick3DNode *>(repeaterX()->objectAt(i));
+                if (result.objectHit() == obj)
+                    m_selectedLabelIndex = i;
+            }
+            handleSelectedElementChange(QtGraphs3D::ElementType::AxisXLabel);
+            break;
+        } else if (objName.contains(QStringLiteral("ElementAxisYLabel"))) {
+            handleSelectedElementChange(QtGraphs3D::ElementType::AxisYLabel);
+            break;
+        } else if (objName.contains(QStringLiteral("ElementAxisZLabel"))) {
+            for (int i = 0; i < repeaterX()->count(); i++) {
+                auto obj = static_cast<QQuick3DNode *>(repeaterZ()->objectAt(i));
+                if (result.objectHit() == obj)
+                    m_selectedLabelIndex = i;
+            }
+            handleSelectedElementChange(QtGraphs3D::ElementType::AxisZLabel);
+            break;
+        } else {
+            continue;
+        }
+    }
+    return true;
+}
+
+bool QQuickGraphsItem::doRayPicking(const QVector3D &origin, const QVector3D &direction)
+{
+    checkSliceEnabled();
+
+    QList<QQuick3DPickResult> results = rayPickAll(origin, direction);
     if (!m_customItemList.isEmpty()) {
         // Try to pick custom item only
         for (const auto &result : results) {

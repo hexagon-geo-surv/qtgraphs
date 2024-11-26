@@ -2126,6 +2126,90 @@ bool QQuickGraphsSurface::doPicking(QPointF position)
     return true;
 }
 
+bool QQuickGraphsSurface::doRayPicking(const QVector3D &origin, const QVector3D &direction)
+{
+    if (!m_pickThisFrame && m_proxyDirty) {
+        m_pickThisFrame = true;
+        QVector3D toScene = mapFrom3DScene(origin);
+        m_lastPick = QPointF(toScene.x(), toScene.y());
+        for (auto model : m_model)
+            updateProxyModel(model);
+        return false;
+    }
+    if (!QQuickGraphsItem::doRayPicking(origin, direction))
+        return false;
+
+    m_selectionDirty = true;
+    QList<QQuick3DPickResult> pickResult = rayPickAll(origin, direction);
+    QVector3D pickedPos(0.0f, 0.0f, 0.0f);
+    QQuick3DModel *pickedModel = nullptr;
+
+    if (!selectionMode().testFlag(QtGraphs3D::SelectionFlag::None)) {
+        if (!sliceView() && selectionMode().testFlag(QtGraphs3D::SelectionFlag::Slice))
+            createSliceView();
+
+        if (!pickResult.isEmpty()) {
+            for (auto picked : pickResult) {
+                bool inBounds = qAbs(picked.position().y()) < scaleWithBackground().y();
+                if (inBounds && picked.objectHit()
+                    && picked.objectHit()->objectName().contains(QStringLiteral("ProxyModel"))) {
+                    pickedPos = picked.position();
+                    pickedModel = qobject_cast<QQuick3DModel *>(picked.objectHit()->parentItem());
+                    bool visible = false;
+                    for (auto model : m_model) {
+                        if (model->model == pickedModel)
+                            visible = model->series->isVisible();
+                    }
+                    if (!pickedPos.isNull() && visible)
+                        break;
+                } else {
+                    clearSelection();
+                    for (auto model : m_model)
+                        model->picked = false;
+                }
+            }
+
+            bool inRange = qAbs(pickedPos.x()) < scaleWithBackground().x()
+                           && qAbs(pickedPos.z()) < scaleWithBackground().z();
+
+            if (!pickedPos.isNull() && inRange) {
+                float min = -1.0f;
+
+                for (auto model : m_model) {
+                    if (!model->series->isVisible()) {
+                        model->picked = false;
+                        continue;
+                    }
+
+                    model->picked = (model->model == pickedModel);
+
+                    SurfaceVertex selectedVertex;
+                    for (auto vertex : model->vertices) {
+                        QVector3D pos = vertex.position;
+                        float dist = pickedPos.distanceToPoint(pos);
+                        if (selectedVertex.position.isNull() || dist < min) {
+                            min = dist;
+                            selectedVertex = vertex;
+                        }
+                    }
+                    model->selectedVertex = selectedVertex;
+                    if (!selectedVertex.position.isNull() && model->picked) {
+                        model->series->setSelectedPoint(selectedVertex.coord);
+                        setSlicingActive(false);
+                        if (isSliceEnabled())
+                            setSliceActivatedChanged(true);
+                    }
+                }
+            }
+        } else {
+            clearSelection();
+            for (auto model : m_model)
+                model->picked = false;
+        }
+    }
+    return true;
+}
+
 void QQuickGraphsSurface::updateSelectedPoint()
 {
     bool labelVisible = false;

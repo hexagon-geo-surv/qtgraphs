@@ -92,6 +92,18 @@ Rectangle {
                 clearColor: scatter.theme.backgroundColor
                 backgroundMode: SceneEnvironment.Color
             }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    var origin = topLeftView.mapTo3DScene(Qt.vector3d(mouseX, mouseY, 0))
+                    var far = topLeftView.mapTo3DScene(Qt.vector3d(mouseX, mouseY, 1))
+                    var direction = Qt.vector3d(far.x - origin.x,
+                                                far.y - origin.y,
+                                                far.z - origin.z );
+                    scatter.doRayPicking(origin, direction)
+                }
+            }
         }
     }
 
@@ -113,6 +125,18 @@ Rectangle {
             environment: SceneEnvironment {
                 clearColor: scatter.theme.backgroundColor
                 backgroundMode: SceneEnvironment.Color
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    var origin = topRightView.mapTo3DScene(Qt.vector3d(mouseX, mouseY, 0))
+                    var far = topRightView.mapTo3DScene(Qt.vector3d(mouseX, mouseY, 1))
+                    var direction = Qt.vector3d(far.x - origin.x,
+                                                far.y - origin.y,
+                                                far.z - origin.z );
+                    scatter.doRayPicking(origin, direction)
+                }
             }
         }
     }
@@ -137,6 +161,17 @@ Rectangle {
                 clearColor: scatter.theme.backgroundColor
                 backgroundMode: SceneEnvironment.Color
             }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    var origin = bottomLeftView.mapTo3DScene(Qt.vector3d(mouseX, mouseY, 0))
+                    var far = bottomLeftView.mapTo3DScene(Qt.vector3d(mouseX, mouseY, 1))
+                    var direction = Qt.vector3d(far.x - origin.x,
+                                                far.y - origin.y,
+                                                far.z - origin.z );
+                    scatter.doRayPicking(origin, direction)
+                }
+            }
         }
     }
 
@@ -159,6 +194,18 @@ Rectangle {
             environment: SceneEnvironment {
                 clearColor: scatter.theme.backgroundColor
                 backgroundMode: SceneEnvironment.Color
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    var origin = bottomRightView.mapTo3DScene(Qt.vector3d(mouseX, mouseY, 0))
+                    var far = bottomRightView.mapTo3DScene(Qt.vector3d(mouseX, mouseY, 1))
+                    var direction = Qt.vector3d(far.x - origin.x,
+                                                far.y - origin.y,
+                                                far.z - origin.z );
+                    scatter.doRayPicking(origin, direction)
+                }
             }
         }
     }

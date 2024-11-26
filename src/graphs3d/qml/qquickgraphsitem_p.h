@@ -519,6 +519,8 @@ public:
 
     Q_INVOKABLE virtual bool doPicking(QPointF point);
 
+    Q_REVISION(6, 9) Q_INVOKABLE virtual bool doRayPicking(const QVector3D &origin, const QVector3D &direction);
+
     void minimizeMainGraph();
 
     int horizontalFlipFactor() const;

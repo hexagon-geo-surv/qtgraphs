@@ -168,6 +168,7 @@ protected:
     void handleLabelCountChanged(QQuick3DRepeater *repeater, QColor axisLabelColor) override;
     void updateSelectionMode(QtGraphs3D::SelectionFlags mode) override;
     bool doPicking(QPointF position) override;
+    Q_REVISION(6, 9) bool doRayPicking(const QVector3D &origin, const QVector3D &direction) override;
     QAbstract3DAxis *createDefaultAxis(QAbstract3DAxis::AxisOrientation orientation) override;
     void updateSliceItemLabel(const QString &label, QVector3D position) override;
 

@@ -225,6 +225,8 @@ public:
     void setMsaaSamples(int samples);
 
     void doPicking(QPoint point);
+    Q_REVISION(6, 9)
+    void doRayPicking(const QVector3D &origin, const QVector3D &direction);
 
     float ambientLightStrength() const;
     void setAmbientLightStrength(float newAmbientLightStrength);

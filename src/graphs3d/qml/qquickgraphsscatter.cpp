@@ -1405,6 +1405,36 @@ bool QQuickGraphsScatter::doPicking(QPointF position)
     return true;
 }
 
+bool QQuickGraphsScatter::doRayPicking(const QVector3D &origin, const QVector3D &direction)
+{
+    if (!QQuickGraphsItem::doRayPicking(origin, direction))
+        return false;
+
+    if (selectionMode() == QtGraphs3D::SelectionFlag::Item) {
+        QList<QQuick3DPickResult> results = rayPickAll(origin, direction);
+        if (!results.empty()) {
+            for (const auto &result : std::as_const(results)) {
+                if (const auto &hit = result.objectHit()) {
+                    if (hit == backgroundBB() || hit == background()) {
+                        clearSelectionModel();
+                        continue;
+                    }
+                    if (optimizationHint() == QtGraphs3D::OptimizationHint::Legacy) {
+                        setSelected(hit);
+                        break;
+                    } else if (optimizationHint() == QtGraphs3D::OptimizationHint::Default) {
+                        setSelected(hit, result.instanceIndex());
+                        break;
+                    }
+                }
+            }
+        } else {
+            clearSelectionModel();
+        }
+    }
+    return true;
+}
+
 void QQuickGraphsScatter::updateShadowQuality(QtGraphs3D::ShadowQuality quality)
 {
     // Were shadows visible before?

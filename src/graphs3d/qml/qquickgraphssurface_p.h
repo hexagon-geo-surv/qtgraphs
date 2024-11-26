@@ -154,6 +154,7 @@ protected:
     void updateLightStrength() override;
     void handleThemeTypeChange() override;
     bool doPicking(QPointF position) override;
+    Q_REVISION(6, 9) bool doRayPicking(const QVector3D &origin, const QVector3D &direction) override;
 
     void createSliceView() override;
     void updateSliceItemLabel(const QString &label, QVector3D position) override;

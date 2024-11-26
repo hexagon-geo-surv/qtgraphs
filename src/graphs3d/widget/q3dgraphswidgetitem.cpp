@@ -936,10 +936,29 @@ void Q3DGraphsWidgetItem::setMsaaSamples(int samples)
     d->m_graphsItem->setMsaaSamples(samples);
 }
 
+/*!
+ * Performs picking using view coordinates from \a point
+ * on the elements of the graph, selecting the first item hit.
+ * Default input handling performs this upon receiving the onTapped event.
+ *
+ * \sa selectedElement
+ */
 void Q3DGraphsWidgetItem::doPicking(QPoint point)
 {
     Q_D(Q3DGraphsWidgetItem);
     d->m_graphsItem->doPicking(point);
+}
+
+/*!
+ * Performs picking starting from \a origin and in \a direction
+ * on the elements of the graph, selecting the first item hit.
+ *
+ * \sa selectedElement
+ */
+void Q3DGraphsWidgetItem::doRayPicking(const QVector3D &origin, const QVector3D &direction)
+{
+    Q_D(Q3DGraphsWidgetItem);
+    d->m_graphsItem->doRayPicking(origin, direction);
 }
 
 /*!

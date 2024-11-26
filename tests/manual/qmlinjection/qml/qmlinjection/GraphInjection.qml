@@ -106,6 +106,18 @@ Item {
                 to: Qt.vector3d(360, 0, 360)
             }
         }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                var origin = view3d.mapTo3DScene(Qt.vector3d(mouseX, mouseY, 0))
+                var far = view3d.mapTo3DScene(Qt.vector3d(mouseX, mouseY, 1))
+                var direction = Qt.vector3d(far.x - origin.x,
+                                            far.y - origin.y,
+                                            far.z - origin.z );
+                bars.doRayPicking(origin, direction)
+            }
+        }
     }
 
     Slider {

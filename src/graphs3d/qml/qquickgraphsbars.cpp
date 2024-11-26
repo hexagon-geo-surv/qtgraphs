@@ -1988,6 +1988,90 @@ bool QQuickGraphsBars::doPicking(QPointF position)
     return true;
 }
 
+bool QQuickGraphsBars::doRayPicking(const QVector3D &origin, const QVector3D &direction)
+{
+    if (!QQuickGraphsItem::doRayPicking(origin, direction))
+        return false;
+
+    m_selectionDirty = true;
+    QList<QQuick3DPickResult> pickResults = rayPickAll(origin, direction);
+    QQuick3DModel *selectedModel = nullptr;
+    QVector3D instancePos = {.0f, .0f, .0f};
+    if (!selectionMode().testFlag(QtGraphs3D::SelectionFlag::None)) {
+        if (!pickResults.isEmpty()) {
+            for (const auto &picked : std::as_const(pickResults)) {
+                if (const auto &hit = picked.objectHit()) {
+                    if (hit == backgroundBB() || hit == background()) {
+                        resetClickedStatus();
+                        continue;
+                    } else if (hit->objectName().contains(QStringLiteral("BarModel"))) {
+                        if (optimizationHint() == QtGraphs3D::OptimizationHint::Legacy) {
+                            selectedModel = hit;
+                            for (const auto barlist : std::as_const(m_barModelsMap)) {
+                                for (const auto barModel : *barlist) {
+                                    if (barModel->model == selectedModel) {
+                                        setSelectedBar(barModel->coord,
+                                                       m_barModelsMap.key(barlist),
+                                                       false);
+                                    }
+                                }
+                            }
+                            break;
+                        } else if (optimizationHint() == QtGraphs3D::OptimizationHint::Default) {
+                            BarInstancing *barIns = static_cast<BarInstancing *>(hit->instancing());
+                            // Prevents to select bars with a height of 0 which affect picking.
+                            if (!barIns->dataArray().isEmpty()
+                                && barIns->dataArray().at(picked.instanceIndex())->heightValue
+                                       != 0) {
+                                selectedModel = hit;
+                                instancePos = selectedModel->instancing()->instancePosition(
+                                    picked.instanceIndex());
+                                for (const auto barlist : std::as_const(m_barModelsMap)) {
+                                    for (const auto barModel : *barlist) {
+                                        QList<BarItemHolder *> barItemList = barModel->instancing
+                                                                                 ->dataArray();
+                                        for (const auto bih : barItemList) {
+                                            if (bih->position == instancePos) {
+                                                setSelectedBar(bih->coord,
+                                                               m_barModelsMap.key(barlist),
+                                                               false);
+                                                if (isSliceEnabled())
+                                                    setSliceActivatedChanged(true);
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    } else if (hit->objectName().contains(QStringLiteral("ElementAxis"))) {
+                        QPoint coord = invalidSelectionPosition();
+                        if (selectionMode().testFlag(QtGraphs3D::SelectionFlag::Column)
+                            && selectedAxis() == axisX()) {
+                            // Use row from previous selection in case of row + column mode
+                            int previousRow = qMax(0, m_selectedBar.x());
+                            coord = QPoint(previousRow, selectedLabelIndex());
+                        } else if (selectionMode().testFlag(QtGraphs3D::SelectionFlag::Row)
+                                   && selectedAxis() == axisZ()) {
+                            // Use column from previous selection in case of row + column mode
+                            int previousCol = qMax(0, m_selectedBar.y());
+                            coord = QPoint(selectedLabelIndex(), previousCol);
+                        }
+                        for (auto it = m_barModelsMap.begin(); it != m_barModelsMap.end(); it++) {
+                            if (it.key()->isVisible())
+                                setSelectedBar(coord, it.key(), false);
+                        }
+                        break;
+                    }
+                }
+            }
+        } else {
+            resetClickedStatus();
+        }
+    }
+    return true;
+}
+
 QAbstract3DAxis *QQuickGraphsBars::createDefaultAxis(QAbstract3DAxis::AxisOrientation orientation)
 {
     QAbstract3DAxis *defaultAxis = 0;
