@@ -103,8 +103,6 @@ Item {
             compare(top.empty.rowAxis.type, Abstract3DAxis.AxisType.Category)
             compare(top.empty.valueAxis.type, Abstract3DAxis.AxisType.Value)
             waitForRendering(top)
-            top.empty.destroy()
-            waitForRendering(top)
         }
     }
 
@@ -149,8 +147,6 @@ Item {
             compare(top.basic.barSpacing, Qt.size(-1.0, -1.0), "barSpacing")
             compare(top.basic.barSeriesMargin, Qt.size(-1.0, -1.0),
                     "barSeriesMargin")
-            waitForRendering(top)
-            top.basic.destroy()
             waitForRendering(top)
         }
     }
@@ -202,8 +198,7 @@ Item {
             top.common.msaaSamples = 8
             compare(top.common.msaaSamples, 8, "msaaSamples")
             top.common.theme.theme = GraphsTheme.Theme.QtGreenNeon
-            // TODO: Seems to be causing crashes in testing - QTBUG-122089
-            // top.common.renderingMode = Graphs3D.RenderingMode.DirectToBackground
+            top.common.renderingMode = Graphs3D.RenderingMode.DirectToBackground
             top.common.measureFps = true
             top.common.orthoProjection = true
             top.common.aspectRatio = 1.0
@@ -218,19 +213,15 @@ Item {
             top.common.ambientLightStrength = 0.5
             top.common.lightStrength = 10.0
             top.common.shadowStrength = 50.0
-
             top.common.cameraTargetPosition = Qt.vector3d(1.0, 0.0, -1.0)
-
             compare(top.common.selectionMode,
                     Graphs3D.SelectionFlag.Item | Graphs3D.SelectionFlag.Row
                     | Graphs3D.SelectionFlag.Slice, "selectionMode")
             compare(top.common.shadowQuality, Graphs3D.ShadowQuality.None,
                     "shadowQuality") // Ortho disables shadows
-            // TODO: Seems to be causing crashes in testing - QTBUG-122089
-            // compare(top.common.msaaSamples, 0, "msaaSamples") // Rendering mode changes this to zero
+            compare(top.common.msaaSamples, 0, "msaaSamples") // Rendering mode changes this to zero
             compare(top.common.theme.theme, GraphsTheme.Theme.QtGreenNeon, "theme")
-            // TODO: Seems to be causing crashes in testing - QTBUG-122089
-            // compare(top.common.renderingMode, Graphs3D.RenderingMode.DirectToBackground, "renderingMode")
+            compare(top.common.renderingMode, Graphs3D.RenderingMode.DirectToBackground, "renderingMode")
             compare(top.common.measureFps, true, "measureFps")
             compare(top.common.orthoProjection, true, "orthoProjection")
             compare(top.common.aspectRatio, 1.0, "aspectRatio")
@@ -270,8 +261,6 @@ Item {
             compare(top.common.aspectRatio, 1.0, "aspectRatio")
             compare(top.common.horizontalAspectRatio, 1, "horizontalAspectRatio")
 
-            top.common.destroy()
-
             top.constructCommon()
 
             top.common.ambientLightStrength = -1.0
@@ -286,12 +275,9 @@ Item {
             compare(top.common.shadowStrength, 25.0, "shadowStrength")
             top.common.shadowStrength = -1.0
             compare(top.common.shadowStrength, 25.0, "shadowStrength")
-
             top.common.cameraTargetPosition = Qt.vector3d(2.0, 1.0, -2.0)
             compare(top.common.cameraTargetPosition, Qt.vector3d(1.0, 1.0, -1.0),
                     "cameraTargetPosition")
-
-            top.common.destroy()
         }
 
         function test_4_common_initialized() {
@@ -323,8 +309,6 @@ Item {
                     "ambientLightStrength")
             compare(top.common_init.lightStrength, 10.0, "lightStrength")
             compare(top.common_init.shadowStrength, 50.0, "shadowStrength")
-
-            top.common_init.destroy()
         }
     }
 }
