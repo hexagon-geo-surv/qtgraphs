@@ -373,7 +373,6 @@ QtGraphs3D::ElementType Q3DGraphsWidgetItem::selectedElement() const
  * rendered image when it's ready. Image is rendered with the current
  * antialiasing settings.
  *
- * \note OpenGL ES2 does not support anitialiasing.
  * \sa QQuickItem::grabToImage
  */
 QSharedPointer<QQuickItemGrabResult> Q3DGraphsWidgetItem::renderToImage(QSize imageSize) const
