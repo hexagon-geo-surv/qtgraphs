@@ -2638,20 +2638,23 @@ void QQuickGraphsItem::synchData()
     }
 
     auto rotation = Utils::calculateRotation(rotVec);
-    if (m_yFlipped) {
-        m_backgroundRotation->setRotation(rotation);
-        if (m_axisX->labelAutoAngle() > 0.0f ||
-                m_axisY->labelAutoAngle() > 0.0f ||
-                m_axisZ->labelAutoAngle() > 0.0f) {
-            m_labelsNeedupdate = true;
-        }
-    } else {
-        modelMatrix.rotate(rotation);
-        m_backgroundRotation->setRotation(rotation);
-        if (m_axisX->labelAutoAngle() > 0.0f ||
-                m_axisY->labelAutoAngle() > 0.0f ||
-                m_axisZ->labelAutoAngle() > 0.0f) {
-            m_labelsNeedupdate = true;
+
+    if (rotation != m_backgroundRotation->rotation()) {
+        if (m_yFlipped) {
+            m_backgroundRotation->setRotation(rotation);
+            if (m_axisX->labelAutoAngle() > 0.0f ||
+                    m_axisY->labelAutoAngle() > 0.0f ||
+                    m_axisZ->labelAutoAngle() > 0.0f) {
+                m_labelsNeedupdate = true;
+            }
+        } else {
+            modelMatrix.rotate(rotation);
+            m_backgroundRotation->setRotation(rotation);
+            if (m_axisX->labelAutoAngle() > 0.0f ||
+                    m_axisY->labelAutoAngle() > 0.0f ||
+                    m_axisZ->labelAutoAngle() > 0.0f) {
+                m_labelsNeedupdate = true;
+            }
         }
     }
 
