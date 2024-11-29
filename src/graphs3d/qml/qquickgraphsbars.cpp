@@ -330,7 +330,7 @@ void QQuickGraphsBars::setBarSpecs(float thicknessRatio, QSizeF spacing, bool re
 
 void QQuickGraphsBars::setBarThickness(float thicknessRatio)
 {
-    if (thicknessRatio != barThickness()) {
+    if (thicknessRatio != barThickness() && thicknessRatio > 0.f) {
         setBarSpecs(thicknessRatio, barSpacing(), isBarSpacingRelative());
         emit barThicknessChanged(thicknessRatio);
     }

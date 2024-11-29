@@ -304,6 +304,12 @@ void tst_bars::invalidProperties()
     QCOMPARE(m_graph->shadowStrength(), 25.0f);
     m_graph->setShadowStrength(100.1f);
     QCOMPARE(m_graph->shadowStrength(), 25.0f);
+
+    m_graph->setCameraTargetPosition(QVector3D(2.f, 2.f, -2.f));
+    QCOMPARE(m_graph->cameraTargetPosition(), QVector3D(1.f, 1.f, -1.f));
+
+    m_graph->setBarThickness(-1.f);
+    QCOMPARE(m_graph->barThickness(), 1.f);
 }
 
 void tst_bars::addSeries()
