@@ -1600,8 +1600,10 @@ QList<QAbstract3DAxis *> QQuickGraphsItem::axes() const
 
 void QQuickGraphsItem::setRenderingMode(QtGraphs3D::RenderingMode mode)
 {
-    if (mode == m_renderMode)
+    if (mode == m_renderMode || mode < QtGraphs3D::RenderingMode::DirectToBackground
+            || mode > QtGraphs3D::RenderingMode::Indirect) {
         return;
+    }
 
     QtGraphs3D::RenderingMode previousMode = m_renderMode;
 
