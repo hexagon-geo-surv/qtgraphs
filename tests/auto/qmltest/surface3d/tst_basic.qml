@@ -211,9 +211,7 @@ Item {
             compare(top.common.selectionMode, Graphs3D.SelectionFlag.Item,
                     "selectionMode")
             compare(top.common.theme.theme, GraphsTheme.Theme.QtGreen, "theme")
-            compare(top.common.renderingMode,
-                    -1 /*Graphs3D.RenderingMode.DirectToBackground*/
-                    , "renderingMode") // TODO: Fix once QTRD-3367 is done
+            compare(top.common.renderingMode,Graphs3D.RenderingMode.Indirect, "renderingMode")
             compare(top.common.aspectRatio, 2.0, "aspectRatio")
             compare(top.common.horizontalAspectRatio, 0, "horizontalAspectRatio")
             top.common.ambientLightStrength = -1.0

@@ -174,7 +174,8 @@ Item {
                     "shadowQuality") // Ortho disables shadows
             compare(top.common.msaaSamples, 0, "msaaSamples") // Rendering mode changes this to zero
             compare(top.common.theme.theme, GraphsTheme.Theme.QtGreen, "theme")
-            compare(top.common.renderingMode, Graphs3D.RenderingMode.DirectToBackground, "renderingMode")
+            compare(top.common.renderingMode, Graphs3D.RenderingMode.DirectToBackground,
+                    "renderingMode")
             compare(top.common.measureFps, true, "measureFps")
             compare(top.common.orthoProjection, true, "orthoProjection")
             compare(top.common.aspectRatio, 1.0, "aspectRatio")
@@ -207,9 +208,8 @@ Item {
             compare(top.common.selectionMode,
                     Graphs3D.SelectionFlag.None, "selectionMode")
             compare(top.common.theme.theme, GraphsTheme.Theme.QtGreen, "theme")
-            compare(top.common.renderingMode,
-                    -1 /*Graphs3D.RenderingMode.DirectToBackground*/
-                    , "renderingMode") // TODO: Fix once QTRD-3367 is done
+            compare(top.common.renderingMode, Graphs3D.RenderingMode.DirectToBackground,
+                    "renderingMode")
             compare(top.common.aspectRatio, 1.0, "aspectRatio")
             compare(top.common.horizontalAspectRatio, 1, "horizontalAspectRatio")
 
