@@ -5207,7 +5207,7 @@ QtGraphs3D::ElementType QQuickGraphsItem::selectedElement() const
 
 void QQuickGraphsItem::setAspectRatio(qreal ratio)
 {
-    if (m_aspectRatio != ratio) {
+    if (m_aspectRatio != ratio && ratio > 0.0) {
         m_aspectRatio = ratio;
         m_changeTracker.aspectRatioChanged = true;
         emit aspectRatioChanged(m_aspectRatio);
@@ -5289,7 +5289,7 @@ float QQuickGraphsItem::radialLabelOffset() const
 
 void QQuickGraphsItem::setHorizontalAspectRatio(qreal ratio)
 {
-    if (m_horizontalAspectRatio != ratio) {
+    if (m_horizontalAspectRatio != ratio && ratio > 0.0) {
         m_horizontalAspectRatio = ratio;
         m_changeTracker.horizontalAspectRatioChanged = true;
         emit horizontalAspectRatioChanged(m_horizontalAspectRatio);

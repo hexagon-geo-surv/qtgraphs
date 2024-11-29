@@ -160,8 +160,8 @@ void tst_surface::invalidProperties()
     m_graph->setLocale(QLocale("XX"));
 
     QCOMPARE(m_graph->selectionMode(), QtGraphs3D::SelectionFlag::Item);
-    QCOMPARE(m_graph->aspectRatio(), -1.0/*2.0*/); // TODO: Fix once QTRD-3367 is done
-    QCOMPARE(m_graph->horizontalAspectRatio(), -1.0/*0.0*/); // TODO: Fix once QTRD-3367 is done
+    QCOMPARE(m_graph->aspectRatio(), 2.0);
+    QCOMPARE(m_graph->horizontalAspectRatio(), 0.0);
     QCOMPARE(m_graph->locale(), QLocale("C"));
 }
 
