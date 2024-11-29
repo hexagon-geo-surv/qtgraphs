@@ -761,8 +761,10 @@ QGraphsTheme::Theme QGraphsTheme::theme() const
 void QGraphsTheme::setTheme(Theme newTheme, ForceTheme force)
 {
     Q_D(QGraphsTheme);
-    if (force == ForceTheme::No && d->m_theme == newTheme)
+    if ((force == ForceTheme::No && d->m_theme == newTheme)
+        || newTheme < QGraphsTheme::Theme::QtGreen || newTheme > QGraphsTheme::Theme::UserDefined) {
         return;
+    }
     d->m_dirtyBits.themeDirty = true;
     d->m_theme = newTheme;
     d->m_themeDirty = true;

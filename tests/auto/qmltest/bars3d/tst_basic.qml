@@ -270,8 +270,7 @@ Item {
             compare(top.common.selectionMode,
                     Graphs3D.SelectionFlag.Item | Graphs3D.SelectionFlag.Row
                     | Graphs3D.SelectionFlag.Slice, "selectionMode")
-            compare(top.common.theme.theme, -2 /*GraphsTheme.GreySeries*/
-                    , "theme") // TODO: Fix once QTRD-3367 is done
+            compare(top.common.theme.theme, GraphsTheme.Theme.QtGreenNeon, "theme")
             compare(top.common.renderingMode,
                     -1 /*Graphs3D.RenderingMode.DirectToBackground*/
                     , "renderingMode") // TODO: Fix once QTRD-3367 is done
