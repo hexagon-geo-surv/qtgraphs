@@ -147,8 +147,7 @@ Item {
             top.basic.barThickness = -1
             top.basic.barSpacing = Qt.size(-1.0, -1.0)
             top.basic.barSeriesMargin = Qt.size(-1.0, -1.0)
-            compare(top.basic.barThickness, -1 /*0.5*/
-                    , "barThickness") // TODO: Fix once QTRD-3367 is done
+            compare(top.basic.barThickness, 0.5, "barThickness")
             compare(top.basic.barSpacing, Qt.size(-1.0, -1.0), "barSpacing")
             compare(top.basic.barSeriesMargin, Qt.size(-1.0, -1.0),
                     "barSeriesMargin")
