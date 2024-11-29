@@ -164,8 +164,8 @@ void tst_surface::invalidProperties()
     m_graph->setCameraTargetPosition(QVector3D(2.f, -2.f, -2.f));
 
     QCOMPARE(m_graph->selectionMode(), QtGraphs3D::SelectionFlag::Item);
-    QCOMPARE(m_graph->aspectRatio(), -1.0/*2.0*/); // TODO: Fix once QTRD-3367 is done
-    QCOMPARE(m_graph->horizontalAspectRatio(), -1.0/*0.0*/); // TODO: Fix once QTRD-3367 is done
+    QCOMPARE(m_graph->aspectRatio(), 2.0);
+    QCOMPARE(m_graph->horizontalAspectRatio(), 0.0);
     QCOMPARE(m_graph->locale(), QLocale("C"));
     QCOMPARE(m_graph->cameraTargetPosition(), QVector3D(1.f, -1.f, -1.f));
 }
