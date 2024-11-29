@@ -204,7 +204,7 @@ Item {
             top.common.selectionMode = Graphs3D.SelectionFlag.Row
                     | Graphs3D.SelectionFlag.Column
                     | Graphs3D.SelectionFlag.Slice
-            top.common.theme.type = -2
+            top.common.theme.theme = -2
             top.common.renderingMode = -1
             top.common.measureFps = false
             top.common.orthoProjection = false
@@ -213,8 +213,7 @@ Item {
             top.common.horizontalAspectRatio = -2
             compare(top.common.selectionMode,
                     Graphs3D.SelectionFlag.None, "selectionMode")
-            compare(top.common.theme.type, -2 /*Theme3D.Theme.Retro*/
-                    , "theme") // TODO: Fix once QTRD-3367 is done
+            compare(top.common.theme.theme, GraphsTheme.Theme.QtGreen, "theme")
             compare(top.common.renderingMode,
                     -1 /*Graphs3D.RenderingMode.DirectToBackground*/
                     , "renderingMode") // TODO: Fix once QTRD-3367 is done
