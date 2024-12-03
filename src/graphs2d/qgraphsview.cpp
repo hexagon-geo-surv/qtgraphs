@@ -636,11 +636,6 @@ void QGraphsView::mousePressEvent(QMouseEvent *event)
                             event->buttons(), event->modifiers());
     mappedEvent.setAccepted(false);
 
-#ifdef USE_BARGRAPH
-    if (m_barsRenderer)
-        handled |= m_barsRenderer->handleMousePress(&mappedEvent);
-#endif
-
 #ifdef USE_POINTS
     if (m_pointRenderer)
         handled |= m_pointRenderer->handleMousePress(&mappedEvent);

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
 #include <QtQuick/private/qquickrectangle_p.h>
+#include <QtQuick/private/qquicktaphandler_p.h>
 #include <QtGraphs/qbarseries.h>
 #include <QtGraphs/qbarset.h>
 #include <private/barsrenderer_p.h>
@@ -25,6 +26,11 @@ BarsRenderer::BarsRenderer(QGraphsView *graph)
 {
     setFlag(QQuickItem::ItemHasContents);
     setClip(true);
+
+    m_tapHandler = new QQuickTapHandler(this);
+    connect(m_tapHandler, &QQuickTapHandler::singleTapped, this, &BarsRenderer::onSingleTapped);
+    connect(m_tapHandler, &QQuickTapHandler::doubleTapped, this, &BarsRenderer::onDoubleTapped);
+    connect(m_tapHandler, &QQuickTapHandler::pressedChanged, this, &BarsRenderer::onPressedChanged);
 }
 
 BarsRenderer::~BarsRenderer() {}
@@ -565,28 +571,6 @@ void BarsRenderer::afterPolish(QList<QAbstractSeries *> &cleanupSeries)
     }
 }
 
-bool BarsRenderer::handleMousePress(QMouseEvent *event)
-{
-    bool handled = false;
-    for (auto &rectNodesInputRects : m_rectNodesInputRects) {
-        for (auto &barSelection : rectNodesInputRects) {
-            if (!barSelection.series->isSelectable())
-                continue;
-            qsizetype indexInSet = 0;
-            for (auto &rect : barSelection.rects) {
-                if (rect.contains(event->pos())) {
-                    // TODO: Currently just toggling selection
-                    QList<qsizetype> indexList = {indexInSet};
-                    barSelection.barSet->toggleSelection(indexList);
-                    handled = true;
-                }
-                indexInSet++;
-            }
-        }
-    }
-    return handled;
-}
-
 bool BarsRenderer::handleHoverMove(QHoverEvent *event)
 {
     bool handled = false;
@@ -622,6 +606,70 @@ bool BarsRenderer::handleHoverMove(QHoverEvent *event)
         handled = true;
     }
     return handled;
+}
+
+void BarsRenderer::onSingleTapped(QEventPoint eventPoint, Qt::MouseButton button)
+{
+    Q_UNUSED(button)
+
+    for (auto &rectNodesInputRects : m_rectNodesInputRects) {
+        for (auto &barSelection : rectNodesInputRects) {
+            if (!barSelection.series->isSelectable())
+                continue;
+            qsizetype indexInSet = 0;
+            for (auto &rect : barSelection.rects) {
+                if (rect.contains(eventPoint.position())) {
+                    emit barSelection.series->clicked(indexInSet, barSelection.barSet);
+                    return;
+                }
+                indexInSet++;
+            }
+        }
+    }
+}
+
+void BarsRenderer::onDoubleTapped(QEventPoint eventPoint, Qt::MouseButton button)
+{
+    Q_UNUSED(button)
+
+    for (auto &rectNodesInputRects : m_rectNodesInputRects) {
+        for (auto &barSelection : rectNodesInputRects) {
+            if (!barSelection.series->isSelectable())
+                continue;
+            qsizetype indexInSet = 0;
+            for (auto &rect : barSelection.rects) {
+                if (rect.contains(eventPoint.position())) {
+                    emit barSelection.series->doubleClicked(indexInSet, barSelection.barSet);
+                    return;
+                }
+                indexInSet++;
+            }
+        }
+    }
+}
+
+void BarsRenderer::onPressedChanged()
+{
+    for (auto &rectNodesInputRects : m_rectNodesInputRects) {
+        for (auto &barSelection : rectNodesInputRects) {
+            if (!barSelection.series->isSelectable())
+                continue;
+            qsizetype indexInSet = 0;
+            for (auto &rect : barSelection.rects) {
+                if (rect.contains(m_tapHandler->point().position())) {
+                    // TODO: Currently just toggling selection
+                    if (m_tapHandler->isPressed()) {
+                        QList<qsizetype> indexList = {indexInSet};
+                        barSelection.barSet->toggleSelection(indexList);
+                        emit barSelection.series->pressed(indexInSet, barSelection.barSet);
+                    } else {
+                        emit barSelection.series->released(indexInSet, barSelection.barSet);
+                    }
+                }
+                indexInSet++;
+            }
+        }
+    }
 }
 
 QT_END_NAMESPACE
