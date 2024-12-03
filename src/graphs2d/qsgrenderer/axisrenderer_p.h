@@ -56,6 +56,13 @@ public:
     void updateDateTimeXAxisLabels(QDateTimeAxis *axis, const QRectF rect);
     void initialize();
 
+    bool handleMouseMove(QMouseEvent *event);
+    bool handleMousePress(QMouseEvent *event);
+    bool handleMouseRelease(QMouseEvent *event);
+    bool handleWheel(QWheelEvent *event);
+    void handlePinchScale(qreal delta);
+    void handlePinchGrab(QPointingDevice::GrabTransition transition, QEventPoint point);
+
 Q_SIGNALS:
 
 private:
@@ -71,6 +78,8 @@ private:
                                 QQuickText::HAlignment hAlign = QQuickText::HAlignment::AlignHCenter,
                                 QQuickText::VAlignment vAlign = QQuickText::VAlignment::AlignVCenter);
     void updateAxisLabelItems(QList<QQuickItem *> &textItems, qsizetype neededSize, QQmlComponent *component);
+    QVector2D windowToAxisCoords(QVector2D coords);
+    bool zoom(qreal delta);
 
     QGraphsView *m_graph = nullptr;
     QGraphsTheme *theme();
@@ -113,7 +122,7 @@ private:
     double m_axisYDisplacement = 0;
     // The value of smallest label
     double m_axisVerticalMinLabel = 0;
-
+    double m_axisVerticalValueRangeZoomless = 0;
 
     // Horizontal axis
     // Max value
@@ -130,6 +139,7 @@ private:
     double m_axisXDisplacement = 0;
     // The value of smallest label
     double m_axisHorizontalMinLabel = 0;
+    double m_axisHorizontalValueRangeZoomless = 0;
 
     double m_axisVerticalSubGridScale = 0.5;
     double m_axisHorizontalSubGridScale = 0.5;
@@ -137,6 +147,16 @@ private:
     bool m_gridVerticalLinesVisible = true;
     bool m_gridHorizontalSubLinesVisible = false;
     bool m_gridVerticalSubLinesVisible = false;
+
+    struct PanState
+    {
+        bool panning = false;
+        QVector2D touchPositionAtPress;
+        QVector2D panAtPress;
+    };
+
+    PanState m_panState;
+    QVector2D m_zoomBoxStart;
 };
 
 QT_END_NAMESPACE

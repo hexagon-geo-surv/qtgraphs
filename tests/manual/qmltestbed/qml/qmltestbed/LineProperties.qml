@@ -74,6 +74,31 @@ Rectangle {
                 text: "SELECTED: " + lineSeries1.selectedPoints
             }
         }
+
+        Column {
+            Button {
+                text: "Reset zoom/pan"
+                onClicked: {
+                    xAxis.zoom = 1;
+                    yAxis.zoom = 1;
+                    xAxis.pan = 0;
+                    yAxis.pan = 0;
+                }
+            }
+
+            CheckBox {
+                id: zoomAreaCheck
+                text: "Zoom area enabled"
+
+                contentItem: Text {
+                    text: zoomAreaCheck.text
+                    font: zoomAreaCheck.font
+                    color: "#ffffff"
+                    verticalAlignment: Text.AlignVCenter
+                    leftPadding: zoomAreaCheck.indicator.width + zoomAreaCheck.spacing
+                }
+            }
+        }
     }
 
     Rectangle {
@@ -137,6 +162,9 @@ Rectangle {
         anchors.top: toolbar.bottom
         anchors.margins: 10
         anchors.rightMargin: settingsView.posX + 20 * px
+        zoomStyle: GraphsView.ZoomStyle.Center;
+        panStyle: zoomAreaCheck.checked ? GraphsView.PanStyle.None : GraphsView.PanStyle.Drag
+        zoomAreaEnabled: zoomAreaCheck.checked
 
         axisX: ValueAxis {
             id: xAxis

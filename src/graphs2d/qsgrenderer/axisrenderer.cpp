@@ -54,6 +54,189 @@ void AxisRenderer::initialize() {
     m_initialized = true;
 }
 
+QVector2D AxisRenderer::windowToAxisCoords(QVector2D coords)
+{
+    float x = coords.x();
+    float y = coords.y();
+    x /= width() - m_graph->m_marginLeft - m_graph->m_marginRight - m_graph->m_axisWidth;
+    y /= height() - m_graph->m_marginTop - m_graph->m_marginBottom - m_graph->m_axisHeight;
+    x *= m_axisHorizontalValueRange;
+    y *= m_axisVerticalValueRange;
+    return QVector2D(x, y);
+}
+
+bool AxisRenderer::handleMouseMove(QMouseEvent *event)
+{
+    if (m_graph->zoomAreaEnabled() && m_graph->m_zoomAreaItem) {
+        m_graph->m_zoomAreaItem->setVisible(true);
+
+        qreal endX = event->pos().x();
+        qreal endY = event->pos().y();
+
+        qreal x = m_zoomBoxStart.x();
+        qreal y = m_zoomBoxStart.y();
+
+        if (endX < x)
+            x = endX;
+        if (endY < y)
+            y = endY;
+
+        qreal width = qAbs(endX - m_zoomBoxStart.x());
+        qreal height = qAbs(endY - m_zoomBoxStart.y());
+
+        m_graph->m_zoomAreaItem->setX(x + m_graph->m_marginLeft + m_graph->m_axisWidth);
+        m_graph->m_zoomAreaItem->setY(y + m_graph->m_marginTop);
+        m_graph->m_zoomAreaItem->setWidth(width);
+        m_graph->m_zoomAreaItem->setHeight(height);
+    }
+
+    if (m_graph->panStyle() != QGraphsView::PanStyle::Drag)
+        return false;
+
+    auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal);
+    auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical);
+
+    if (!haxis && !vaxis)
+        return false;
+
+    if (m_panState.panning) {
+        QVector2D change(m_panState.touchPositionAtPress - QVector2D(event->pos()));
+        change = windowToAxisCoords(change);
+        change.setY(-change.y());
+
+        if (haxis)
+            haxis->setPan(m_panState.panAtPress.x() + change.x());
+
+        if (vaxis)
+            vaxis->setPan(m_panState.panAtPress.y() + change.y());
+    }
+
+    return true;
+}
+
+bool AxisRenderer::handleMousePress(QMouseEvent *event)
+{
+    auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal);
+    auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical);
+
+    if (!haxis && !vaxis)
+        return false;
+
+    m_panState.panning = true;
+    m_panState.touchPositionAtPress = QVector2D(event->pos());
+
+    if (haxis)
+        m_panState.panAtPress.setX(haxis->pan());
+
+    if (vaxis)
+        m_panState.panAtPress.setY(vaxis->pan());
+
+    m_zoomBoxStart = QVector2D(event->pos());
+    return true;
+}
+
+bool AxisRenderer::handleMouseRelease(QMouseEvent *event)
+{
+    m_panState.panning = false;
+
+    if (!m_graph->zoomAreaEnabled())
+        return false;
+
+    if (m_graph->m_zoomAreaItem)
+        m_graph->m_zoomAreaItem->setVisible(false);
+
+    auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal);
+    auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical);
+
+    if (!haxis && !vaxis)
+        return false;
+
+    QVector2D zoomBoxEnd(event->pos());
+    auto center = (m_zoomBoxStart + zoomBoxEnd) / 2;
+    auto size = (m_zoomBoxStart - zoomBoxEnd);
+    size.setX(qAbs(size.x()));
+    size.setY(qAbs(size.y()));
+
+    if (int(size.x()) == 0 || int(size.y()) == 0)
+        return false;
+
+    size = windowToAxisCoords(size);
+
+    if (haxis)
+        haxis->setZoom(m_axisHorizontalValueRangeZoomless / size.x());
+
+    if (vaxis)
+        vaxis->setZoom(m_axisVerticalValueRangeZoomless / size.y());
+
+    center = windowToAxisCoords(center);
+
+    center -= QVector2D(m_axisHorizontalValueRange / 2.0f, m_axisVerticalValueRange / 2.0f);
+
+    if (haxis)
+        haxis->setPan(haxis->pan() + center.x());
+
+    if (vaxis)
+        vaxis->setPan(vaxis->pan() - center.y());
+
+    return true;
+}
+
+bool AxisRenderer::zoom(qreal delta)
+{
+    if (m_graph->zoomStyle() != QGraphsView::ZoomStyle::Center)
+        return false;
+
+    auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal);
+    auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical);
+
+    if (!haxis && !vaxis)
+        return false;
+
+    QVector2D zoom(1.0, 1.0);
+    if (haxis)
+        zoom.setX(haxis->zoom());
+
+    if (vaxis)
+        zoom.setY(vaxis->zoom());
+
+    QVector2D change;
+    if (delta > 0)
+        change = zoom * m_graph->m_zoomSensitivity;
+    else if (delta < 0)
+        change = -zoom * m_graph->m_zoomSensitivity;
+
+    zoom += change;
+
+    if (zoom.x() < 0.01f)
+        zoom.setX(0.01f);
+    if (zoom.y() < 0.01f)
+        zoom.setY(0.01f);
+
+    if (haxis)
+        haxis->setZoom(zoom.x());
+
+    if (vaxis)
+        vaxis->setZoom(zoom.y());
+
+    return true;
+}
+
+bool AxisRenderer::handleWheel(QWheelEvent *event)
+{
+    return zoom(-event->angleDelta().y());
+}
+
+void AxisRenderer::handlePinchScale(qreal delta)
+{
+    zoom(delta - 1.0);
+}
+
+void AxisRenderer::handlePinchGrab(QPointingDevice::GrabTransition transition, QEventPoint point)
+{
+    Q_UNUSED(transition)
+    Q_UNUSED(point)
+}
+
 void AxisRenderer::handlePolish()
 {
     if (!m_axisGrid) {
@@ -179,14 +362,22 @@ void AxisRenderer::updateAxis()
     }
 
     if (auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical)) {
-        m_axisVerticalMaxValue = vaxis->max();
-        m_axisVerticalMinValue = vaxis->min();
         double step = vaxis->tickInterval();
 
+        qreal diff = vaxis->max() - vaxis->min();
+        qreal center = diff / 2.0f + vaxis->pan();
+
+        diff /= vaxis->zoom();
+
+        m_axisVerticalMaxValue = center + diff / 2.0f;
+        m_axisVerticalMinValue = center - diff / 2.0f;
+
         m_axisVerticalValueRange = m_axisVerticalMaxValue - m_axisVerticalMinValue;
+        m_axisVerticalValueRangeZoomless = vaxis->max() - vaxis->min();
+
         // If step is not manually defined (or it is invalid), calculate autostep
         if (step <= 0)
-            step = getValueStepsFromRange(m_axisVerticalValueRange);
+            step = getValueStepsFromRange(vaxis->max() - vaxis->min());
 
         // Get smallest tick label value
         double minLabel = vaxis->tickAnchor();
@@ -208,14 +399,22 @@ void AxisRenderer::updateAxis()
     }
 
     if (auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal)) {
-        m_axisHorizontalMaxValue = haxis->max();
-        m_axisHorizontalMinValue = haxis->min();
         double step = haxis->tickInterval();
 
+        qreal diff = haxis->max() - haxis->min();
+        qreal center = diff / 2.0f + haxis->pan();
+
+        diff /= haxis->zoom();
+
+        m_axisHorizontalMaxValue = center + diff / 2.0f;
+        m_axisHorizontalMinValue = center - diff / 2.0f;
+
         m_axisHorizontalValueRange = m_axisHorizontalMaxValue - m_axisHorizontalMinValue;
+        m_axisHorizontalValueRangeZoomless = haxis->max() - haxis->min();
+
         // If step is not manually defined (or it is invalid), calculate autostep
         if (step <= 0)
-            step = getValueStepsFromRange(m_axisHorizontalValueRange);
+            step = getValueStepsFromRange(haxis->max() - haxis->min());
 
         // Get smallest tick label value
         double minLabel = haxis->tickAnchor();

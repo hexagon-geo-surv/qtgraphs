@@ -27,6 +27,7 @@
 #endif
 #include <QTimer>
 #include <QtQuick/private/qquickrectangle_p.h>
+#include <QtQuick/private/qquickpinchhandler_p.h>
 #include <private/axisrenderer_p.h>
 #include <private/qabstractaxis_p.h>
 #include <private/qgraphsview_p.h>
@@ -61,6 +62,17 @@ QGraphsView::QGraphsView(QQuickItem *parent) :
     setAcceptedMouseButtons(Qt::LeftButton);
     setAcceptHoverEvents(true);
     m_defaultTheme = new QGraphsTheme(this);
+    m_pinchHandler = new QQuickPinchHandler(this);
+    m_pinchHandler->setTarget(nullptr);
+
+    QObject::connect(m_pinchHandler,
+                     &QQuickPinchHandler::scaleChanged,
+                     this,
+                     &QGraphsView::onPinchScaleChanged);
+    QObject::connect(m_pinchHandler,
+                     &QQuickPinchHandler::grabChanged,
+                     this,
+                     &QGraphsView::onPinchGrabChanged);
 }
 
 QGraphsView::~QGraphsView()
@@ -72,6 +84,18 @@ QGraphsView::~QGraphsView()
         m_axisX->d_func()->setGraph(nullptr);
     if (m_axisY)
         m_axisY->d_func()->setGraph(nullptr);
+}
+
+void QGraphsView::onPinchScaleChanged(qreal delta)
+{
+    if (m_axisRenderer)
+        m_axisRenderer->handlePinchScale(delta);
+}
+
+void QGraphsView::onPinchGrabChanged(QPointingDevice::GrabTransition transition, QEventPoint point)
+{
+    if (m_axisRenderer)
+        m_axisRenderer->handlePinchGrab(transition, point);
 }
 
 /*!
@@ -537,6 +561,26 @@ void QGraphsView::updateComponentSizes()
 
 void QGraphsView::componentComplete()
 {
+    if (!m_zoomAreaDelegate && !m_zoomAreaItem) {
+        const QString qmlData = QLatin1StringView(R"QML(
+            import QtQuick;
+            Rectangle {
+                color: "#8888aaff"
+                border.width: 1
+                border.color: "#4466aa"
+            }
+        )QML");
+
+        QQmlComponent *tempZoomAreaDelegate = new QQmlComponent(qmlEngine(this), this);
+        tempZoomAreaDelegate->setData(qmlData.toUtf8(), QUrl());
+
+        m_zoomAreaItem = qobject_cast<QQuickItem *>(
+            tempZoomAreaDelegate->create(tempZoomAreaDelegate->creationContext()));
+        m_zoomAreaItem->setParent(this);
+        m_zoomAreaItem->setParentItem(this);
+        m_zoomAreaItem->setVisible(false);
+    }
+
     if (!m_theme) {
         m_theme = m_defaultTheme;
         QObject::connect(m_theme, &QGraphsTheme::update, this, &QQuickItem::update);
@@ -572,6 +616,9 @@ void QGraphsView::mouseMoveEvent(QMouseEvent *event)
         handled |= m_pointRenderer->handleMouseMove(&mappedEvent);
 #endif
 
+    if (!handled && m_axisRenderer)
+        handled |= m_axisRenderer->handleMouseMove(&mappedEvent);
+
     if (!handled)
         event->ignore();
     else
@@ -604,6 +651,9 @@ void QGraphsView::mousePressEvent(QMouseEvent *event)
         handled |= m_areaRenderer->handleMousePress(&mappedEvent);
 #endif
 
+    if (!handled && m_axisRenderer)
+        handled |= m_axisRenderer->handleMousePress(&mappedEvent);
+
     if (!handled)
         event->ignore();
     else
@@ -625,6 +675,9 @@ void QGraphsView::mouseReleaseEvent(QMouseEvent *event)
     if (m_pointRenderer)
         handled |= m_pointRenderer->handleMouseRelease(&mappedEvent);
 #endif
+
+    if (m_axisRenderer)
+        handled |= m_axisRenderer->handleMouseRelease(&mappedEvent);
 
     if (!handled)
         event->ignore();
@@ -659,6 +712,32 @@ void QGraphsView::hoverMoveEvent(QHoverEvent *event)
 
     if (!handled)
         event->ignore();
+}
+
+void QGraphsView::wheelEvent(QWheelEvent *event)
+{
+    bool handled = false;
+
+    // Adjust event position to renderers position
+    QPointF localPos = event->position() - m_plotArea.topLeft();
+    QWheelEvent mappedEvent(localPos,
+                            event->globalPosition(),
+                            event->pixelDelta(),
+                            event->angleDelta(),
+                            event->buttons(),
+                            event->modifiers(),
+                            event->phase(),
+                            event->inverted(),
+                            event->source());
+    mappedEvent.setAccepted(false);
+
+    if (m_axisRenderer)
+        handled |= m_axisRenderer->handleWheel(&mappedEvent);
+
+    if (!handled)
+        event->ignore();
+    else
+        polishAndUpdate();
 }
 
 QSGNode *QGraphsView::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *updatePaintNodeData)
@@ -1189,6 +1268,80 @@ void QGraphsView::setOrientation(Qt::Orientation newOrientation)
     m_orientation = newOrientation;
     emit orientationChanged();
     emit update();
+}
+
+QGraphsView::ZoomStyle QGraphsView::zoomStyle() const
+{
+    return m_zoomStyle;
+}
+
+void QGraphsView::setZoomStyle(ZoomStyle newZoomStyle)
+{
+    if (m_zoomStyle == newZoomStyle)
+        return;
+    m_zoomStyle = newZoomStyle;
+    emit zoomStyleChanged();
+}
+
+QGraphsView::PanStyle QGraphsView::panStyle() const
+{
+    return m_panStyle;
+}
+
+void QGraphsView::setPanStyle(PanStyle newPanStyle)
+{
+    if (m_panStyle == newPanStyle)
+        return;
+    m_panStyle = newPanStyle;
+    emit panStyleChanged();
+}
+
+bool QGraphsView::zoomAreaEnabled() const
+{
+    return m_zoomAreaEnabled;
+}
+
+void QGraphsView::setZoomAreaEnabled(bool newZoomAreaEnabled)
+{
+    if (m_zoomAreaEnabled == newZoomAreaEnabled)
+        return;
+    m_zoomAreaEnabled = newZoomAreaEnabled;
+    emit zoomAreaEnabledChanged();
+}
+
+QQmlComponent *QGraphsView::zoomAreaDelegate() const
+{
+    return m_zoomAreaDelegate;
+}
+
+void QGraphsView::setZoomAreaDelegate(QQmlComponent *newZoomAreaDelegate)
+{
+    if (m_zoomAreaDelegate == newZoomAreaDelegate)
+        return;
+    m_zoomAreaDelegate = newZoomAreaDelegate;
+
+    if (m_zoomAreaDelegate) {
+        m_zoomAreaItem = qobject_cast<QQuickItem *>(
+            m_zoomAreaDelegate->create(m_zoomAreaDelegate->creationContext()));
+        m_zoomAreaItem->setParent(this);
+        m_zoomAreaItem->setParentItem(this);
+        m_zoomAreaItem->setVisible(false);
+    }
+
+    emit zoomAreaDelegateChanged();
+}
+
+qreal QGraphsView::zoomSensitivity() const
+{
+    return m_zoomSensitivity;
+}
+
+void QGraphsView::setZoomSensitivity(qreal newZoomSensitivity)
+{
+    if (qFuzzyCompare(m_zoomSensitivity, newZoomSensitivity))
+        return;
+    m_zoomSensitivity = newZoomSensitivity;
+    emit zoomSensitivityChanged();
 }
 
 int QGraphsView::getSeriesRendererIndex(QAbstractSeries *series)

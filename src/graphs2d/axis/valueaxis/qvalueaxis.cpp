@@ -324,6 +324,38 @@ int QValueAxis::labelDecimals() const
     return d->m_decimals;
 }
 
+void QValueAxis::setZoom(qreal zoom)
+{
+    Q_D(QValueAxis);
+    if (d->m_zoom != zoom) {
+        d->m_zoom = zoom;
+        emit update();
+        emit zoomChanged(zoom);
+    }
+}
+
+qreal QValueAxis::zoom() const
+{
+    Q_D(const QValueAxis);
+    return d->m_zoom;
+}
+
+void QValueAxis::setPan(qreal pan)
+{
+    Q_D(QValueAxis);
+    if (d->m_pan != pan) {
+        d->m_pan = pan;
+        emit update();
+        emit panChanged(pan);
+    }
+}
+
+qreal QValueAxis::pan() const
+{
+    Q_D(const QValueAxis);
+    return d->m_pan;
+}
+
 /*!
   Returns the type of the axis.
 */
