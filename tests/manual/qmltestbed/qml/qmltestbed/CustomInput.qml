@@ -13,7 +13,10 @@ ColumnLayout {
         id: tab
         Layout.fillWidth: true
         TabButton {
-            text: "Bars"
+            text: "Bar"
+        }
+        TabButton {
+            text: "Area"
         }
     }
 
@@ -44,39 +47,38 @@ ColumnLayout {
                         running: true
                     }
                     onPressed: (index, barset) => {
-                                   pressedIndex.text = "Index : " + index
-                                   pressedLabel.text = "Label : " + barset.label
+                                   barPressedIndex.text = "Index : " + index
+                                   barPressedLabel.text = "Label : " + barset.label
                                }
                     onReleased: (index, barset) => {
-                                   releasedIndex.text = "Index : " + index
-                                   releasedLabel.text = "Label : " + barset.label
-                               }
+                                    barReleasedIndex.text = "Index : " + index
+                                    barReleasedLabel.text = "Label : " + barset.label
+                                }
                     onClicked: (index, barset) => {
-                                   clickedIndex.text = "Index : " + index
-                                   clickedLabel.text = "Label : " + barset.label
+                                   barClickedIndex.text = "Index : " + index
+                                   barClickedLabel.text = "Label : " + barset.label
                                }
                     onDoubleClicked: (index, barset) => {
-                                         doubleClickedIndex.text = "Index : " + index
-                                         doubleClickedLabel.text = "Label : " + barset.label
+                                         barDoubleClickedIndex.text = "Index : " + index
+                                         barDoubleClickedLabel.text = "Label : " + barset.label
                                      }
                     onHoverEnter: (seriesName, position, value) => {
-                                      hoverEnteredSeries.text = "Series : " + seriesName
-                                      hoverEnteredPosition.text = "Position : " + position
-                                      hoverEnteredValue.text = "Value : " + value
+                                      barHoverEnteredSeries.text = "Series : " + seriesName
+                                      barHoverEnteredPosition.text = "Position : " + position
+                                      barHoverEnteredValue.text = "Value : " + value
                                   }
-                    onHover: (seriesName, position) => {
-                                      hoverSeries.text = "Series : " + seriesName
-                                      hoverPosition.text = "Position : " + position
-                                  }
-                    onHoverExit: (seriesName, position, value) => {
-                                      hoverExitSeries.text = "Series : " + seriesName
-                                      hoverExitPosition.text = "Position : " + position
-                                      hoverExitValue.text = "Value : " + value
-                                  }
+                    onHover: (seriesName, position, value) => {
+                                 barHoverSeries.text = "Series : " + seriesName
+                                 barHoverPosition.text = "Position : " + position
+                                 barHoverValue.text = "Value : " + value
+                             }
+                    onHoverExit: (seriesName, position) => {
+                                     barHoverExitSeries.text = "Series : " + seriesName
+                                     barHoverExitPosition.text = "Position : " + position
+                                 }
                 }
             }
             Column {
-                id: status
                 Layout.minimumWidth: 250
                 spacing: 5
 
@@ -87,13 +89,13 @@ ColumnLayout {
                 }
 
                 Text {
-                    id: pressedIndex
+                    id: barPressedIndex
                     text: "Index :"
                     color: "white"
                 }
 
                 Text {
-                    id: pressedLabel
+                    id: barPressedLabel
                     text: "Label :"
                     color: "white"
                 }
@@ -105,13 +107,13 @@ ColumnLayout {
                 }
 
                 Text {
-                    id: releasedIndex
+                    id: barReleasedIndex
                     text: "Index :"
                     color: "white"
                 }
 
                 Text {
-                    id: releasedLabel
+                    id: barReleasedLabel
                     text: "Label :"
                     color: "white"
                 }
@@ -123,13 +125,13 @@ ColumnLayout {
                 }
 
                 Text {
-                    id: clickedIndex
+                    id: barClickedIndex
                     text: "Index :"
                     color: "white"
                 }
 
                 Text {
-                    id: clickedLabel
+                    id: barClickedLabel
                     text: "Label :"
                     color: "white"
                 }
@@ -141,13 +143,13 @@ ColumnLayout {
                 }
 
                 Text {
-                    id: doubleClickedIndex
+                    id: barDoubleClickedIndex
                     text: "Index :"
                     color: "white"
                 }
 
                 Text {
-                    id: doubleClickedLabel
+                    id: barDoubleClickedLabel
                     text: "Label :"
                     color: "white"
                 }
@@ -159,19 +161,19 @@ ColumnLayout {
                 }
 
                 Text {
-                    id: hoverEnteredSeries
+                    id: barHoverEnteredSeries
                     text: "Series :"
                     color: "white"
                 }
 
                 Text {
-                    id: hoverEnteredPosition
+                    id: barHoverEnteredPosition
                     text: "Position :"
                     color: "white"
                 }
 
                 Text {
-                    id: hoverEnteredValue
+                    id: barHoverEnteredValue
                     text: "Value :"
                     color: "white"
                 }
@@ -183,14 +185,20 @@ ColumnLayout {
                 }
 
                 Text {
-                    id: hoverSeries
+                    id: barHoverSeries
                     text: "Series :"
                     color: "white"
                 }
 
                 Text {
-                    id: hoverPosition
+                    id: barHoverPosition
                     text: "Position :"
+                    color: "white"
+                }
+
+                Text {
+                    id: barHoverValue
+                    text: "Value :"
                     color: "white"
                 }
 
@@ -201,20 +209,197 @@ ColumnLayout {
                 }
 
                 Text {
-                    id: hoverExitSeries
+                    id: barHoverExitSeries
                     text: "Series :"
                     color: "white"
                 }
 
                 Text {
-                    id: hoverExitPosition
+                    id: barHoverExitPosition
+                    text: "Position :"
+                    color: "white"
+                }
+            }
+        }
+
+        // Area Graph
+        RowLayout {
+            GraphsView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                axisX: ValueAxis {
+                    id: xAxis
+                    max: 8
+                }
+                axisY: ValueAxis {
+                    id: yAxis
+                    max: 4
+                }
+
+                AreaSeries {
+                    selectable: true
+                    hoverable: true
+
+                    upperSeries: SplineSeries {
+                        XYPoint { x: 3; y: 1 }
+                        XYPoint { x: 4; y: 2.5 }
+                        XYPoint { x: 5; y: 2.8 }
+                    }
+
+                    lowerSeries: SplineSeries {
+                        XYPoint { x: 3.4; y: 0.5 }
+                        XYPoint { x: 4; y: 1.5 }
+                        XYPoint { x: 5; y: 2 }
+                    }
+
+                    onPressed: (point) => {
+                                   areaPressedPoint.text = "Point : " + point
+                               }
+
+                    onReleased: (point) => {
+                                    areaReleasedPoint.text = "Point : " + point
+                                }
+
+                    onClicked: (point) => {
+                                   areaClickedPoint.text = "Point : " + point
+                               }
+
+                    onDoubleClicked: (point) => {
+                                         areaDoubleClickedPoint.text = "Point : " + point
+                                     }
+
+                    onHoverEnter: (seriesName, position, value) => {
+                                      areaHoverEnteredSeries.text = "Series : " + seriesName
+                                      areaHoverEnteredPosition.text = "Position : " + position
+                                      areaHoverEnteredValue.text = "Value : " + value
+                                  }
+                    onHover: (seriesName, position, value) => {
+                                 areaHoverSeries.text = "Series : " + seriesName
+                                 areaHoverPosition.text = "Position : " + position
+                                 areaHoverValue.text = "Value : " + value
+                             }
+                    onHoverExit: (seriesName, position) => {
+                                     areaHoverExitSeries.text = "Series : " + seriesName
+                                     areaHoverExitPosition.text = "Position : " + position
+                                 }
+                }
+            }
+            Column {
+                Layout.minimumWidth: 250
+                spacing: 5
+
+                Text {
+                    text: "Pressed"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: areaPressedPoint
+                    text: "Point :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "Released"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: areaReleasedPoint
+                    text: "Point :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "Clicked"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: areaClickedPoint
+                    text: "Point :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "DoubleClicked"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: areaDoubleClickedPoint
+                    text: "Point :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "HoverEnterd"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: areaHoverEnteredSeries
+                    text: "Series :"
+                    color: "white"
+                }
+
+                Text {
+                    id: areaHoverEnteredPosition
                     text: "Position :"
                     color: "white"
                 }
 
                 Text {
-                    id: hoverExitValue
+                    id: areaHoverEnteredValue
                     text: "Value :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "Hover"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: areaHoverSeries
+                    text: "Series :"
+                    color: "white"
+                }
+
+                Text {
+                    id: areaHoverPosition
+                    text: "Position :"
+                    color: "white"
+                }
+
+                Text {
+                    id: areaHoverValue
+                    text: "Value :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "HoverExit"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: areaHoverExitSeries
+                    text: "Series :"
+                    color: "white"
+                }
+
+                Text {
+                    id: areaHoverExitPosition
+                    text: "Position :"
                     color: "white"
                 }
             }

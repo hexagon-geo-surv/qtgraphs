@@ -641,11 +641,6 @@ void QGraphsView::mousePressEvent(QMouseEvent *event)
         handled |= m_pointRenderer->handleMousePress(&mappedEvent);
 #endif
 
-#ifdef USE_AREAGRAPH
-    if (m_areaRenderer)
-        handled |= m_areaRenderer->handleMousePress(&mappedEvent);
-#endif
-
     if (!handled && m_axisRenderer)
         handled |= m_axisRenderer->handleMousePress(&mappedEvent);
 

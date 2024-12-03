@@ -70,6 +70,11 @@ Q_SIGNALS:
     void upperSeriesChanged();
     void lowerSeriesChanged();
 
+    void clicked(QPoint point);
+    void doubleClicked(QPoint point);
+    void pressed(QPoint point);
+    void released(QPoint point);
+
 protected:
     QAreaSeries(QAreaSeriesPrivate &dd, QObject *parent = nullptr);
 
