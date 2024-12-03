@@ -3969,6 +3969,7 @@ void QQuickGraphsItem::updateItemLabel(QVector3D position)
     QVector3D pos2d = mapFrom3DScene(m_labelPosition);
     int pointSize = theme()->labelFont().pointSize();
     float scale = m_labelScale.x() * ((-10.0f * pointSize) + 650.0f) / pos2d.z();
+    scale = scale < 0 ? -scale : scale;
     if (m_sliceView && m_sliceView->isVisible())
         m_itemLabel->setScale(scale * .2f);
     else
