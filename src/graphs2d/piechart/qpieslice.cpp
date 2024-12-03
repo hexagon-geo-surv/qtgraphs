@@ -52,6 +52,15 @@ QT_BEGIN_NAMESPACE
 
     The PieSlice type should be used as a child of a PieSeries type. For example:
 
+    \code
+    PieSeries {
+        PieSlice {
+            label: "example"
+            value: 1
+        }
+    }
+    \endcode
+
     Alternatively, slices can be added to a pie series by using the \l {QtGraphs::PieSeries::append()}
     {PieSeries.append()} method.
 
