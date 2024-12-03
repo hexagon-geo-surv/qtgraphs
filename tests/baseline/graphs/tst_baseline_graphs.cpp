@@ -24,6 +24,7 @@ public:
 private Q_SLOTS:
     void initTestCase();
     void cleanup();
+    void cleanupTestCase();
     void testRendering_data();
     void testRendering();
 
@@ -80,6 +81,11 @@ void tst_Graphs::cleanup()
     // Allow subsystems time to settle
     if (!aborted)
         QTest::qWait(grabberTimeout / 100);
+}
+
+void tst_Graphs::cleanupTestCase()
+{
+    QBaselineTest::finalizeAndDisconnect();
 }
 
 void tst_Graphs::testRendering_data()
