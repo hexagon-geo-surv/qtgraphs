@@ -133,6 +133,25 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
+ * \qmlproperty bool Abstract3DAxis::scaleLabelsByCount
+ * \since 6.9
+ *
+ * Whether the labels will automatically adjust their size based on the total amount of labels.
+ *
+ * \sa labelSize
+ */
+
+/*!
+ * \qmlproperty real Abstract3DAxis::labelSize
+ * \since 6.9
+ *
+ * The size of the label.
+ * The default for this value is \c 1.0.
+ *
+ * \sa scaleLabelsByCount
+ */
+
+/*!
     \qmlsignal Abstract3DAxis::titleChanged(string newTitle)
 
     This signal is emitted when \l title changes to \a newTitle.
@@ -198,6 +217,18 @@ QT_BEGIN_NAMESPACE
 
     This signal is emitted when the titleOffset property value changes to
     \a offset.
+*/
+/*!
+    \qmlsignal Abstract3DAxis::scaleLabelsByCountChanged(bool adjust)
+
+    This signal is emitted when the scaleLabelsByCount property value changes to
+    \a adjust.
+*/
+/*!
+    \qmlsignal Abstract3DAxis::labelSizeChanged(real size)
+
+    This signal is emitted when the labelSize property value changes to
+    \a size.
 */
 
 /*!
@@ -496,7 +527,7 @@ bool QAbstract3DAxis::isAutoAdjustRange() const
  * \brief Whether the labels will automatically adjust their size
  * based on the total amount of labels
  *
- * \sa setLabelSize(),
+ * \sa labelSize()
  */
 void QAbstract3DAxis::setScaleLabelsByCount(bool adjust)
 {
@@ -521,7 +552,7 @@ bool QAbstract3DAxis::isScaleLabelsByCount() const
  * The size of the label.
  * The default for this value is \c 1.0.
  *
- * \sa setLabelSize(),
+ * \sa scaleLabelsByCount()
  */
 void QAbstract3DAxis::setLabelSize(float size)
 {
