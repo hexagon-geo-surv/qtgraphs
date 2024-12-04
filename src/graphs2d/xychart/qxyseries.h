@@ -98,6 +98,11 @@ Q_SIGNALS:
     void seriesUpdated();
     void countChanged();
 
+    void clicked(QPoint point);
+    void doubleClicked(QPoint point);
+    void pressed(QPoint point);
+    void released(QPoint point);
+
 private:
     friend class PointRenderer;
     friend class QGraphPointAnimation;

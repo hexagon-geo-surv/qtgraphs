@@ -21,6 +21,9 @@ ColumnLayout {
         TabButton {
             text: "Pie"
         }
+        TabButton {
+            text: "Line"
+        }
     }
 
     StackLayout {
@@ -31,16 +34,23 @@ ColumnLayout {
             GraphsView {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+
                 axisX: BarCategoryAxis {
                     categories: ["2023", "2024", "2025", "2026"]
                     subGridVisible: false
                 }
+
                 axisY: ValueAxis {
                     max: 10
                     subTickCount: 9
                 }
+
+                theme: GraphsTheme {
+                    colorScheme: GraphsTheme.ColorScheme.Dark
+                    theme: GraphsTheme.Theme.QtGreen
+                }
+
                 BarSeries {
-                    id: barSeries
                     selectable: true
                     BarSet { id: set1; label: "Axel"; values: [1, 2, 3, 4]; selectedColor: "red" }
                     BarSet { id: set2; label: "Frank"; values: [8, 2, 6, 0] }
@@ -81,6 +91,7 @@ ColumnLayout {
                                  }
                 }
             }
+
             Column {
                 Layout.minimumWidth: 250
                 spacing: 5
@@ -232,12 +243,15 @@ ColumnLayout {
                 Layout.fillHeight: true
 
                 axisX: ValueAxis {
-                    id: xAxis
                     max: 8
                 }
                 axisY: ValueAxis {
-                    id: yAxis
                     max: 4
+                }
+
+                theme: GraphsTheme {
+                    colorScheme: GraphsTheme.ColorScheme.Dark
+                    theme: GraphsTheme.Theme.QtGreen
                 }
 
                 AreaSeries {
@@ -288,6 +302,7 @@ ColumnLayout {
                                  }
                 }
             }
+
             Column {
                 Layout.minimumWidth: 250
                 spacing: 5
@@ -492,6 +507,7 @@ ColumnLayout {
                                  }
                 }
             }
+
             Column {
                 Layout.minimumWidth: 250
                 spacing: 5
@@ -606,6 +622,215 @@ ColumnLayout {
 
                 Text {
                     id: pieHoverExitPosition
+                    text: "Position :"
+                    color: "white"
+                }
+            }
+        }
+
+        // Line Graph
+        RowLayout {
+            GraphsView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                theme: GraphsTheme {
+                    colorScheme: GraphsTheme.ColorScheme.Dark
+                    theme: GraphsTheme.Theme.QtGreen
+                }
+
+                axisX: ValueAxis {
+                    id: axisX
+                    max: 4
+                    subTickCount: 9
+                }
+                axisY: ValueAxis {
+                    id: axisY
+                    max: 6
+                    subTickCount: 9
+                }
+                LineSeries {
+                    id: lineSeries
+                    selectable: true
+                    hoverable: true
+
+                    XYPoint { x: 0.0; y: 2.5 }
+                    XYPoint { x: 1.0; y: 3.3 }
+                    XYPoint { x: 2.0; y: 2.1 }
+                    XYPoint { x: 3.0; y: 4.9 }
+                    XYPoint { x: 4.0; y: 3.0 }
+
+                    pointDelegate: Item {
+                        id: delegate
+                        property color pointColor
+                        property real pointValueX
+                        property real pointValueY
+                        property bool pointSelected
+                        width: 20
+                        height: 20
+                        Rectangle {
+                            anchors.fill: parent
+                            color: delegate.pointSelected ? "#f08060" : "#202020"
+                            border.width: 2
+                            border.color: delegate.pointColor
+                            radius: width / 2
+                        }
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.bottom: parent.top
+                            color: "#ffffff"
+                            font.pixelSize: 16
+                            text: "(" + delegate.pointValueX.toFixed(1) + ", " + delegate.pointValueY.toFixed(1) + ")"
+                        }
+                    }
+
+                    onPressed: (point) => {
+                                   linePressedPoint.text = "Point : " + point
+                               }
+
+                    onReleased: (point) => {
+                                    lineReleasedPoint.text = "Point : " + point
+                                }
+
+                    onClicked: (point) => {
+                                   lineClickedPoint.text = "Point : " + point
+                               }
+
+                    onDoubleClicked: (point) => {
+                                         lineDoubleClickedPoint.text = "Point : " + point
+                                     }
+
+                    onHoverEnter: (seriesName, position, value) => {
+                                      lineHoverEnteredSeries.text = "Series : " + seriesName
+                                      lineHoverEnteredPosition.text = "Position : " + position
+                                      lineHoverEnteredValue.text = "Value : " + value
+                                  }
+                    onHover: (seriesName, position, value) => {
+                                 lineHoverSeries.text = "Series : " + seriesName
+                                 lineHoverPosition.text = "Position : " + position
+                                 lineHoverValue.text = "Value : " + value
+                             }
+                    onHoverExit: (seriesName, position) => {
+                                     lineHoverExitSeries.text = "Series : " + seriesName
+                                     lineHoverExitPosition.text = "Position : " + position
+                                 }
+                }
+            }
+
+            Column {
+                Layout.minimumWidth: 250
+                spacing: 5
+
+                Text {
+                    text: "Pressed"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: linePressedPoint
+                    text: "Point Label :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "Released"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: lineReleasedPoint
+                    text: "Point Label :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "Clicked"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: lineClickedPoint
+                    text: "Point Label :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "DoubleClicked"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: lineDoubleClickedPoint
+                    text: "Point Label :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "HoverEnterd"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: lineHoverEnteredSeries
+                    text: "Series :"
+                    color: "white"
+                }
+
+                Text {
+                    id: lineHoverEnteredPosition
+                    text: "Position :"
+                    color: "white"
+                }
+
+                Text {
+                    id: lineHoverEnteredValue
+                    text: "Value :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "Hover"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: lineHoverSeries
+                    text: "Series :"
+                    color: "white"
+                }
+
+                Text {
+                    id: lineHoverPosition
+                    text: "Position :"
+                    color: "white"
+                }
+
+                Text {
+                    id: lineHoverValue
+                    text: "Value :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "HoverExit"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: lineHoverExitSeries
+                    text: "Series :"
+                    color: "white"
+                }
+
+                Text {
+                    id: lineHoverExitPosition
                     text: "Position :"
                     color: "white"
                 }

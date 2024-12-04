@@ -611,11 +611,6 @@ void QGraphsView::mouseMoveEvent(QMouseEvent *event)
                             event->buttons(), event->modifiers());
     mappedEvent.setAccepted(false);
 
-#ifdef USE_POINTS
-    if (m_pointRenderer)
-        handled |= m_pointRenderer->handleMouseMove(&mappedEvent);
-#endif
-
     if (!handled && m_axisRenderer)
         handled |= m_axisRenderer->handleMouseMove(&mappedEvent);
 
@@ -636,11 +631,6 @@ void QGraphsView::mousePressEvent(QMouseEvent *event)
                             event->buttons(), event->modifiers());
     mappedEvent.setAccepted(false);
 
-#ifdef USE_POINTS
-    if (m_pointRenderer)
-        handled |= m_pointRenderer->handleMousePress(&mappedEvent);
-#endif
-
     if (!handled && m_axisRenderer)
         handled |= m_axisRenderer->handleMousePress(&mappedEvent);
 
@@ -660,11 +650,6 @@ void QGraphsView::mouseReleaseEvent(QMouseEvent *event)
                             event->globalPosition(), event->button(),
                             event->buttons(), event->modifiers());
     mappedEvent.setAccepted(false);
-
-#ifdef USE_POINTS
-    if (m_pointRenderer)
-        handled |= m_pointRenderer->handleMouseRelease(&mappedEvent);
-#endif
 
     if (m_axisRenderer)
         handled |= m_axisRenderer->handleMouseRelease(&mappedEvent);
