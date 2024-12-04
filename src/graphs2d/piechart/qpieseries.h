@@ -96,6 +96,11 @@ Q_SIGNALS:
     void verticalPositionChanged();
     void holeSizeChanged();
 
+    void clicked(QPieSlice *slice);
+    void doubleClicked(QPieSlice *slice);
+    void pressed(QPieSlice *slice);
+    void released(QPieSlice *slice);
+
 private:
     friend class PieRenderer;
     Q_DECLARE_PRIVATE(QPieSeries)

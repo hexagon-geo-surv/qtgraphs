@@ -18,6 +18,9 @@ ColumnLayout {
         TabButton {
             text: "Area"
         }
+        TabButton {
+            text: "Pie"
+        }
     }
 
     StackLayout {
@@ -399,6 +402,210 @@ ColumnLayout {
 
                 Text {
                     id: areaHoverExitPosition
+                    text: "Position :"
+                    color: "white"
+                }
+            }
+        }
+
+        // Pie Graph
+        RowLayout {
+            GraphsView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                theme: GraphsTheme {
+                    colorScheme: GraphsTheme.ColorScheme.Dark
+                    theme: GraphsTheme.Theme.QtGreen
+                }
+
+                PieSeries {
+                    selectable: true
+                    hoverable: true
+                    PieSlice {
+                        label: "Volkswagen"
+                        labelVisible: true
+                        value: 13.5
+                        exploded: true
+                    }
+                    PieSlice {
+                        label: "Toyota"
+                        labelVisible: true
+                        labelPosition: PieSlice.LabelPosition.InsideHorizontal
+                        labelColor: 'black'
+                        value: 10.9
+                    }
+                    PieSlice {
+                        label: "Ford"
+                        labelVisible: true
+                        labelPosition: PieSlice.LabelPosition.InsideNormal
+                        labelColor: 'black'
+                        value: 8.6
+                    }
+                    PieSlice {
+                        label: "Skoda"
+                        labelVisible: true
+                        labelPosition: PieSlice.LabelPosition.InsideTangential
+                        labelColor: 'black'
+                        value: 8.2
+                    }
+                    PieSlice {
+                        label: "Volvo"
+                        labelVisible: true
+                        value: 6.8
+                    }
+                    PieSlice {
+                        label: "Others"
+                        labelVisible: true
+                        value: 52.0
+                    }
+
+                    onPressed: (slice) => {
+                                   piePressedSlice.text = "Slice Label : " + slice.label
+                               }
+
+                    onReleased: (slice) => {
+                                    pieReleasedSlice.text = "Slice Label : " + slice.label
+                                }
+
+                    onClicked: (slice) => {
+                                   pieClickedSlice.text = "Slice Label : " + slice.label
+                               }
+
+                    onDoubleClicked: (slice) => {
+                                         pieDoubleClickedSlice.text = "Slice Label : " + slice.label
+                                     }
+
+                    onHoverEnter: (seriesName, position, value) => {
+                                      pieHoverEnteredSeries.text = "Series : " + seriesName
+                                      pieHoverEnteredPosition.text = "Position : " + position
+                                      pieHoverEnteredValue.text = "Value : " + value
+                                  }
+                    onHover: (seriesName, position, value) => {
+                                 pieHoverSeries.text = "Series : " + seriesName
+                                 pieHoverPosition.text = "Position : " + position
+                                 pieHoverValue.text = "Value : " + value
+                             }
+                    onHoverExit: (seriesName, position) => {
+                                     pieHoverExitSeries.text = "Series : " + seriesName
+                                     pieHoverExitPosition.text = "Position : " + position
+                                 }
+                }
+            }
+            Column {
+                Layout.minimumWidth: 250
+                spacing: 5
+
+                Text {
+                    text: "Pressed"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: piePressedSlice
+                    text: "Slice Label :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "Released"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: pieReleasedSlice
+                    text: "Slice Label :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "Clicked"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: pieClickedSlice
+                    text: "Slice Label :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "DoubleClicked"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: pieDoubleClickedSlice
+                    text: "Slice Label :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "HoverEnterd"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: pieHoverEnteredSeries
+                    text: "Series :"
+                    color: "white"
+                }
+
+                Text {
+                    id: pieHoverEnteredPosition
+                    text: "Position :"
+                    color: "white"
+                }
+
+                Text {
+                    id: pieHoverEnteredValue
+                    text: "Value :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "Hover"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: pieHoverSeries
+                    text: "Series :"
+                    color: "white"
+                }
+
+                Text {
+                    id: pieHoverPosition
+                    text: "Position :"
+                    color: "white"
+                }
+
+                Text {
+                    id: pieHoverValue
+                    text: "Value :"
+                    color: "white"
+                }
+
+                Text {
+                    text: "HoverExit"
+                    color: "white"
+                    font.pointSize: 20
+                }
+
+                Text {
+                    id: pieHoverExitSeries
+                    text: "Series :"
+                    color: "white"
+                }
+
+                Text {
+                    id: pieHoverExitPosition
                     text: "Position :"
                     color: "white"
                 }

@@ -695,6 +695,11 @@ void QGraphsView::hoverMoveEvent(QHoverEvent *event)
         handled |= m_pointRenderer->handleHoverMove(&mappedEvent);
 #endif
 
+#ifdef USE_PIEGRAPH
+    if (m_pieRenderer)
+        handled |= m_pieRenderer->handleHoverMove(&mappedEvent);
+#endif
+
 #ifdef USE_AREAGRAPH
     if (m_areaRenderer)
         handled |= m_areaRenderer->handleHoverMove(&mappedEvent);

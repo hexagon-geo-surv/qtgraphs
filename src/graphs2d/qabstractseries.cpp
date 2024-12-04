@@ -239,6 +239,7 @@ QT_BEGIN_NAMESPACE
     This signal is emitted when the series hovering starts. The name of the series is in \a seriesName,
     the mouse/touch position in \a position, and the series value in \a value.
     \note This signal is only emitted when \l hoverable is set to true.
+    \note For Pie graph, the value represents (angle of position, start angle of hovering slice)
 */
 
 /*!
@@ -253,6 +254,7 @@ QT_BEGIN_NAMESPACE
     This signal is emitted when the series hovering changes. The name of the series is in \a seriesName,
     the mouse/touch position in \a position, and the series value in \a value.
     \note This signal is only emitted when \l hoverable is set to true.
+    \note For Pie graph, the value represents (angle of position, start angle of hovering slice)
 */
 
 /*!
