@@ -30,6 +30,8 @@ QGraphsTheme *AxisRenderer::theme() {
 void AxisRenderer::initialize() {
     if (m_initialized)
         return;
+    if (!window())
+        return;
 
     if (m_axisGrid)
         m_axisGrid->componentComplete();
