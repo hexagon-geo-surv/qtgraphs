@@ -91,6 +91,7 @@ constexpr float polarRoundness = 64.0f;
 
 /*!
  * \qmlproperty float GraphsItem3D::minCameraXRotation
+ * \since 6.9
  *
  * \brief The minimum X-rotation angle of the camera around the target point in degrees.
  * The default value is \c{-180.0}
@@ -98,6 +99,7 @@ constexpr float polarRoundness = 64.0f;
 
 /*!
  * \qmlproperty float GraphsItem3D::maxCameraXRotation
+ * \since 6.9
  *
  * \brief The maximum X-rotation angle of the camera around the target point in degrees.
  * The default value is \c{180.0}
@@ -105,6 +107,7 @@ constexpr float polarRoundness = 64.0f;
 
 /*!
  * \qmlproperty float GraphsItem3D::minCameraYRotation
+ * \since 6.9
  *
  * \brief The minimum Y-rotation angle of the camera around the target point in degrees.
  * The default value is \c{0.0}
@@ -112,6 +115,7 @@ constexpr float polarRoundness = 64.0f;
 
 /*!
  * \qmlproperty float GraphsItem3D::maxCameraYRotation
+ * \since 6.9
  *
  * \brief The maximum Y-rotation angle of the camera around the target point in degrees.
  * The default value is \c{90.0}
@@ -225,6 +229,7 @@ constexpr float polarRoundness = 64.0f;
 /*!
  * \qmlproperty Node GraphsItem3D::rootNode
  * \readonly
+ * \since 6.9
  *
  * Returns a pointer to the root node of the 3D graph. Use this property
  * for injecting a 3D graph into a separate \l {View3D} using
