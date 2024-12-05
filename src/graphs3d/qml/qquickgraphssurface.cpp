@@ -2362,6 +2362,7 @@ void QQuickGraphsSurface::addModel(QSurface3DSeries *series)
                                0,
                                QQuick3DGeometry::Attribute::U32Type);
     gridModel->setGeometry(gridGeometry);
+    gridModel->setCastsShadows(false);
     QQmlListReference gridMaterialRef(gridModel, "materials");
     auto gridMaterial = createQmlCustomMaterial(QStringLiteral(":/materials/GridSurfaceMaterial"));
     gridMaterial->setParent(gridModel);
