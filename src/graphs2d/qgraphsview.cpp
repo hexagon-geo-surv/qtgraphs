@@ -1250,6 +1250,36 @@ void QGraphsView::setOrientation(Qt::Orientation newOrientation)
     emit update();
 }
 
+/*!
+    \enum QGraphsView::ZoomStyle
+    This enum value describes the zoom style of the graph:
+
+    \value None
+        Zooming is disabled.
+    \value Center
+        Pinch zoom and mouse wheel zoom towards the center of the graph view.
+*/
+
+/*!
+    \property QGraphsView::zoomStyle
+    \brief Zoom style of the GraphsView.
+
+    Determines the zoom style of the QGraphsView. Zooming works by
+    manipulating the QValueAxis zoom property. The default value
+    is \c {QGraphsView::ZoomStyle::None}.
+*/
+/*!
+    \qmlproperty enumeration GraphsView::zoomStyle
+    Determines the zoom style of the GraphsView. Zooming works by
+    manipulating the ValueAxis zoom property. The default value
+    is \c {GraphsView.ZoomStyle.None}.
+
+    \value GraphsView.ZoomStyle.None
+        Zooming is disabled.
+    \value GraphsView.ZoomStyle.Center
+        Pinch zoom and mouse wheel zoom towards the center of the graph view.
+
+*/
 QGraphsView::ZoomStyle QGraphsView::zoomStyle() const
 {
     return m_zoomStyle;
@@ -1263,6 +1293,35 @@ void QGraphsView::setZoomStyle(ZoomStyle newZoomStyle)
     emit zoomStyleChanged();
 }
 
+/*!
+    \enum QGraphsView::PanStyle
+    This enum value describes the pan style of the graph:
+
+    \value None
+        Panning is disabled.
+    \value Drag
+        Mouse and touch drag pan the view around.
+*/
+
+/*!
+    \property QGraphsView::panStyle
+    \brief Pan style of the GraphsView.
+
+    Determines the pan style of the QGraphsView. Panning works by
+    manipulating the pan property of a QValueAxis.
+    The default value is \c {QGraphsView::PanStyle::None}.
+*/
+/*!
+    \qmlproperty enumeration GraphsView::panStyle
+    Determines the pan style of the GraphsView. Panning works by
+    manipulating the pan property of a ValueAxis.
+    The default value is \c {GraphsView.PanStyle.None}.
+
+    \value GraphsView.PanStyle.None
+        Panning is disabled.
+    \value GraphsView.PanStyle.Drag
+        Mouse and touch drag pan the view around.
+*/
 QGraphsView::PanStyle QGraphsView::panStyle() const
 {
     return m_panStyle;
@@ -1276,6 +1335,24 @@ void QGraphsView::setPanStyle(PanStyle newPanStyle)
     emit panStyleChanged();
 }
 
+/*!
+    \property QGraphsView::zoomAreaEnabled
+    \brief Enables zoom area
+
+    Zoom area changes mouse and touch dragging to draw a box determined
+    by \c zoomAreaDelegate. Upon release the graph QValueAxis zoom and pan
+    properties are changed so that the view covers only the area intersected
+    by the drawn box.
+    \sa zoomAreaDelegate
+*/
+/*!
+    \qmlproperty bool GraphsView::zoomAreaEnabled
+    Zoom area changes mouse and touch dragging to draw a box determined
+    by \c zoomAreaDelegate. Upon release the graph ValueAxis zoom and pan
+    properties are changed so that the view covers only the area intersected
+    by the drawn box.
+    \sa zoomAreaDelegate
+*/
 bool QGraphsView::zoomAreaEnabled() const
 {
     return m_zoomAreaEnabled;
@@ -1289,6 +1366,18 @@ void QGraphsView::setZoomAreaEnabled(bool newZoomAreaEnabled)
     emit zoomAreaEnabledChanged();
 }
 
+/*!
+    \property QGraphsView::zoomAreaDelegate
+    \brief Zoom area visual delegate
+
+    Determines the QML element that is drawn when the user performs a drag
+    motion to zoom in to an area.
+*/
+/*!
+    \qmlproperty Component GraphsView::zoomAreaDelegate
+    Determines the QML element that is drawn when the user performs a drag
+    motion to zoom in to an area.
+*/
 QQmlComponent *QGraphsView::zoomAreaDelegate() const
 {
     return m_zoomAreaDelegate;
@@ -1311,6 +1400,16 @@ void QGraphsView::setZoomAreaDelegate(QQmlComponent *newZoomAreaDelegate)
     emit zoomAreaDelegateChanged();
 }
 
+/*!
+    \property QGraphsView::zoomSensitivity
+    \brief Zoom value change sensitivity
+
+    Determines how fast zoom value changes while zooming.
+*/
+/*!
+    \qmlproperty real GraphsView::zoomSensitivity
+    Determines how fast zoom value changes while zooming.
+*/
 qreal QGraphsView::zoomSensitivity() const
 {
     return m_zoomSensitivity;
