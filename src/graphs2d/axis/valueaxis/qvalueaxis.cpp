@@ -148,6 +148,36 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
+  \property QValueAxis::zoom
+  \brief The zoom value of the axis.
+
+  The zoom value enlarges or shrinks the axis and thus the graph without affecting intervals
+  of grid and labels. The default value is 1.
+*/
+/*!
+  \qmlproperty real ValueAxis::zoom
+  The zoom value of the axis.
+
+  The zoom value enlarges or shrinks the axis and thus the graph without affecting intervals
+  of grid and labels. The default value is 1.
+*/
+
+/*!
+  \property QValueAxis::pan
+  \brief The pan value of the axis.
+
+  The pan value moves the center of the axis without affecting intervals
+  of grid and labels. The default value is 0.
+*/
+/*!
+  \qmlproperty real ValueAxis::pan
+  The pan value of the axis.
+
+  The pan value moves the center of the axis without affecting intervals
+  of grid and labels. The default value is 0.
+*/
+
+/*!
   \qmlsignal ValueAxis::minChanged(real min)
   This signal is emitted when the minimum value of the axis changes to \a min.
 */
