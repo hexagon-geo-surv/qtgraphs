@@ -97,12 +97,16 @@ void PieRenderer::handlePolish(QPieSeries *series)
         m_colorIndex = m_graph->graphSeriesCount();
     m_graph->setGraphSeriesCount(m_colorIndex + series->slices().size());
 
+    qreal sliceAngle = series->startAngle();
     int sliceIndex = 0;
     QList<QLegendData> legendDataList;
     for (QPieSlice *slice : series->slices()) {
         m_painterPath.clear();
 
         QPieSlicePrivate *d = slice->d_func();
+        d->setStartAngle(sliceAngle);
+        d->setAngleSpan((series->endAngle() - series->startAngle()) * slice->percentage()
+                        * series->valuesMultiplier());
 
         // update slice
         QQuickShapePath *shapePath = d->m_shapePath;
@@ -202,9 +206,11 @@ void PieRenderer::handlePolish(QPieSeries *series)
         d->setLabelPosition(d->m_labelPosition);
         d->m_labelPath->setPath(m_painterPath);
 
+        sliceAngle += slice->angleSpan();
         sliceIndex++;
         legendDataList.push_back({color, borderColor, d->m_labelText});
     }
+
     series->d_func()->setLegendData(legendDataList);
 }
 
