@@ -578,7 +578,7 @@ void AxisRenderer::updateAxisTitles(const QRectF xAxisRect, const QRectF yAxisRe
 
     if (m_axisVertical && m_axisVertical->isTitleVisible()) {
         m_yAxisTitle->setText(m_axisVertical->titleText());
-        m_yAxisTitle->setX(0 - m_yAxisTitle->height());
+        m_yAxisTitle->setX(0 + m_yAxisTitle->height() - m_yAxisTitle->contentWidth() * 0.5);
         m_yAxisTitle->setY((2 * yAxisRect.y() - m_yAxisTitle->contentHeight() + yAxisRect.height())
                            * 0.5);
         m_yAxisTitle->setRotation(-90);
