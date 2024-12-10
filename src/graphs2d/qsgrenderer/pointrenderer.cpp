@@ -118,33 +118,50 @@ void PointRenderer::reverseRenderCoordinates(
              / (-1 * m_areaHeight * flipY * m_maxVertical);
 }
 
-void PointRenderer::updatePointDelegate(
-    QXYSeries *series, PointGroup *group, qsizetype pointIndex, qreal x, qreal y)
+PointRenderer::SeriesStyle PointRenderer::getSeriesStyle(PointGroup *group)
 {
     auto theme = m_graph->theme();
-    auto marker = group->markers[pointIndex];
-    auto &rect = group->rects[pointIndex];
 
     const auto &seriesColors = theme->seriesColors();
     const auto &borderColors = theme->borderColors();
+
     qsizetype index = group->colorIndex % seriesColors.size();
-    QColor color = series->color().alpha() != 0 ? series->color() : seriesColors.at(index);
+    QColor color = group->series->color().alpha() != 0 ? group->series->color() : seriesColors.at(index);
+
+    QColor selectedColor = group->series->selectedColor().alpha() != 0
+                               ? group->series->selectedColor()
+                               : m_graph->theme()->singleHighlightColor();
+
     index = group->colorIndex % borderColors.size();
     QColor borderColor = borderColors.at(index);
     qreal borderWidth = theme->borderWidth();
-    QColor selectedColor = series->selectedColor().alpha() != 0
-                               ? series->selectedColor()
-                               : m_graph->theme()->singleHighlightColor();
+
+    return {
+        color,
+        selectedColor,
+        borderColor,
+        borderWidth
+    };
+}
+
+void PointRenderer::updatePointDelegate(
+    QXYSeries *series, PointGroup *group, qsizetype pointIndex, qreal x, qreal y)
+{
+    const auto style = getSeriesStyle(group);
+
+    auto marker = group->markers[pointIndex];
+    auto &rect = group->rects[pointIndex];
+
     if (marker->property(TAG_POINT_SELECTED).isValid())
         marker->setProperty(TAG_POINT_SELECTED, series->isPointSelected(pointIndex));
     if (marker->property(TAG_POINT_COLOR).isValid())
-        marker->setProperty(TAG_POINT_COLOR, color);
+        marker->setProperty(TAG_POINT_COLOR, style.color);
     if (marker->property(TAG_POINT_BORDER_COLOR).isValid())
-        marker->setProperty(TAG_POINT_BORDER_COLOR, borderColor);
+        marker->setProperty(TAG_POINT_BORDER_COLOR, style.borderColor);
     if (marker->property(TAG_POINT_BORDER_WIDTH).isValid())
-        marker->setProperty(TAG_POINT_BORDER_WIDTH, borderWidth);
+        marker->setProperty(TAG_POINT_BORDER_WIDTH, style.borderWidth);
     if (marker->property(TAG_POINT_SELECTED_COLOR).isValid())
-        marker->setProperty(TAG_POINT_SELECTED_COLOR, selectedColor);
+        marker->setProperty(TAG_POINT_SELECTED_COLOR, style.selectedColor);
     const auto point = series->points().at(pointIndex);
     if (marker->property(TAG_POINT_VALUE_X).isValid())
         marker->setProperty(TAG_POINT_VALUE_X, point.x());
@@ -266,8 +283,10 @@ void PointRenderer::onPressedChanged()
 #ifdef USE_SCATTERGRAPH
 void PointRenderer::updateScatterSeries(QScatterSeries *series, QLegendData &legendData)
 {
+    auto group = m_groups.value(series);
+    const auto style = getSeriesStyle(group);
+
     if (series->isVisible()) {
-        auto group = m_groups.value(series);
         auto &&points = series->points();
         group->rects.resize(points.size());
         for (int i = 0; i < points.size(); ++i) {
@@ -284,23 +303,18 @@ void PointRenderer::updateScatterSeries(QScatterSeries *series, QLegendData &leg
     } else {
         hidePointDelegates(series);
     }
-    // TODO: When fill color is added to the scatterseries use it instead for
-    // the color. QTBUG-122434
-    legendData = {series->color(), series->color(), series->name()};
+
+    legendData = { style.color, style.borderColor, series->name() };
 }
 #endif
 
 #ifdef USE_LINEGRAPH
 void PointRenderer::updateLineSeries(QLineSeries *series, QLegendData &legendData)
 {
-    auto theme = m_graph->theme();
     auto group = m_groups.value(series);
+    const auto style = getSeriesStyle(group);
 
-    const auto &seriesColors = theme->seriesColors();
-    qsizetype index = group->colorIndex % seriesColors.size();
-    QColor color = series->color().alpha() != 0 ? series->color() : seriesColors.at(index);
-
-    group->shapePath->setStrokeColor(color);
+    group->shapePath->setStrokeColor(style.color);
     group->shapePath->setStrokeWidth(series->width());
     group->shapePath->setFillColor(QColorConstants::Transparent);
 
@@ -338,21 +352,17 @@ void PointRenderer::updateLineSeries(QLineSeries *series, QLegendData &legendDat
         hidePointDelegates(series);
     }
     group->shapePath->setPath(painterPath);
-    legendData = {color, color, series->name()};
+    legendData = { style.color, style.borderColor, series->name() };
 }
 #endif
 
 #ifdef USE_SPLINEGRAPH
 void PointRenderer::updateSplineSeries(QSplineSeries *series, QLegendData &legendData)
 {
-    auto theme = m_graph->theme();
     auto group = m_groups.value(series);
+    const auto style = getSeriesStyle(group);
 
-    const auto &seriesColors = theme->seriesColors();
-    qsizetype index = group->colorIndex % seriesColors.size();
-    QColor color = series->color().alpha() != 0 ? series->color() : seriesColors.at(index);
-
-    group->shapePath->setStrokeColor(color);
+    group->shapePath->setStrokeColor(style.color);
     group->shapePath->setStrokeWidth(series->width());
     group->shapePath->setFillColor(QColorConstants::Transparent);
 
@@ -407,7 +417,7 @@ void PointRenderer::updateSplineSeries(QSplineSeries *series, QLegendData &legen
     }
 
     group->shapePath->setPath(painterPath);
-    legendData = {color, color, series->name()};
+    legendData = { style.color, style.borderColor, series->name() };
 }
 #endif
 
