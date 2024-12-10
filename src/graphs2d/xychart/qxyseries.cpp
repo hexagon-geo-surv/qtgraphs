@@ -75,6 +75,30 @@ QT_BEGIN_NAMESPACE
     becomes fixed.
 */
 
+/*!
+    \qmlsignal XYSeries::clicked(point point)
+    This signal is emitted when the user clicks or taps the \a point in the graph.
+*/
+
+/*!
+    \qmlsignal XYSeries::doubleClicked(point point)
+    This signal is emitted when the user double-clicks or double-taps the data \a point in
+    the graph. The \a point is the point where the first press was triggered.
+    This signal always occurs after \l clicked.
+*/
+
+/*!
+    \qmlsignal XYSeries::pressed(point point)
+    This signal is emitted when the user presses the data \a point in the graph
+    and holds down the mouse button or gesture.
+*/
+
+/*!
+    \qmlsignal XYSeries::released(point point)
+    This signal is emitted when the user releases the previously pressed mouse
+    button or gesture on the data \a point.
+*/
+
 QXYSeries::QXYSeries(QXYSeriesPrivate &dd, QObject *parent)
     : QAbstractSeries(dd, parent)
 {
