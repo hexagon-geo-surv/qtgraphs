@@ -108,7 +108,6 @@ void QXYSeries::append(qreal x, qreal y)
 void QXYSeries::append(QPointF point)
 {
     Q_D(QXYSeries);
-
     if (isValidValue(point)) {
         if (d->m_graphTransition && d->m_graphTransition->initialized()
             && d->m_graphTransition->contains(QGraphAnimation::GraphAnimationType::GraphPoint)) {
@@ -927,6 +926,29 @@ void QXYSeriesPrivate::setPointSelected(qsizetype index, bool selected, bool &ca
 bool QXYSeriesPrivate::isPointSelected(qsizetype index) const
 {
     return m_selectedPoints.contains(index);
+}
+
+void QXYSeriesPrivate::append(const QList<QPointF> &points)
+{
+    bool anim = m_graphTransition && m_graphTransition->initialized()
+                && m_graphTransition->contains(QGraphAnimation::GraphAnimationType::GraphPoint);
+
+    if (anim) {
+        m_graphTransition->stop();
+        qsizetype index = m_points.size();
+
+        for (auto point : points) {
+            if (isValidValue(point)) {
+                m_graphTransition->stop();
+                m_graphTransition->onPointChanged(QGraphTransition::TransitionType::PointAdded,
+                                                  index,
+                                                  point);
+                index++;
+            }
+        }
+    } else {
+        m_points.append(points);
+    }
 }
 
 QT_END_NAMESPACE
