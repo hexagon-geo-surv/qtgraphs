@@ -31,16 +31,6 @@ QT_BEGIN_NAMESPACE
  * a default surface format. To get the custom surface format,
  * use \l {QQuick3D::idealSurfaceFormat()}.
  *
- * \note Q3DGraphsWidgetItem sets window flag \c Qt::FramelessWindowHint on by
- * default. If you want to display graph windows as standalone windows with
- * regular window frame, clear this flag after constructing the graph. For
- * example:
- *
- * \code
- *  Q3DBarsWidgetItem *graphWindow = new Q3DBarsWidgetItem;
- *  graphWindow->setFlags(graphWindow->flags() ^ Qt::FramelessWindowHint);
- * \endcode
- *
  * \sa Q3DBarsWidgetItem, Q3DScatterWidgetItem, Q3DSurfaceWidgetItem, {Qt Graphs C++ Classes for 3D}
  */
 
@@ -372,7 +362,7 @@ QtGraphs3D::ElementType Q3DGraphsWidgetItem::selectedElement() const
  * rendered image when it's ready. Image is rendered with the current
  * antialiasing settings.
  *
- * \sa QQuickItem::grabToImage
+ * \sa QQuickItem::grabToImage()
  */
 QSharedPointer<QQuickItemGrabResult> Q3DGraphsWidgetItem::renderToImage(QSize imageSize) const
 {
@@ -624,10 +614,12 @@ void Q3DGraphsWidgetItem::setLightColor(QColor newLightColor)
 /*!
  * \property Q3DGraphsWidgetItem::gridLineType
  *
- * \brief Whether the grid lines type is Q3DGraphsWidgetItem::GridLineType::Shader or
- * Q3DGraphsWidgetItem::GridLineType::Geometry.
+ * \brief Whether the grid lines type is QtGraphs3D::GridLineType::Shader or
+ * QtGraphs3D::GridLineType::Geometry.
  *
  * This value affects all grid lines.
+ *
+ * \sa QtGraphs3D::GridLineType
  */
 QtGraphs3D::GridLineType Q3DGraphsWidgetItem::gridLineType() const
 {
@@ -641,6 +633,19 @@ void Q3DGraphsWidgetItem::setGridLineType(const QtGraphs3D::GridLineType &gridLi
     d->m_graphsItem->setGridLineType(gridLineType);
 }
 
+/*!
+ * Sets the given \a widget instance to be used as the \l QQuickWidget for the widget item.
+ * The graph is set as the content of the QQuickWidget.
+ *
+ * Graphs can only be rendered in widget applications using QQuickWidgets.
+ *
+ * Usage example:
+ * \code
+ * QQuickWidget quickwidget;
+ * Q3DBarsWidgetItem graph;
+ * graph.setWidget(&quickwidget);
+ * \endcode
+ */
 void Q3DGraphsWidgetItem::setWidget(QQuickWidget *widget)
 {
     Q_D(Q3DGraphsWidgetItem);
@@ -651,6 +656,9 @@ void Q3DGraphsWidgetItem::setWidget(QQuickWidget *widget)
     }
 }
 
+/*!
+ * Returns a pointer to the \l QQuickWidget instance that has been set for the widget item.
+ */
 QQuickWidget *Q3DGraphsWidgetItem::widget() const
 {
     Q_D(const Q3DGraphsWidgetItem);
