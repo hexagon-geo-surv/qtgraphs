@@ -451,6 +451,31 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
+    \qmlsignal BarSeries::clicked(int index, BarSet barset)
+    This signal is emitted when the user clicks or taps the bar specified by \a index
+    in the bar set specified by \a barset.
+*/
+
+/*!
+    \qmlsignal BarSeries::doubleClicked(int index, BarSet barset)
+    This signal is emitted when the user double-clicks or double-taps the bar specified
+    by \a index in the bar set specified by \a barset.
+    This signal always occurs after \l clicked.
+*/
+
+/*!
+    \qmlsignal BarSeries::pressed(int index, BarSet barset)
+    This signal is emitted when the user clicks or taps the bar specified by \a index
+    in the bar set specified by \a barset and holds down the mouse button or gesture.
+*/
+
+/*!
+    \qmlsignal BarSeries::released(int index, BarSet barset);
+    This signal is emitted when the user releases a previously pressed mouse button
+    or gesture on the bar specified by \a index in the bar set specified by \a barset.
+*/
+
+/*!
     \internal
 */
 
