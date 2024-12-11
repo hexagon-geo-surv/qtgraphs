@@ -834,6 +834,14 @@ ColumnLayout {
                     text: "Position :"
                     color: "white"
                 }
+
+                Button {
+                    id: lineChangeDraggable
+                    text: "Draggable : " + lineSeries.draggable
+                    onClicked: () => {
+                                 lineSeries.draggable = lineSeries.draggable ? false : true
+                             }
+                }
             }
         }
     }
