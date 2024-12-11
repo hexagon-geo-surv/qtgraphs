@@ -50,6 +50,19 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
+    \fn void QXYSeries::pointsAdded(qsizetype start, qsizetype end)
+    This signal is emitted when a list of points is appended.
+    The indexes of the new added points are between \a start and \a end.
+    \since 6.9
+*/
+/*!
+    \qmlsignal XYSeries::pointsAdded(int start, int end)
+    This signal is emitted when a list of points is appended.
+    The indexes of the new added points are between \a start and \a end.
+    \since 6.9
+*/
+
+/*!
     \qmlsignal XYSeries::colorChanged(color color)
     This signal is emitted when the line color changes to \a color.
 */
@@ -104,6 +117,7 @@ QXYSeries::QXYSeries(QXYSeriesPrivate &dd, QObject *parent)
 {
     QObject::connect(this, &QXYSeries::selectedPointsChanged, this, &QAbstractSeries::update);
     QObject::connect(this, &QXYSeries::pointAdded, this, &QAbstractSeries::update);
+    QObject::connect(this, &QXYSeries::pointsAdded, this, &QAbstractSeries::update);
     QObject::connect(this, &QXYSeries::pointReplaced, this, &QAbstractSeries::update);
     QObject::connect(this, &QXYSeries::pointsReplaced, this, &QAbstractSeries::update);
     QObject::connect(this, &QXYSeries::pointRemoved, this, &QAbstractSeries::update);
@@ -150,14 +164,18 @@ void QXYSeries::append(QPointF point)
 /*!
     \qmlmethod XYSeries::append(list<point> points)
     Appends points with the coordinates \a points to the series.
+    \note This is much faster than appending data points one by one.
+    Emits \l pointsAdded when the points have been added.
 */
 /*!
     Appends points with the coordinates \a points to the series.
+    \note This is much faster than appending data points one by one.
+    Emits \l pointsAdded when the points have been added.
 */
 void QXYSeries::append(const QList<QPointF> &points)
 {
-    for (const QPointF &point : points)
-        append(point);
+    Q_D(QXYSeries);
+    d->append(points);
 }
 
 /*!
@@ -971,7 +989,12 @@ void QXYSeriesPrivate::append(const QList<QPointF> &points)
             }
         }
     } else {
+        qsizetype start = m_points.size();
         m_points.append(points);
+
+        Q_Q(QXYSeries);
+        Q_EMIT q->pointsAdded(start, m_points.size() - 1);
+        Q_EMIT q->countChanged();
     }
 }
 

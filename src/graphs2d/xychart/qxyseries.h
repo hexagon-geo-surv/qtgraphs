@@ -88,6 +88,7 @@ Q_SIGNALS:
     void pointReplaced(qsizetype index);
     void pointRemoved(qsizetype index);
     void pointAdded(qsizetype index);
+    Q_REVISION(6, 9) void pointsAdded(qsizetype start, qsizetype end);
     void colorChanged(QColor color);
     void selectedColorChanged(QColor color);
     void pointsReplaced();
