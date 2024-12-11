@@ -514,8 +514,13 @@ void PointRenderer::handlePolish(QXYSeries *series)
                 item->setParent(this);
                 item->setParentItem(this);
                 QQuickDragHandler *handler = new QQuickDragHandler(item);
+                handler->setEnabled(series->isDraggable());
+                connect(series, &QXYSeries::draggableChanged, this, [handler, series]() {
+                    handler->setEnabled(series->isDraggable());
+                });
                 group->markers << item;
                 group->dragHandlers << handler;
+
                 connect(handler, &QQuickDragHandler::translationChanged, this, [&]() {
                     if (m_pressedGroup) {
                         float w = width();
