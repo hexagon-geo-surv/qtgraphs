@@ -367,7 +367,7 @@ void AxisRenderer::updateAxis()
         double step = vaxis->tickInterval();
 
         qreal diff = vaxis->max() - vaxis->min();
-        qreal center = diff / 2.0f + vaxis->pan();
+        qreal center = diff / 2.0f + vaxis->min() + vaxis->pan();
 
         diff /= vaxis->zoom();
 
@@ -404,7 +404,7 @@ void AxisRenderer::updateAxis()
         double step = haxis->tickInterval();
 
         qreal diff = haxis->max() - haxis->min();
-        qreal center = diff / 2.0f + haxis->pan();
+        qreal center = diff / 2.0f + haxis->min() + haxis->pan();
 
         diff /= haxis->zoom();
 
