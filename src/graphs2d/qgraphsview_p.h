@@ -299,8 +299,8 @@ private:
     qreal m_shadowYOffset = 0.0;
     qreal m_shadowSmoothing = 4.0;
 
-    ZoomStyle m_zoomStyle;
-    PanStyle m_panStyle;
+    ZoomStyle m_zoomStyle = ZoomStyle::None;
+    PanStyle m_panStyle = PanStyle::None;
     qreal m_zoomSensitivity = 0.05f;
 
     bool m_zoomAreaEnabled = false;
