@@ -766,13 +766,11 @@ QColor QXYSeries::color() const
 
 /*!
     \property QXYSeries::selectedColor
-    \brief The main color of the selected series. For QLineSeries this means the line color and
-    for QScatterSeries the color of the point.
+    \brief The color of selected points.
 */
 /*!
     \qmlproperty color XYSeries::selectedColor
-    The main color of the selected series. For LineSeries this means the line color and
-    for ScatterSeries the color of the point
+    The color of selected points.
 */
 void QXYSeries::setSelectedColor(QColor color)
 {
