@@ -938,6 +938,8 @@ void QQuickGraphsSurface::removeSeries(QSurface3DSeries *series)
 void QQuickGraphsSurface::clearSelection()
 {
     setSelectedPoint(invalidSelectionPosition(), 0, false);
+    for (auto model : m_model)
+        model->picked = false;
 }
 
 void QQuickGraphsSurface::handleAxisXChanged(QAbstract3DAxis *axis)
@@ -2089,8 +2091,6 @@ bool QQuickGraphsSurface::doPicking(QPointF position)
                         break;
                 } else {
                     clearSelection();
-                    for (auto model : m_model)
-                        model->picked = false;
                 }
             }
 
