@@ -2079,10 +2079,18 @@ bool QQuickGraphsSurface::doPicking(QPointF position)
         if (!pickResult.isEmpty()) {
             for (auto picked : pickResult) {
                 bool inBounds = qAbs(picked.position().y()) < scaleWithBackground().y();
-                if (inBounds && picked.objectHit()
-                    && picked.objectHit()->objectName().contains(QStringLiteral("ProxyModel"))) {
+                if (inBounds && picked.objectHit()) {
                     pickedPos = picked.position();
-                    pickedModel = qobject_cast<QQuick3DModel *>(picked.objectHit()->parentItem());
+                    if (picked.objectHit()->objectName().contains(QStringLiteral("ProxyModel"))) {
+                        pickedModel = qobject_cast<QQuick3DModel *>(
+                            picked.objectHit()->parentItem());
+                    } else if (picked.objectHit()->objectName().contains(
+                                   QStringLiteral("SurfaceModel"))) {
+                        pickedModel = qobject_cast<QQuick3DModel *>(picked.objectHit());
+                    } else {
+                        clearSelection();
+                        continue;
+                    }
                     bool visible = false;
                     for (auto model : m_model) {
                         if (model->model == pickedModel)
