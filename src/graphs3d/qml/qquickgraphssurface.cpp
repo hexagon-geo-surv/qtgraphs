@@ -524,7 +524,8 @@ void QQuickGraphsSurface::handleArrayReset()
         m_changedSeriesList.append(series);
 
     // Clear selection unless still valid
-    setSelectedPoint(m_selectedPoint, m_selectedSeries, false);
+    if (m_selectedPoint != invalidSelectionPosition())
+        setSelectedPoint(m_selectedPoint, m_selectedSeries, false);
     series->d_func()->markItemLabelDirty();
     emitNeedRender();
 }
