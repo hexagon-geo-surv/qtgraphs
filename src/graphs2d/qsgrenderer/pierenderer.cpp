@@ -117,7 +117,7 @@ void PieRenderer::handlePolish(QPieSeries *series)
         if (d->m_borderColor.isValid())
             borderColor = d->m_borderColor;
         qreal borderWidth = theme->borderWidth();
-        if (d->m_borderWidth > 0.0)
+        if (d->m_borderWidth >= 1.0)
             borderWidth = d->m_borderWidth;
         const auto &seriesColors = theme->seriesColors();
         index = sliceIndex % seriesColors.size();
@@ -127,6 +127,11 @@ void PieRenderer::handlePolish(QPieSeries *series)
         shapePath->setStrokeWidth(borderWidth);
         shapePath->setStrokeColor(borderColor);
         shapePath->setFillColor(color);
+
+        QColor labelTextColor = theme->labelTextColor();
+        if (d->m_labelColor.isValid())
+            labelTextColor = d->m_labelColor;
+        d->m_labelItem->setColor(labelTextColor);
 
         if (!m_activeSlices.contains(slice))
             return;
