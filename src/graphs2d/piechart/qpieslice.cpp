@@ -658,13 +658,13 @@ QPieSlicePrivate::QPieSlicePrivate()
     , m_isExploded(false)
     , m_explodeDistanceFactor(.15)
     , m_labelDirty(false)
-    , m_borderWidth(1.0)
+    , m_borderWidth(0.0)
     , m_shapePath(new QQuickShapePath)
     , m_labelItem(new QQuickText)
     , m_labelShape(new QQuickShape)
     , m_labelPath(new QQuickShapePath)
 {
-    m_labelItem->setColor(Qt::white);
+    m_labelItem->setColor(Qt::transparent);
     m_labelItem->setVisible(m_isLabelVisible);
     m_labelShape->setVisible(m_isLabelVisible);
     m_labelPath->setParent(m_labelShape);
