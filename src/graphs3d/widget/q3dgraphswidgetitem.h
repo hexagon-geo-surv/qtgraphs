@@ -230,7 +230,6 @@ public:
     void setMsaaSamples(int samples);
 
     void doPicking(QPoint point);
-    Q_REVISION(6, 9)
     void doRayPicking(const QVector3D &origin, const QVector3D &direction);
 
     float ambientLightStrength() const;
@@ -258,7 +257,7 @@ protected:
 Q_SIGNALS:
     void activeThemeChanged(QGraphsTheme *activeTheme);
     void shadowQualityChanged(QtGraphs3D::ShadowQuality quality);
-    void transparencyTechniqueChanged(QtGraphs3D::TransparencyTechnique technique);
+    Q_REVISION(6, 9) void transparencyTechniqueChanged(QtGraphs3D::TransparencyTechnique technique);
     void selectionModeChanged(const QtGraphs3D::SelectionFlags selectionMode);
     void selectedElementChanged(QtGraphs3D::ElementType type);
     void measureFpsChanged(bool enabled);
