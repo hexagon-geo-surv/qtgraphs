@@ -26,8 +26,8 @@ class Q_GRAPHS_EXPORT QValueAxis : public QAbstractAxis
     Q_PROPERTY(qreal tickAnchor READ tickAnchor WRITE setTickAnchor NOTIFY tickAnchorChanged FINAL)
     Q_PROPERTY(
         qreal tickInterval READ tickInterval WRITE setTickInterval NOTIFY tickIntervalChanged FINAL)
-    Q_PROPERTY(qreal zoom READ zoom WRITE setZoom NOTIFY zoomChanged FINAL REVISION(6, 9))
-    Q_PROPERTY(qreal pan READ pan WRITE setPan NOTIFY panChanged FINAL REVISION(6, 9))
+    Q_PROPERTY(qreal zoom READ zoom WRITE setZoom NOTIFY zoomChanged REVISION(6, 9))
+    Q_PROPERTY(qreal pan READ pan WRITE setPan NOTIFY panChanged REVISION(6, 9))
     QML_NAMED_ELEMENT(ValueAxis)
 
 public:
@@ -76,8 +76,8 @@ Q_SIGNALS:
     void labelDecimalsChanged(int decimals);
     void tickAnchorChanged(qreal tickAnchor);
     void tickIntervalChanged(qreal tickInterval);
-    void zoomChanged(qreal zoom);
-    void panChanged(qreal pan);
+    Q_REVISION(6, 9) void zoomChanged(qreal zoom);
+    Q_REVISION(6, 9) void panChanged(qreal pan);
 
 private:
     Q_DECLARE_PRIVATE(QValueAxis)

@@ -116,7 +116,7 @@ protected:
     void calculateSceneScalingFactors() override;
     void componentComplete() override;
     bool doPicking(QPointF position) override;
-    Q_REVISION(6, 9) bool doRayPicking(const QVector3D &origin, const QVector3D &direction) override;
+    bool doRayPicking(const QVector3D &origin, const QVector3D &direction) override;
     void updateShadowQuality(QtGraphs3D::ShadowQuality quality) override;
     void updateLightStrength() override;
     void startRecordingRemovesAndInserts() override;

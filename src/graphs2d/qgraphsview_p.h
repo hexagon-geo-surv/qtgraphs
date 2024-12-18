@@ -59,15 +59,15 @@ class Q_GRAPHS_EXPORT QGraphsView : public QQuickItem
     Q_PROPERTY(
         Qt::Orientation orientation READ orientation WRITE setOrientation NOTIFY orientationChanged FINAL)
 
-    Q_PROPERTY(ZoomStyle zoomStyle READ zoomStyle WRITE setZoomStyle NOTIFY zoomStyleChanged FINAL REVISION(6, 9))
-    Q_PROPERTY(PanStyle panStyle READ panStyle WRITE setPanStyle NOTIFY panStyleChanged FINAL REVISION(6, 9))
+    Q_PROPERTY(ZoomStyle zoomStyle READ zoomStyle WRITE setZoomStyle NOTIFY zoomStyleChanged REVISION(6, 9))
+    Q_PROPERTY(PanStyle panStyle READ panStyle WRITE setPanStyle NOTIFY panStyleChanged REVISION(6, 9))
     Q_PROPERTY(qreal zoomSensitivity READ zoomSensitivity WRITE setZoomSensitivity NOTIFY
-                   zoomSensitivityChanged FINAL REVISION(6, 9))
+                   zoomSensitivityChanged REVISION(6, 9))
 
     Q_PROPERTY(bool zoomAreaEnabled READ zoomAreaEnabled WRITE setZoomAreaEnabled NOTIFY
-                   zoomAreaEnabledChanged FINAL REVISION(6, 9))
+                   zoomAreaEnabledChanged REVISION(6, 9))
     Q_PROPERTY(QQmlComponent *zoomAreaDelegate READ zoomAreaDelegate WRITE setZoomAreaDelegate
-                   NOTIFY zoomAreaDelegateChanged FINAL REVISION(6, 9))
+                   NOTIFY zoomAreaDelegateChanged REVISION(6, 9))
 
     Q_CLASSINFO("DefaultProperty", "seriesList")
     QML_NAMED_ELEMENT(GraphsView)
@@ -223,13 +223,13 @@ Q_SIGNALS:
 
     void orientationChanged();
 
-    void zoomStyleChanged();
-    void panStyleChanged();
+    Q_REVISION(6, 9) void zoomStyleChanged();
+    Q_REVISION(6, 9) void panStyleChanged();
 
-    void zoomAreaEnabledChanged();
-    void zoomAreaDelegateChanged();
+    Q_REVISION(6, 9) void zoomAreaEnabledChanged();
+    Q_REVISION(6, 9) void zoomAreaDelegateChanged();
 
-    void zoomSensitivityChanged();
+    Q_REVISION(6, 9) void zoomSensitivityChanged();
 
 private:
     friend class AxisRenderer;

@@ -24,6 +24,7 @@ class Q_GRAPHS_EXPORT QSpline3DSeries : public QScatter3DSeries
         QColor splineColor READ splineColor WRITE setSplineColor NOTIFY splineColorChanged FINAL)
     Q_PROPERTY(int splineResolution READ splineResolution WRITE setSplineResolution NOTIFY
                    splineResolutionChanged FINAL)
+    QML_ADDED_IN_VERSION(6, 9)
 public:
     explicit QSpline3DSeries(QObject *parent = nullptr);
     explicit QSpline3DSeries(QScatterDataProxy *dataProxy, QObject *parent = nullptr);

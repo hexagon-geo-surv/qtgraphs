@@ -524,7 +524,8 @@ public:
 
     Q_INVOKABLE virtual bool doPicking(QPointF point);
 
-    Q_REVISION(6, 9) Q_INVOKABLE virtual bool doRayPicking(const QVector3D &origin, const QVector3D &direction);
+    Q_REVISION(6, 9) Q_INVOKABLE virtual bool doRayPicking(const QVector3D &origin,
+                                          const QVector3D &direction);
 
     void minimizeMainGraph();
 
@@ -588,7 +589,7 @@ Q_SIGNALS:
     void msaaSamplesChanged(int samples);
     void themeChanged(QGraphsTheme *theme);
     void renderingModeChanged(QtGraphs3D::RenderingMode mode);
-    void transparencyTechniqueChanged(QtGraphs3D::TransparencyTechnique technique);
+    Q_REVISION(6, 9) void transparencyTechniqueChanged(QtGraphs3D::TransparencyTechnique technique);
     void measureFpsChanged(bool enabled);
     void currentFpsChanged(int fps);
     void selectedElementChanged(QtGraphs3D::ElementType type);
@@ -609,10 +610,10 @@ Q_SIGNALS:
     void cameraTargetPositionChanged(QVector3D target);
     void minCameraZoomLevelChanged(float zoomLevel);
     void maxCameraZoomLevelChanged(float zoomLevel);
-    void minCameraXRotationChanged(float rotation);
-    void minCameraYRotationChanged(float rotation);
-    void maxCameraXRotationChanged(float rotation);
-    void maxCameraYRotationChanged(float rotation);
+    Q_REVISION(6, 9) void minCameraXRotationChanged(float rotation);
+    Q_REVISION(6, 9) void minCameraYRotationChanged(float rotation);
+    Q_REVISION(6, 9) void maxCameraXRotationChanged(float rotation);
+    Q_REVISION(6, 9) void maxCameraYRotationChanged(float rotation);
     void wrapCameraXRotationChanged(bool wrap);
     void wrapCameraYRotationChanged(bool wrap);
     void needRender();
