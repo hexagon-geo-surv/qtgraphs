@@ -126,6 +126,7 @@ void PieRenderer::handlePolish(QPieSeries *series)
         if (d->m_labelColor.isValid())
             labelTextColor = d->m_labelColor;
         d->m_labelItem->setColor(labelTextColor);
+        d->m_labelPath->setStrokeColor(labelTextColor);
 
         if (!m_activeSlices.contains(slice))
             return;
