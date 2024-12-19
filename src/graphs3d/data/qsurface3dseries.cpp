@@ -184,7 +184,7 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
-* \qmlproperty SurfaceDataArray Surface3DSeries::dataArray
+ * \qmlproperty SurfaceDataArray Surface3DSeries::dataArray
  *
  * Holds the reference of the data array.
  *
