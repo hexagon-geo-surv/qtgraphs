@@ -88,6 +88,11 @@ void QSplineSeries::componentComplete()
         d->calculateSplinePoints();
     });
 
+    connect(this, &QSplineSeries::pointsRemoved, this
+            , [d]([[maybe_unused]] int index, [[maybe_unused]] int count) {
+       d->calculateSplinePoints();
+   });
+
     connect(this, &QSplineSeries::pointReplaced, this, [d]([[maybe_unused]] int index) {
         d->calculateSplinePoints();
     });
