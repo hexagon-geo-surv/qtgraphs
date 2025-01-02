@@ -987,6 +987,7 @@ void QGraphsView::setAxisX(QAbstractAxis *axis)
     m_axisX = axis;
     if (axis)
         addAxis(axis);
+    emit axisXChanged();
     emit update();
 }
 
@@ -1015,6 +1016,7 @@ void QGraphsView::setAxisY(QAbstractAxis *axis)
     m_axisY = axis;
     if (axis)
         addAxis(axis);
+    emit axisYChanged();
     emit update();
 }
 
