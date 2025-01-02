@@ -1184,6 +1184,7 @@ void QGraphsView::setAxisX(QAbstractAxis *axis)
             axis->setAlignment(Qt::AlignBottom);
         addAxis(axis);
     }
+    emit axisXChanged();
     emit update();
 }
 
@@ -1215,6 +1216,7 @@ void QGraphsView::setAxisY(QAbstractAxis *axis)
             axis->setAlignment(Qt::AlignLeft);
         addAxis(axis);
     }
+    emit axisYChanged();
     emit update();
 }
 
