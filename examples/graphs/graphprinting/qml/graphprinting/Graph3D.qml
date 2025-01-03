@@ -8,8 +8,10 @@ Item {
     id: graphContainer
     width: 1280
     height: 720
+    property alias theme: bars.theme
 
     Bars3D {
+        id: bars
         anchors.fill: parent
         msaaSamples: 8
         cameraPreset: Graphs3D.CameraPreset.IsometricLeftHigh
@@ -20,6 +22,7 @@ Item {
             grid.mainColor: "black"
             labelFont.pointSize: 20
             labelBackgroundVisible: false
+            colorScheme: Qt.Light
         }
 
         Bar3DSeries {

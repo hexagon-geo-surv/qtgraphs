@@ -8,10 +8,12 @@ Rectangle {
     id: graphContainer
     width: 1280
     height: 720
+    property alias theme: lines.theme
 
     color: "white"
 
     GraphsView {
+        id: lines
         anchors.fill: parent
         anchors.margins: 16
         theme: GraphsTheme {
@@ -20,6 +22,7 @@ Rectangle {
             labelTextColor: "black"
             plotAreaBackgroundColor: "white"
             backgroundColor: "white"
+            colorScheme: Qt.Light
         }
         axisX: ValueAxis {
             max: 5

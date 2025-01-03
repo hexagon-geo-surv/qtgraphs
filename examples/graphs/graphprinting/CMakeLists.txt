@@ -21,6 +21,9 @@ find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Quick)
 find_package(Qt6 COMPONENTS Quick3D)
 find_package(Qt6 COMPONENTS Graphs)
+find_package(Qt6 COMPONENTS PrintSupport)
+
+qt_standard_project_setup(REQUIRES 6.8)
 
 qt_add_executable(graphprinting
     main.cpp
@@ -48,6 +51,17 @@ qt6_add_qml_module(graphprinting
         qml/graphprinting/main.qml
         qml/graphprinting/Graph2D.qml
         qml/graphprinting/Graph3D.qml
+    RESOURCES
+        qml/graphprinting/box_left.svg
+        qml/graphprinting/box_left_fill.svg
+        qml/graphprinting/documents.svg
+        qml/graphprinting/documents_fill.svg
+        qml/graphprinting/flatten.svg
+        qml/graphprinting/flatten_square_fill.svg
+        qml/graphprinting/folder.svg
+        qml/graphprinting/folder_fill.svg
+        qml/graphprinting/print.svg
+        qml/graphprinting/print_fill.svg
 )
 
 install(TARGETS graphprinting
