@@ -26,6 +26,11 @@
     For XYSeries, this is considered to be the main list of points defined inside
     the series. The point is linearly interpolated from the start to the end value.
 
+    \note GraphPointAnimation currently supports animating only the last point in
+    a series when a point is appended or removed. If a point is replaced, the
+    animation will be triggered regardless of the point’s index within the
+    series.
+
     \sa GraphTransition, SplineControlAnimation
 */
 
