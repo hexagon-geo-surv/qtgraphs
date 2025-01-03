@@ -16,8 +16,8 @@ public:
   explicit GraphPrinter(QObject *parent = 0);
   ~GraphPrinter() override;
 
-  Q_INVOKABLE void generatePDF(const QUrl &path, const QImage &image);
-  Q_INVOKABLE void print(const QImage &image, const QString printerName);
+  Q_INVOKABLE QString generatePDF(const QUrl &path, const QImage &image);
+  Q_INVOKABLE QString print(const QImage &image, const QString printerName);
   Q_INVOKABLE QStringList getPrinters();
 };
 
