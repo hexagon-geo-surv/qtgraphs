@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   viewer.setMinimumSize({1280, 720});
   viewer.setSource(QUrl("qrc:/qml/graphprinting/main.qml"));
   viewer.setResizeMode(QQuickView::SizeRootObjectToView);
-  viewer.setColor("black");
+  viewer.setColor("white");
   viewer.show();
 
   return app.exec();
