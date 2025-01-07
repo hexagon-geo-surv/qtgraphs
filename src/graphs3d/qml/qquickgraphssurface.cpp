@@ -2149,7 +2149,7 @@ bool QQuickGraphsSurface::doPicking(QPointF position)
     return true;
 }
 
-bool QQuickGraphsSurface::doRayPicking(const QVector3D &origin, const QVector3D &direction)
+bool QQuickGraphsSurface::doRayPicking(QVector3D origin, QVector3D direction)
 {
     if (!m_pickThisFrame && m_proxyDirty) {
         m_pickThisFrame = true;

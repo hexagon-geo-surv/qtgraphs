@@ -1988,7 +1988,7 @@ bool QQuickGraphsBars::doPicking(QPointF position)
     return true;
 }
 
-bool QQuickGraphsBars::doRayPicking(const QVector3D &origin, const QVector3D &direction)
+bool QQuickGraphsBars::doRayPicking(QVector3D origin, QVector3D direction)
 {
     if (!QQuickGraphsItem::doRayPicking(origin, direction))
         return false;
