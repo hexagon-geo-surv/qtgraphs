@@ -1003,7 +1003,7 @@ void Q3DGraphsWidgetItem::doPicking(QPoint point)
  *
  * \sa selectedElement
  */
-void Q3DGraphsWidgetItem::doRayPicking(const QVector3D &origin, const QVector3D &direction)
+void Q3DGraphsWidgetItem::doRayPicking(QVector3D origin, QVector3D direction)
 {
     Q_D(Q3DGraphsWidgetItem);
     d->m_graphsItem->doRayPicking(origin, direction);

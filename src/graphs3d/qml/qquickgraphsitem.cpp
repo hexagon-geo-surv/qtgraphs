@@ -5789,7 +5789,7 @@ bool QQuickGraphsItem::doPicking(QPointF point)
     return true;
 }
 
-bool QQuickGraphsItem::doRayPicking(const QVector3D &origin, const QVector3D &direction)
+bool QQuickGraphsItem::doRayPicking(QVector3D origin, QVector3D direction)
 {
     checkSliceEnabled();
 
