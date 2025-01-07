@@ -1435,18 +1435,22 @@ void QQuickGraphsSurface::updateModel(SurfaceModel *model)
                 vertex.uv = QVector2D(j * uvX, i * uvY);
                 vertex.coord = QPoint(j, i);
                 model->vertices.push_back(vertex);
-                if (boundsMin.isNull())
-                    boundsMin = pos;
-                else
-                    boundsMin = QVector3D(qMin(boundsMin.x(), pos.x()),
-                                          qMin(boundsMin.y(), pos.y()),
-                                          qMin(boundsMin.z(), pos.z()));
-                if (boundsMax.isNull())
+                if (!qIsNaN(pos.y()) && !qIsInf(pos.y())) {
+                    if (boundsMin.isNull()) {
+                        boundsMin = pos;
+                    } else {
+                        boundsMin = QVector3D(qMin(boundsMin.x(), pos.x()),
+                                              qMin(boundsMin.y(), pos.y()),
+                                              qMin(boundsMin.z(), pos.z()));
+                    }
+                }
+                if (boundsMax.isNull()) {
                     boundsMax = pos;
-                else
+                } else {
                     boundsMax = QVector3D(qMax(boundsMax.x(), pos.x()),
                                           qMax(boundsMax.y(), pos.y()),
                                           qMax(boundsMax.z(), pos.z()));
+                }
             }
         }
         model->boundsMin = boundsMin;
@@ -1566,10 +1570,11 @@ void QQuickGraphsSurface::updateProxyModel(SurfaceModel *model)
             vertex.uv = QVector2D(j * uvX, i * uvY);
             vertex.coord = QPoint(i, j);
             proxyVerts.push_back(vertex);
-
-            boundsMin = QVector3D(qMin(boundsMin.x(), pos.x()),
-                                  qMin(boundsMin.y(), pos.y()),
-                                  qMin(boundsMin.z(), pos.z()));
+            if (!qIsNaN(pos.y()) && !qIsInf(pos.y())) {
+                boundsMin = QVector3D(qMin(boundsMin.x(), pos.x()),
+                                      qMin(boundsMin.y(), pos.y()),
+                                      qMin(boundsMin.z(), pos.z()));
+            }
             boundsMax = QVector3D(qMax(boundsMax.x(), pos.x()),
                                   qMax(boundsMax.y(), pos.y()),
                                   qMax(boundsMax.z(), pos.z()));
