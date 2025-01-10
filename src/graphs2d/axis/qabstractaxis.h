@@ -120,7 +120,7 @@ Q_SIGNALS:
     void titleColorChanged(QColor color);
     void titleVisibleChanged(bool visible);
     void titleFontChanged(const QFont &font);
-    Q_REVISION(6, 9) void alignmentChanged();
+    Q_REVISION(6, 9) void alignmentChanged(Qt::Alignment alignment);
     void update();
     void rangeChanged(qreal min, qreal max);
 
