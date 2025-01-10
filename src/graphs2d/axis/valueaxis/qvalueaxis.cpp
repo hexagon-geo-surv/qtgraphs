@@ -149,6 +149,7 @@ QT_BEGIN_NAMESPACE
 
 /*!
   \property QValueAxis::zoom
+  \since 6.9
   \brief The zoom value of the axis.
 
   The zoom value enlarges or shrinks the axis and thus the graph without affecting intervals
@@ -156,6 +157,7 @@ QT_BEGIN_NAMESPACE
 */
 /*!
   \qmlproperty real ValueAxis::zoom
+  \since 6.9
   The zoom value of the axis.
 
   The zoom value enlarges or shrinks the axis and thus the graph without affecting intervals
@@ -164,6 +166,7 @@ QT_BEGIN_NAMESPACE
 
 /*!
   \property QValueAxis::pan
+  \since 6.9
   \brief The pan value of the axis.
 
   The pan value moves the center of the axis without affecting intervals
@@ -171,6 +174,7 @@ QT_BEGIN_NAMESPACE
 */
 /*!
   \qmlproperty real ValueAxis::pan
+  \since 6.9
   The pan value of the axis.
 
   The pan value moves the center of the axis without affecting intervals

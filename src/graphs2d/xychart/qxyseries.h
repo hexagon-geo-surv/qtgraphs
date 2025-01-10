@@ -99,10 +99,10 @@ Q_SIGNALS:
     void seriesUpdated();
     void countChanged();
 
-    void clicked(QPoint point);
-    void doubleClicked(QPoint point);
-    void pressed(QPoint point);
-    void released(QPoint point);
+    Q_REVISION(6, 9) void clicked(QPoint point);
+    Q_REVISION(6, 9) void doubleClicked(QPoint point);
+    Q_REVISION(6, 9) void pressed(QPoint point);
+    Q_REVISION(6, 9) void released(QPoint point);
 
 private:
     friend class PointRenderer;

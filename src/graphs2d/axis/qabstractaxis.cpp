@@ -521,7 +521,7 @@ void QAbstractAxis::setAlignment(Qt::Alignment alignment)
         if (d->m_graph)
             d->m_graph->updateComponentSizes();
         emit update();
-        emit alignmentChanged();
+        emit alignmentChanged(alignment);
         break;
     default:
         qWarning("Invalid alignment.");
