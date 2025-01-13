@@ -693,15 +693,17 @@ void AxisRenderer::updateAxisTickersShadow()
 
 void AxisRenderer::updateAxisGrid()
 {
-    //if (theme()->themeDirty()) {
-        m_axisGrid->setGridColor(theme()->grid().mainColor());
-        m_axisGrid->setSubGridColor(theme()->grid().subColor());
-        m_axisGrid->setSubGridLineWidth(theme()->grid().subWidth());
-        m_axisGrid->setGridLineWidth(theme()->grid().mainWidth());
-        const double minimumSmoothing = 0.05;
-        m_axisGrid->setSmoothing(m_graph->gridSmoothing() + minimumSmoothing);
+    m_axisGrid->setGridColor(theme()->grid().mainColor());
+    m_axisGrid->setSubGridColor(theme()->grid().subColor());
+    m_axisGrid->setSubGridLineWidth(theme()->grid().subWidth());
+    m_axisGrid->setGridLineWidth(theme()->grid().mainWidth());
+    const double minimumSmoothing = 0.05;
+    m_axisGrid->setSmoothing(m_graph->gridSmoothing() + minimumSmoothing);
+    if (theme()->isPlotAreaBackgroundVisible())
         m_axisGrid->setPlotAreaBackgroundColor(theme()->plotAreaBackgroundColor());
-    //}
+    else
+        m_axisGrid->setPlotAreaBackgroundColor(QColorConstants::Transparent);
+
     float topPadding = m_axisGrid->gridLineWidth() * 0.5;
     float bottomPadding = topPadding;
     float leftPadding = topPadding;
