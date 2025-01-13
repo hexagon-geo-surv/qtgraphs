@@ -5085,7 +5085,7 @@ void QQuickGraphsItem::updateCustomData()
         customLabel->setProperty("labelFont", label->font());
         customLabel->setProperty("backgroundVisible", label->isBackgroundVisible());
         customLabel->setProperty("backgroundColor", label->backgroundColor());
-        customLabel->setProperty("borderVisible", label->isBackgroundVisible());
+        customLabel->setProperty("borderVisible", label->isBorderVisible());
         customLabel->setVisible(label->isVisible());
 
         ++labelIterator;
