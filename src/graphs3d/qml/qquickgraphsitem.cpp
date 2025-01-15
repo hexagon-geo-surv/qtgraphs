@@ -979,7 +979,7 @@ void QQuickGraphsItem::handleAxisScaleLabelsByCountChanged(bool adjust)
     handleAxisScaleLabelsByCountChangedBySender(sender());
 }
 
-void QQuickGraphsItem::handleAxisLabelSizeChanged(float size)
+void QQuickGraphsItem::handleAxisLabelSizeChanged(qreal size)
 {
     Q_UNUSED(size);
     handleAxisLabelSizeChangedBySender(sender());

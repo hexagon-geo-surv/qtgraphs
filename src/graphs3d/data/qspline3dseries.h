@@ -14,9 +14,9 @@ class Q_GRAPHS_EXPORT QSpline3DSeries : public QScatter3DSeries
     Q_DECLARE_PRIVATE(QSpline3DSeries)
     Q_PROPERTY(bool splineVisible READ isSplineVisible WRITE setSplineVisible NOTIFY
                    splineVisibilityChanged FINAL)
-    Q_PROPERTY(float splineTension READ splineTension WRITE setSplineTension NOTIFY
+    Q_PROPERTY(qreal splineTension READ splineTension WRITE setSplineTension NOTIFY
                    splineTensionChanged FINAL)
-    Q_PROPERTY(float splineKnotting READ splineKnotting WRITE setSplineKnotting NOTIFY
+    Q_PROPERTY(qreal splineKnotting READ splineKnotting WRITE setSplineKnotting NOTIFY
                    splineKnottingChanged FINAL)
     Q_PROPERTY(bool splineLooping READ isSplineLooping WRITE setSplineLooping NOTIFY
                    splineLoopingChanged FINAL)
@@ -33,11 +33,11 @@ public:
     void setSplineVisible(bool draw);
     bool isSplineVisible() const;
 
-    void setSplineTension(float tension);
-    float splineTension() const;
+    void setSplineTension(qreal tension);
+    qreal splineTension() const;
 
-    void setSplineKnotting(float knotting);
-    float splineKnotting() const;
+    void setSplineKnotting(qreal knotting);
+    qreal splineKnotting() const;
 
     void setSplineLooping(bool looping);
     bool isSplineLooping() const;
@@ -50,8 +50,8 @@ public:
 
 Q_SIGNALS:
     void splineVisibilityChanged(bool visible);
-    void splineTensionChanged(float tension);
-    void splineKnottingChanged(float knotting);
+    void splineTensionChanged(qreal tension);
+    void splineKnottingChanged(qreal knotting);
     void splineLoopingChanged(bool looping);
     void splineColorChanged(QColor color);
     void splineResolutionChanged(int resolution);

@@ -557,7 +557,7 @@ public Q_SLOTS:
     void handleAxisSubSegmentCountChanged(qsizetype count);
     void handleAxisAutoAdjustRangeChanged(bool autoAdjust);
     void handleAxisScaleLabelsByCountChanged(bool adjust);
-    void handleAxisLabelSizeChanged(float size);
+    void handleAxisLabelSizeChanged(qreal size);
     void handleAxisLabelFormatChanged(const QString &format);
     void handleAxisReversedChanged(bool enable);
     void handleAxisFormatterDirty();
