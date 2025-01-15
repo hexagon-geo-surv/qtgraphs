@@ -658,6 +658,11 @@ protected:
     virtual void handleParentHeightChange();
     void componentComplete() override;
     void checkSliceEnabled();
+    bool isUserCameraRotationRange() { return m_userRotationRange; };
+    void setUserCameraRotationRange(bool userRotationRange)
+    {
+        m_userRotationRange = userRotationRange;
+    };
 
     virtual void createSliceView();
 
@@ -786,6 +791,7 @@ protected:
     bool m_isPolar = false;
     float m_radialLabelOffset = 1.0f;
     float m_polarRadius = 2.0f;
+    bool m_userRotationRange = false;
 
     QList<QAbstract3DSeries *> m_seriesList;
 
