@@ -6147,6 +6147,7 @@ void QQuickGraphsItem::setMinCameraXRotation(float rotation)
         return;
 
     m_minXRotation = rotation;
+    setUserCameraRotationRange(true);
     emit minCameraXRotationChanged(rotation);
 }
 
@@ -6156,6 +6157,7 @@ void QQuickGraphsItem::setMaxCameraXRotation(float rotation)
         return;
 
     m_maxXRotation = rotation;
+    setUserCameraRotationRange(true);
     emit maxCameraXRotationChanged(rotation);
 }
 
@@ -6165,6 +6167,7 @@ void QQuickGraphsItem::setMinCameraYRotation(float rotation)
         return;
 
     m_minYRotation = rotation;
+    setUserCameraRotationRange(true);
     emit minCameraYRotationChanged(rotation);
 }
 
@@ -6174,6 +6177,7 @@ void QQuickGraphsItem::setMaxCameraYRotation(float rotation)
         return;
 
     m_maxYRotation = rotation;
+    setUserCameraRotationRange(true);
     emit maxCameraYRotationChanged(rotation);
 }
 

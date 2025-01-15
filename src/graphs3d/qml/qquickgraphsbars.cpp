@@ -983,6 +983,25 @@ void QQuickGraphsBars::calculateHeightAdjustment()
     else if (valueAxis()->min() >= m_actualFloorLevel)
         m_hasNegativeValues = false;
 
+    // Check first if user has set the ranges
+    if (!isUserCameraRotationRange()) {
+        // If not, adjust them automatically based on possibly existing negative values
+        if (!m_noZeroInRange) {
+            setMinCameraYRotation(-90.0f);
+            setMaxCameraYRotation(90.0f);
+        } else {
+            if ((m_hasNegativeValues && !valueAxis()->reversed())
+                || (!m_hasNegativeValues && valueAxis()->reversed())) {
+                setMinCameraYRotation(-90.0f);
+                setMaxCameraYRotation(0.0f);
+            } else {
+                setMinCameraYRotation(0.0f);
+                setMaxCameraYRotation(90.0f);
+            }
+        }
+        setUserCameraRotationRange(false);
+    }
+
     if (valueAxis()->max() < m_actualFloorLevel) {
         m_heightNormalizer = float(qFabs(valueAxis()->min()) - qFabs(valueAxis()->max()));
         maxAbs = qFabs(valueAxis()->max()) - qFabs(valueAxis()->min());
