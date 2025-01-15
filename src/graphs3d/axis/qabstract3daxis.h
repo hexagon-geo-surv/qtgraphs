@@ -34,7 +34,7 @@ class Q_GRAPHS_EXPORT QAbstract3DAxis : public QObject
                    labelAutoAngleChanged FINAL)
     Q_PROPERTY(bool scaleLabelsByCount READ isScaleLabelsByCount WRITE setScaleLabelsByCount NOTIFY
                    scaleLabelsByCountChanged REVISION(6, 9))
-    Q_PROPERTY(float labelSize READ labelSize WRITE setLabelSize NOTIFY labelSizeChanged NOTIFY
+    Q_PROPERTY(qreal labelSize READ labelSize WRITE setLabelSize NOTIFY labelSizeChanged NOTIFY
                    labelSizeChanged REVISION(6, 9))
     Q_PROPERTY(bool titleVisible READ isTitleVisible WRITE setTitleVisible NOTIFY
                    titleVisibleChanged FINAL)
@@ -80,8 +80,8 @@ public:
     void setScaleLabelsByCount(bool adjust);
     bool isScaleLabelsByCount() const;
 
-    void setLabelSize(float size);
-    float labelSize() const;
+    void setLabelSize(qreal size);
+    qreal labelSize() const;
 
     void setRange(float min, float max);
 
@@ -109,7 +109,7 @@ Q_SIGNALS:
     void rangeChanged(float min, float max);
     void autoAdjustRangeChanged(bool autoAdjust);
     Q_REVISION(6, 9) void scaleLabelsByCountChanged(bool adjust);
-    Q_REVISION(6, 9) void labelSizeChanged(float size);
+    Q_REVISION(6, 9) void labelSizeChanged(qreal size);
     void labelAutoAngleChanged(float angle);
     void titleVisibleChanged(bool visible);
     void labelVisibleChanged(bool visible);

@@ -554,7 +554,7 @@ bool QAbstract3DAxis::isScaleLabelsByCount() const
  *
  * \sa scaleLabelsByCount()
  */
-void QAbstract3DAxis::setLabelSize(float size)
+void QAbstract3DAxis::setLabelSize(qreal size)
 {
     Q_D(QAbstract3DAxis);
     if (d->m_labelSize != size) {
@@ -563,7 +563,7 @@ void QAbstract3DAxis::setLabelSize(float size)
     }
 }
 
-float QAbstract3DAxis::labelSize() const
+qreal QAbstract3DAxis::labelSize() const
 {
     Q_D(const QAbstract3DAxis);
     return d->m_labelSize;

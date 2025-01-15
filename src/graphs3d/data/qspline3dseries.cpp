@@ -42,7 +42,7 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
- * \qmlproperty float Spline3DSeries::splineTension
+ * \qmlproperty real Spline3DSeries::splineTension
  *
  * The tension of the spline.
  *
@@ -54,7 +54,7 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
- * \qmlproperty float Spline3DSeries::splineKnotting
+ * \qmlproperty real Spline3DSeries::splineKnotting
  *
  * The knot parametrization of the spline.
  *
@@ -69,7 +69,7 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
- * \qmlproperty float Spline3DSeries::splineLooping
+ * \qmlproperty bool Spline3DSeries::splineLooping
  *
  * Determines whether the spline loops.
  *
@@ -106,13 +106,13 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \qmlsignal Scatter3DSeries::splineTensionChanged(float tension)
+    \qmlsignal Scatter3DSeries::splineTensionChanged(real tension)
 
     This signal is emitted when splineTension changes to \a tension.
 */
 
 /*!
-    \qmlsignal Scatter3DSeries::splineKnottingChanged(float knotting)
+    \qmlsignal Scatter3DSeries::splineKnottingChanged(real knotting)
 
     This signal is emitted when splineKnotting changes to \a knotting.
 */
@@ -205,7 +205,7 @@ bool QSpline3DSeries::isSplineVisible() const
  * The default value is \c 0.0
  *
  */
-void QSpline3DSeries::setSplineTension(float tension)
+void QSpline3DSeries::setSplineTension(qreal tension)
 {
     Q_D(QSpline3DSeries);
     if (tension < 0.0f || tension > 1.0f) {
@@ -216,7 +216,7 @@ void QSpline3DSeries::setSplineTension(float tension)
     }
 }
 
-float QSpline3DSeries::splineTension() const
+qreal QSpline3DSeries::splineTension() const
 {
     const Q_D(QSpline3DSeries);
     return d->m_tension;
@@ -236,7 +236,7 @@ float QSpline3DSeries::splineTension() const
  * The default value is \c 0.5.
  *
  */
-void QSpline3DSeries::setSplineKnotting(float knotting)
+void QSpline3DSeries::setSplineKnotting(qreal knotting)
 {
     Q_D(QSpline3DSeries);
     if (knotting < 0.0f || knotting > 1.0f) {
@@ -247,7 +247,7 @@ void QSpline3DSeries::setSplineKnotting(float knotting)
     }
 }
 
-float QSpline3DSeries::splineKnotting() const
+qreal QSpline3DSeries::splineKnotting() const
 {
     const Q_D(QSpline3DSeries);
     return d->m_knotting;
