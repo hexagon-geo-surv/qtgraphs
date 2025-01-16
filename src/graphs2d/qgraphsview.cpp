@@ -600,66 +600,6 @@ void QGraphsView::geometryChange(const QRectF &newGeometry, const QRectF &oldGeo
     ensurePolished();
 }
 
-void QGraphsView::mouseMoveEvent(QMouseEvent *event)
-{
-    bool handled = false;
-
-    // Adjust event position to renderers position
-    QPointF localPos = event->position() - m_plotArea.topLeft();
-    QMouseEvent mappedEvent(event->type(), localPos, event->scenePosition(),
-                            event->globalPosition(), event->button(),
-                            event->buttons(), event->modifiers());
-    mappedEvent.setAccepted(false);
-
-    if (!handled && m_axisRenderer)
-        handled |= m_axisRenderer->handleMouseMove(&mappedEvent);
-
-    if (!handled)
-        event->ignore();
-    else
-        polishAndUpdate();
-}
-
-void QGraphsView::mousePressEvent(QMouseEvent *event)
-{
-    bool handled = false;
-
-    // Adjust event position to renderers position
-    QPointF localPos = event->position() - m_plotArea.topLeft();
-    QMouseEvent mappedEvent(event->type(), localPos, event->scenePosition(),
-                            event->globalPosition(), event->button(),
-                            event->buttons(), event->modifiers());
-    mappedEvent.setAccepted(false);
-
-    if (!handled && m_axisRenderer)
-        handled |= m_axisRenderer->handleMousePress(&mappedEvent);
-
-    if (!handled)
-        event->ignore();
-    else
-        polishAndUpdate();
-}
-
-void QGraphsView::mouseReleaseEvent(QMouseEvent *event)
-{
-    bool handled = false;
-
-    // Adjust event position to renderers position
-    QPointF localPos = event->position() - m_plotArea.topLeft();
-    QMouseEvent mappedEvent(event->type(), localPos, event->scenePosition(),
-                            event->globalPosition(), event->button(),
-                            event->buttons(), event->modifiers());
-    mappedEvent.setAccepted(false);
-
-    if (m_axisRenderer)
-        handled |= m_axisRenderer->handleMouseRelease(&mappedEvent);
-
-    if (!handled)
-        event->ignore();
-    else
-        polishAndUpdate();
-}
-
 void QGraphsView::hoverMoveEvent(QHoverEvent *event)
 {
     bool handled = false;

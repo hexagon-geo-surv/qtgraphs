@@ -11,6 +11,7 @@
 #include <private/qdatetimeaxis_p.h>
 #include <private/qgraphsview_p.h>
 #include <private/qvalueaxis_p.h>
+#include <QtQuick/private/qquickdraghandler_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -19,6 +20,14 @@ AxisRenderer::AxisRenderer(QQuickItem *parent)
 {
     m_graph = qobject_cast<QGraphsView *>(parent);
     setFlag(QQuickItem::ItemHasContents);
+
+    m_dragHandler = new QQuickDragHandler(this);
+    m_dragHandler->setDragThreshold(0);
+    m_dragHandler->setTarget(nullptr);
+    connect(m_dragHandler, &QQuickDragHandler::translationChanged,
+            this, &AxisRenderer::onTranslationChanged);
+    connect(m_dragHandler, &QQuickDragHandler::grabChanged,
+            this, &AxisRenderer::onGrabChanged);
 }
 
 AxisRenderer::~AxisRenderer() {}
@@ -65,122 +74,6 @@ QVector2D AxisRenderer::windowToAxisCoords(QVector2D coords)
     x *= m_axisHorizontalValueRange;
     y *= m_axisVerticalValueRange;
     return QVector2D(x, y);
-}
-
-bool AxisRenderer::handleMouseMove(QMouseEvent *event)
-{
-    if (m_graph->zoomAreaEnabled() && m_graph->m_zoomAreaItem) {
-        m_graph->m_zoomAreaItem->setVisible(true);
-
-        qreal endX = event->pos().x();
-        qreal endY = event->pos().y();
-
-        qreal x = m_zoomBoxStart.x();
-        qreal y = m_zoomBoxStart.y();
-
-        if (endX < x)
-            x = endX;
-        if (endY < y)
-            y = endY;
-
-        qreal width = qAbs(endX - m_zoomBoxStart.x());
-        qreal height = qAbs(endY - m_zoomBoxStart.y());
-
-        m_graph->m_zoomAreaItem->setX(x + m_graph->m_marginLeft + m_graph->m_axisWidth);
-        m_graph->m_zoomAreaItem->setY(y + m_graph->m_marginTop);
-        m_graph->m_zoomAreaItem->setWidth(width);
-        m_graph->m_zoomAreaItem->setHeight(height);
-    }
-
-    if (m_graph->panStyle() != QGraphsView::PanStyle::Drag)
-        return false;
-
-    auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal);
-    auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical);
-
-    if (!haxis && !vaxis)
-        return false;
-
-    if (m_panState.panning) {
-        QVector2D change(m_panState.touchPositionAtPress - QVector2D(event->pos()));
-        change = windowToAxisCoords(change);
-        change.setY(-change.y());
-
-        if (haxis)
-            haxis->setPan(m_panState.panAtPress.x() + change.x());
-
-        if (vaxis)
-            vaxis->setPan(m_panState.panAtPress.y() + change.y());
-    }
-
-    return true;
-}
-
-bool AxisRenderer::handleMousePress(QMouseEvent *event)
-{
-    auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal);
-    auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical);
-
-    if (!haxis && !vaxis)
-        return false;
-
-    m_panState.panning = true;
-    m_panState.touchPositionAtPress = QVector2D(event->pos());
-
-    if (haxis)
-        m_panState.panAtPress.setX(haxis->pan());
-
-    if (vaxis)
-        m_panState.panAtPress.setY(vaxis->pan());
-
-    m_zoomBoxStart = QVector2D(event->pos());
-    return true;
-}
-
-bool AxisRenderer::handleMouseRelease(QMouseEvent *event)
-{
-    m_panState.panning = false;
-
-    if (!m_graph->zoomAreaEnabled())
-        return false;
-
-    if (m_graph->m_zoomAreaItem)
-        m_graph->m_zoomAreaItem->setVisible(false);
-
-    auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal);
-    auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical);
-
-    if (!haxis && !vaxis)
-        return false;
-
-    QVector2D zoomBoxEnd(event->pos());
-    auto center = (m_zoomBoxStart + zoomBoxEnd) / 2;
-    auto size = (m_zoomBoxStart - zoomBoxEnd);
-    size.setX(qAbs(size.x()));
-    size.setY(qAbs(size.y()));
-
-    if (int(size.x()) == 0 || int(size.y()) == 0)
-        return false;
-
-    size = windowToAxisCoords(size);
-
-    if (haxis)
-        haxis->setZoom(m_axisHorizontalValueRangeZoomless / size.x());
-
-    if (vaxis)
-        vaxis->setZoom(m_axisVerticalValueRangeZoomless / size.y());
-
-    center = windowToAxisCoords(center);
-
-    center -= QVector2D(m_axisHorizontalValueRange / 2.0f, m_axisVerticalValueRange / 2.0f);
-
-    if (haxis)
-        haxis->setPan(haxis->pan() + center.x());
-
-    if (vaxis)
-        vaxis->setPan(vaxis->pan() - center.y());
-
-    return true;
 }
 
 bool AxisRenderer::zoom(qreal delta)
@@ -237,6 +130,120 @@ void AxisRenderer::handlePinchGrab(QPointingDevice::GrabTransition transition, Q
 {
     Q_UNUSED(transition)
     Q_UNUSED(point)
+}
+
+void AxisRenderer::onTranslationChanged(QVector2D delta)
+{
+    if (!m_dragState.dragging)
+        return;
+
+    m_dragState.delta += delta;
+
+    if (m_graph->zoomAreaEnabled() && m_graph->m_zoomAreaItem) {
+        m_graph->m_zoomAreaItem->setVisible(true);
+
+        qreal x = m_dragState.touchPositionAtPress.x();
+        if (m_dragState.delta.x() < 0)
+            x += m_dragState.delta.x();
+
+        qreal y = m_dragState.touchPositionAtPress.y();
+        if (m_dragState.delta.y() < 0)
+            y += m_dragState.delta.y();
+
+        qreal width = qAbs(m_dragState.delta.x());
+        qreal height = qAbs(m_dragState.delta.y());
+
+        m_graph->m_zoomAreaItem->setX(x);
+        m_graph->m_zoomAreaItem->setY(y);
+        m_graph->m_zoomAreaItem->setWidth(width);
+        m_graph->m_zoomAreaItem->setHeight(height);
+    }
+
+    if (m_graph->panStyle() != QGraphsView::PanStyle::Drag)
+        return;
+
+    auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal);
+    auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical);
+
+    if (!haxis && !vaxis)
+        return;
+
+    QVector2D change(m_dragState.delta);
+    change = windowToAxisCoords(change);
+    change.setX(-change.x());
+
+    if (haxis)
+        haxis->setPan(m_dragState.panAtPress.x() + change.x());
+
+    if (vaxis)
+        vaxis->setPan(m_dragState.panAtPress.y() + change.y());
+}
+
+void AxisRenderer::onGrabChanged(QPointingDevice::GrabTransition transition, QEventPoint point)
+{
+    const QPointF position = point.position();
+
+    if (transition == QPointingDevice::GrabPassive
+        && point.pressPosition() == point.position()) {
+        auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal);
+        auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical);
+
+        if (!haxis && !vaxis)
+            return;
+
+        m_dragState.dragging = true;
+        m_dragState.touchPositionAtPress = QVector2D(position);
+        m_dragState.delta = QVector2D(0, 0);
+
+        if (haxis)
+            m_dragState.panAtPress.setX(haxis->pan());
+
+        if (vaxis)
+            m_dragState.panAtPress.setY(vaxis->pan());
+    } else if (m_dragState.dragging && transition == QPointingDevice::UngrabPassive) {
+        m_dragState.dragging = false;
+
+        if (!m_graph->zoomAreaEnabled())
+            return;
+
+        if (m_graph->m_zoomAreaItem)
+            m_graph->m_zoomAreaItem->setVisible(false);
+
+        auto haxis = qobject_cast<QValueAxis *>(m_axisHorizontal);
+        auto vaxis = qobject_cast<QValueAxis *>(m_axisVertical);
+
+        if (!haxis && !vaxis)
+            return;
+
+        QVector2D zoomBoxEnd(position);
+        auto center = (m_dragState.touchPositionAtPress + zoomBoxEnd) / 2;
+        auto size = (m_dragState.touchPositionAtPress - zoomBoxEnd);
+        size.setX(qAbs(size.x()));
+        size.setY(qAbs(size.y()));
+
+        if (int(size.x()) == 0 || int(size.y()) == 0)
+            return;
+
+        size = windowToAxisCoords(size);
+
+        if (haxis)
+            haxis->setZoom(m_axisHorizontalValueRangeZoomless / size.x());
+
+        if (vaxis)
+            vaxis->setZoom(m_axisVerticalValueRangeZoomless / size.y());
+
+        center -= QVector2D(m_graph->m_marginLeft + m_graph->m_axisWidth, m_graph->m_marginTop);
+
+        center = windowToAxisCoords(center);
+
+        center -= QVector2D(m_axisHorizontalValueRange / 2.0f, m_axisVerticalValueRange / 2.0f);
+
+        if (haxis)
+            haxis->setPan(haxis->pan() + center.x());
+
+        if (vaxis)
+            vaxis->setPan(vaxis->pan() - center.y());
+    }
 }
 
 void AxisRenderer::handlePolish()

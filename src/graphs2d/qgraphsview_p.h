@@ -188,9 +188,6 @@ protected:
     void updateComponentSizes();
     void componentComplete() override;
     void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent *event) override;
     void hoverMoveEvent(QHoverEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
     QSGNode *updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *updatePaintNodeData) override;
