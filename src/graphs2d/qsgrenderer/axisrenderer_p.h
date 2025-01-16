@@ -31,6 +31,7 @@ class QBarCategoryAxis;
 class QValueAxis;
 class QGraphsTheme;
 class QDateTimeAxis;
+class QQuickDragHandler;
 
 class AxisRenderer : public QQuickItem
 {
@@ -56,9 +57,6 @@ public:
     void updateDateTimeXAxisLabels(QDateTimeAxis *axis, const QRectF rect);
     void initialize();
 
-    bool handleMouseMove(QMouseEvent *event);
-    bool handleMousePress(QMouseEvent *event);
-    bool handleMouseRelease(QMouseEvent *event);
     bool handleWheel(QWheelEvent *event);
     void handlePinchScale(qreal delta);
     void handlePinchGrab(QPointingDevice::GrabTransition transition, QEventPoint point);
@@ -71,6 +69,9 @@ private:
     friend class LinesRenderer;
     friend class PointRenderer;
     friend class AreaRenderer;
+
+    void onTranslationChanged(QVector2D delta);
+    void onGrabChanged(QPointingDevice::GrabTransition transition, QEventPoint point);
 
     double getValueStepsFromRange(double range);
     int getValueDecimalsFromRange(double range);
@@ -148,15 +149,17 @@ private:
     bool m_gridHorizontalSubLinesVisible = false;
     bool m_gridVerticalSubLinesVisible = false;
 
-    struct PanState
+    QQuickDragHandler *m_dragHandler = nullptr;
+
+    struct DragState
     {
-        bool panning = false;
+        bool dragging = false;
         QVector2D touchPositionAtPress;
         QVector2D panAtPress;
+        QVector2D delta;
     };
 
-    PanState m_panState;
-    QVector2D m_zoomBoxStart;
+    DragState m_dragState;
 };
 
 QT_END_NAMESPACE
