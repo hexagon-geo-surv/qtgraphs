@@ -322,6 +322,11 @@ void QXYSeries::removeMultiple(qsizetype index, qsizetype count)
         return;
 
     if (count > 0) {
+        if (d->m_graphTransition && d->m_graphTransition->initialized()
+            && d->m_graphTransition->contains(QGraphAnimation::GraphAnimationType::GraphPoint)) {
+            d->m_graphTransition->stop();
+        }
+
         d->m_points.remove(index, count);
 
         bool callSignal = false;
