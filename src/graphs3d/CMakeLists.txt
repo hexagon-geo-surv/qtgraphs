@@ -78,6 +78,7 @@ else()
             engine/scatterinstancing.cpp engine/scatterinstancing_p.h
 
             qml/foreigntypesscatter_p.h
+            qml/foreigntypesspline_p.h
             qml/qquickgraphsscatter.cpp qml/qquickgraphsscatter_p.h
             qml/qquickgraphsscatterseries.cpp qml/qquickgraphsscatterseries_p.h
             qml/qquickgraphssplineseries.cpp qml/qquickgraphssplineseries_p.h
