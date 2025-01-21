@@ -6,7 +6,6 @@
 
 #include <QtCore/qobject.h>
 #include <QtGraphs/qxyseries.h>
-#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 
