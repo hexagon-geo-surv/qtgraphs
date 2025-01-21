@@ -215,6 +215,10 @@ void QGraphsView::addAxis(QAbstractAxis *axis)
         createAxisRenderer();
         polishAndUpdate();
         QObject::connect(axis, &QAbstractAxis::update, this, &QGraphsView::polishAndUpdate);
+        QObject::connect(axis,
+                         &QAbstractAxis::visibleChanged,
+                         this,
+                         &QGraphsView::updateComponentSizes);
     }
 }
 
@@ -1018,6 +1022,26 @@ QRectF QGraphsView::plotArea() const
 
 void QGraphsView::updateAxisAreas()
 {
+    if (m_axisX && !m_axisX->isVisible()) {
+        m_axisXLabelsMargin = 0;
+        m_axisTickersHeight = 0;
+        m_axisLabelsHeight = 0;
+    } else {
+        m_axisTickersHeight = m_defaultAxisTickersHeight;
+        m_axisLabelsHeight = m_defaultAxisLabelsHeight;
+        m_axisXLabelsMargin = m_defaultAxisXLabelsMargin;
+    }
+
+    if (m_axisY && !m_axisY->isVisible()) {
+        m_axisTickersWidth = 0;
+        m_axisLabelsWidth = 0;
+        m_axisYLabelsMargin = 0;
+    } else {
+        m_axisLabelsWidth = m_defaultAxisLabelsWidth;
+        m_axisTickersWidth = m_defaultAxisTickersWidth;
+        m_axisYLabelsMargin = m_defaultAxisYLabelsMargin;
+    }
+
     QRectF r = { m_marginLeft,
                  m_marginTop,
                  width() - m_marginLeft - m_marginRight,
