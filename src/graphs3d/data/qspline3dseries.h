@@ -1,7 +1,7 @@
 // Copyright (C) 2024 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
-#ifndef QSPLINE3DSERIES_H
-#define QSPLINE3DSERIES_H
+#ifndef QTGRAPHS_QSPLINE3DSERIES_H
+#define QTGRAPHS_QSPLINE3DSERIES_H
 
 #include <QtGraphs/qscatter3dseries.h>
 QT_BEGIN_NAMESPACE
@@ -67,4 +67,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif // QSPLINE3DSERIES_H
+#endif // QTGRAPHS_QSPLINE3DSERIES_H
