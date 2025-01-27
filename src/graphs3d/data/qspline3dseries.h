@@ -25,6 +25,8 @@ class Q_GRAPHS_EXPORT QSpline3DSeries : public QScatter3DSeries
     Q_PROPERTY(int splineResolution READ splineResolution WRITE setSplineResolution NOTIFY
                    splineResolutionChanged FINAL)
     QML_ADDED_IN_VERSION(6, 9)
+    QML_ELEMENT
+    QML_UNCREATABLE("Trying to create uncreatable: QSpline3DSeries, use Spline3DSeries instead.")
 public:
     explicit QSpline3DSeries(QObject *parent = nullptr);
     explicit QSpline3DSeries(QScatterDataProxy *dataProxy, QObject *parent = nullptr);
