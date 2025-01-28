@@ -183,6 +183,7 @@ void PointRenderer::updateScatterSeries(QScatterSeries *series, QLegendData &leg
         for (int i = 0; i < points.size(); ++i) {
             qreal x, y;
             calculateRenderCoordinates(m_graph->m_axisRenderer, points[i].x(), points[i].y(), &x, &y);
+            y *= series->valuesMultiplier();
             if (group->currentMarker) {
                 updatePointDelegate(series, group, i, x, y);
             } else {
@@ -224,6 +225,7 @@ void PointRenderer::updateLineSeries(QLineSeries *series, QLegendData &legendDat
         for (int i = 0; i < points.size(); ++i) {
             qreal x, y;
             calculateRenderCoordinates(m_graph->m_axisRenderer, points[i].x(), points[i].y(), &x, &y);
+            y *= series->valuesMultiplier();
             if (i == 0)
                 painterPath.moveTo(x, y);
             else
@@ -273,6 +275,8 @@ void PointRenderer::updateSplineSeries(QSplineSeries *series, QLegendData &legen
             qreal x, y;
             calculateRenderCoordinates(m_graph->m_axisRenderer, points[i].x(), points[i].y(), &x, &y);
 
+            qreal valuesMultiplier = series->valuesMultiplier();
+            y *= valuesMultiplier;
             if (i == 0) {
                 painterPath.moveTo(x, y);
             } else {
@@ -287,6 +291,9 @@ void PointRenderer::updateSplineSeries(QSplineSeries *series, QLegendData &legen
                                            fittedPoints[j].y(),
                                            &x2,
                                            &y2);
+
+                y1 *= valuesMultiplier;
+                y2 *= valuesMultiplier;
                 painterPath.cubicTo(x1, y1, x2, y2, x, y);
                 ++j;
             }
