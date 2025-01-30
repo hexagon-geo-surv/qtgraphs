@@ -160,6 +160,21 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
+    \property QAbstractSeries::hovered
+    \brief Check whether a series is hovered on.
+
+    Can be used to check whether mouse/touch is currently
+    hovering on a series.
+    \sa QAbstractSeries::hovered
+*/
+/*!
+    \qmlproperty bool AbstractSeries::hovered
+    Can be used to check whether mouse/touch is currently
+    hovering on a series.
+    \sa QAbstractSeries::hovered
+*/
+
+/*!
     \property QAbstractSeries::opacity
     \brief The opacity of the series.
 
@@ -222,6 +237,11 @@ QT_BEGIN_NAMESPACE
 /*!
     \qmlsignal AbstractSeries::hoverableChanged()
     This signal is emitted when the series \l hoverable changes.
+*/
+
+/*!
+    \qmlsignal AbstractSeries::hoveredChanged()
+    This signal is emitted when the series \l hovered changes.
 */
 
 /*!
@@ -344,6 +364,22 @@ bool QAbstractSeries::hasLoaded() const
 {
     Q_D(const QAbstractSeries);
     return d->m_loaded;
+}
+
+bool QAbstractSeries::isHovered() const
+{
+    Q_D(const QAbstractSeries);
+    return d->m_hovered;
+}
+
+void QAbstractSeries::setHovered(bool enabled)
+{
+    Q_D(QAbstractSeries);
+
+    if (enabled != d->m_hovered) {
+        d->m_hovered = enabled;
+        emit hoveredChanged(d->m_hovered);
+    }
 }
 
 qreal QAbstractSeries::opacity() const

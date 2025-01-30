@@ -327,9 +327,11 @@ bool PieRenderer::handleHoverMove(QHoverEvent *event)
 
             if (!m_currentHoverSlice) {
                 m_currentHoverSlice = slice;
+                slice->series()->setHovered(true);
                 emit slice->series()->hoverEnter(name, position, value);
             }
             if (m_currentHoverSlice != slice) {
+                slice->series()->setHovered(true);
                 emit m_currentHoverSlice->series()->hoverExit(name, position);
                 emit slice->series()->hoverEnter(name, position, value);
                 m_currentHoverSlice = slice;
@@ -342,6 +344,7 @@ bool PieRenderer::handleHoverMove(QHoverEvent *event)
     }
 
     if (!hovering && m_currentHoverSlice) {
+        m_currentHoverSlice->series()->setHovered(false);
         emit m_currentHoverSlice->series()->
             hoverExit(m_currentHoverSlice->series()->name(), position);
         m_currentHoverSlice = nullptr;

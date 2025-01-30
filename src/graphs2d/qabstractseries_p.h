@@ -44,6 +44,7 @@ private:
     bool m_loaded = false;
     bool m_selectable = false;
     bool m_hoverable = false;
+    bool m_hovered = false;
     qreal m_opacity = 1.0;
     qreal m_valuesMultiplier = 1.0;
     QList<QLegendData> m_legendData;

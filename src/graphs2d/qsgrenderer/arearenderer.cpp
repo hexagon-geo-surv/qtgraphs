@@ -363,6 +363,7 @@ bool AreaRenderer::handleHoverMove(QHoverEvent *event)
 
             if (!group->hover) {
                 group->hover = true;
+                group->series->setHovered(true);
                 emit group->series->hoverEnter(name, position, QPointF(x, y));
             }
 
@@ -373,6 +374,7 @@ bool AreaRenderer::handleHoverMove(QHoverEvent *event)
 
         if (!hovering && group->hover) {
             group->hover = false;
+            group->series->setHovered(false);
             emit group->series->hoverExit(name, position);
             handled = true;
         }

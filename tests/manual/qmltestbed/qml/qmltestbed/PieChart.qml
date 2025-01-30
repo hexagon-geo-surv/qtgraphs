@@ -32,6 +32,7 @@ Item {
 
         PieSeries {
             id: pieSeries
+            hoverable: true
             PieSlice {
                 label: "Volkswagen"
                 labelVisible: true
@@ -63,6 +64,11 @@ Item {
                 labelVisible: true
                 value: 6.8
             }
+
+            onHoveredChanged: (enabled)=> {
+                                  console.log("hoveredChanged:", enabled)
+                                  console.log("isHovered:, hovered)
+                              }
         }
 
         Component.onCompleted: {

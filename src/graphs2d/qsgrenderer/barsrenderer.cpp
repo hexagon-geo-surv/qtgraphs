@@ -588,6 +588,7 @@ bool BarsRenderer::handleHoverMove(QHoverEvent *event)
 
                     if (!m_currentHoverSeries) {
                         m_currentHoverSeries = barSelection.series;
+                        barSelection.series->setHovered(true);
                         emit barSelection.series->hoverEnter(name, position, point);
                     }
 
@@ -601,6 +602,7 @@ bool BarsRenderer::handleHoverMove(QHoverEvent *event)
     }
 
     if (!hovering && m_currentHoverSeries) {
+        m_currentHoverSeries->setHovered(false);
         emit m_currentHoverSeries->hoverExit(m_currentHoverSeries->name(), position);
         m_currentHoverSeries = nullptr;
         handled = true;

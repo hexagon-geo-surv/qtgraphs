@@ -753,6 +753,7 @@ bool PointRenderer::handleHoverMove(QHoverEvent *event)
 
                                 if (!group->hover) {
                                     group->hover = true;
+                                    group->series->setHovered(true);
                                     emit group->series->hoverEnter(name, position, point);
                                 }
 
@@ -828,6 +829,7 @@ bool PointRenderer::handleHoverMove(QHoverEvent *event)
 
                 if (!hovering && group->hover) {
                     group->hover = false;
+                    group->series->setHovered(false);
                     emit group->series->hoverExit(name, position);
                     handled = true;
                 }
