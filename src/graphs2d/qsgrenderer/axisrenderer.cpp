@@ -751,8 +751,14 @@ void AxisRenderer::updateValueYAxisLabels(QValueAxis *axis, const QRectF rect)
             if (decimals < 0)
                 decimals = getValueDecimalsFromRange(m_axisVerticalValueRange);
             const QString f = axis->labelFormat();
-            char format = f.isEmpty() ? 'f' : f.front().toLatin1();
-            QString label = QString::number(number, format, decimals);
+            QString label;
+            if (f.length() <= 1) {
+              char format = f.isEmpty() ? 'f' : f.front().toLatin1();
+              label = QString::number(number, format, decimals);
+            } else {
+              QByteArray array = f.toLatin1();
+              label = QString::asprintf(array.constData(), number);
+            }
             if (m_verticalAxisOnRight) {
                 setLabelTextProperties(textItem, label, false,
                                        QQuickText::HAlignment::AlignLeft,
@@ -810,8 +816,14 @@ void AxisRenderer::updateValueXAxisLabels(QValueAxis *axis, const QRectF rect)
             if (decimals < 0)
                 decimals = getValueDecimalsFromRange(m_axisHorizontalValueRange);
             const QString f = axis->labelFormat();
-            char format = f.isEmpty() ? 'f' : f.front().toLatin1();
-            QString label = QString::number(number, format, decimals);
+            QString label;
+            if (f.length() <= 1) {
+              char format = f.isEmpty() ? 'f' : f.front().toLatin1();
+              label = QString::number(number, format, decimals);
+            } else {
+              QByteArray array = f.toLatin1();
+              label = QString::asprintf(array.constData(), number);
+            }
             if (m_horizontalAxisOnTop) {
                 setLabelTextProperties(textItem, label, true,
                                        QQuickText::HAlignment::AlignHCenter,
