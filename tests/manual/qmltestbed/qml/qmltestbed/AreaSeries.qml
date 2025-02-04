@@ -120,7 +120,7 @@ Rectangle {
             }
             onHoveredChanged: (enabled)=> {
                                   console.log("hoveredChanged:", enabled)
-                                  console.log("isHovered:, hovered)
+                                  console.log("isHovered:", hovered)
                               }
         }
 

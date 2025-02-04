@@ -47,6 +47,7 @@ class Q_GRAPHS_EXPORT QAbstractSeries : public QObject, public QQmlParserStatus
     Q_PROPERTY(QList<QLegendData> legendData READ legendData NOTIFY legendDataChanged FINAL)
     Q_PROPERTY(bool hovered READ isHovered NOTIFY hoveredChanged REVISION(6, 10))
     Q_CLASSINFO("DefaultProperty", "seriesChildren")
+    QML_ANONYMOUS
 
 public:
     enum class SeriesType {
