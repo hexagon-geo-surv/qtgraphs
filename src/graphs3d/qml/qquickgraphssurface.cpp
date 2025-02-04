@@ -1421,6 +1421,10 @@ void QQuickGraphsSurface::updateModel(SurfaceModel *model)
         material->setProperty("vertCount", QVector2D(columnCount, rowCount));
         material->setProperty("flipU", !model->ascendingX);
         material->setProperty("flipV", !model->ascendingZ);
+        for (int i = 0; i < m_seriesList.size(); i++) {
+            if (m_seriesList.at(i) == model->series)
+                material->setProperty("order", i);
+        }
 
         model->vertices.clear();
         model->vertices.reserve(totalSize);
